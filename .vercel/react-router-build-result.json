@@ -1,0 +1,243 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs_eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "routes/home": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/about": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/contact": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/clients": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/career": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/web-development": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/website-design": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/graphic-design": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/ecommerce": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "id": "root",
+        "file": "app/root.tsx",
+        "path": "",
+        "config": {}
+      },
+      "routes/home": {
+        "id": "routes/home",
+        "parentId": "root",
+        "file": "app/routes/home.tsx",
+        "index": true,
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/about": {
+        "id": "routes/about",
+        "parentId": "root",
+        "file": "app/routes/about.tsx",
+        "path": "about",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/contact": {
+        "id": "routes/contact",
+        "parentId": "root",
+        "file": "app/routes/contact.tsx",
+        "path": "contact",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/clients": {
+        "id": "routes/clients",
+        "parentId": "root",
+        "file": "app/routes/clients.tsx",
+        "path": "clients",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/career": {
+        "id": "routes/career",
+        "parentId": "root",
+        "file": "app/routes/career.tsx",
+        "path": "career",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/web-development": {
+        "id": "routes/web-development",
+        "parentId": "root",
+        "file": "app/routes/web-development.tsx",
+        "path": "web-development",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/website-design": {
+        "id": "routes/website-design",
+        "parentId": "root",
+        "file": "app/routes/website-design.tsx",
+        "path": "website-design",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/graphic-design": {
+        "id": "routes/graphic-design",
+        "parentId": "root",
+        "file": "app/routes/graphic-design.tsx",
+        "path": "graphic-design",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/ecommerce": {
+        "id": "routes/ecommerce",
+        "parentId": "root",
+        "file": "app/routes/ecommerce.tsx",
+        "path": "ecommerce",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    }
+  },
+  "reactRouterConfig": {
+    "appDirectory": "D:/Website Works/Aarvitek-systems/app",
+    "basename": "/",
+    "buildDirectory": "D:/Website Works/Aarvitek-systems/build",
+    "future": {
+      "unstable_optimizeDeps": false,
+      "unstable_subResourceIntegrity": false,
+      "v8_middleware": false,
+      "v8_splitRouteModules": false,
+      "v8_viteEnvironmentApi": false
+    },
+    "routes": {
+      "root": {
+        "id": "root",
+        "file": "root.tsx",
+        "path": ""
+      },
+      "routes/home": {
+        "id": "routes/home",
+        "parentId": "root",
+        "file": "routes/home.tsx",
+        "index": true
+      },
+      "routes/about": {
+        "id": "routes/about",
+        "parentId": "root",
+        "file": "routes/about.tsx",
+        "path": "about"
+      },
+      "routes/contact": {
+        "id": "routes/contact",
+        "parentId": "root",
+        "file": "routes/contact.tsx",
+        "path": "contact"
+      },
+      "routes/clients": {
+        "id": "routes/clients",
+        "parentId": "root",
+        "file": "routes/clients.tsx",
+        "path": "clients"
+      },
+      "routes/career": {
+        "id": "routes/career",
+        "parentId": "root",
+        "file": "routes/career.tsx",
+        "path": "career"
+      },
+      "routes/web-development": {
+        "id": "routes/web-development",
+        "parentId": "root",
+        "file": "routes/web-development.tsx",
+        "path": "web-development"
+      },
+      "routes/website-design": {
+        "id": "routes/website-design",
+        "parentId": "root",
+        "file": "routes/website-design.tsx",
+        "path": "website-design"
+      },
+      "routes/graphic-design": {
+        "id": "routes/graphic-design",
+        "parentId": "root",
+        "file": "routes/graphic-design.tsx",
+        "path": "graphic-design"
+      },
+      "routes/ecommerce": {
+        "id": "routes/ecommerce",
+        "parentId": "root",
+        "file": "routes/ecommerce.tsx",
+        "path": "ecommerce"
+      }
+    },
+    "routeDiscovery": {
+      "mode": "lazy",
+      "manifestPath": "/__manifest"
+    },
+    "serverBuildFile": "index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true,
+    "unstable_routeConfig": [
+      {
+        "id": "root",
+        "path": "",
+        "file": "root.tsx",
+        "children": [
+          {
+            "file": "routes/home.tsx",
+            "index": true
+          },
+          {
+            "file": "routes/about.tsx",
+            "path": "about"
+          },
+          {
+            "file": "routes/contact.tsx",
+            "path": "contact"
+          },
+          {
+            "file": "routes/clients.tsx",
+            "path": "clients"
+          },
+          {
+            "file": "routes/career.tsx",
+            "path": "career"
+          },
+          {
+            "file": "routes/web-development.tsx",
+            "path": "web-development"
+          },
+          {
+            "file": "routes/website-design.tsx",
+            "path": "website-design"
+          },
+          {
+            "file": "routes/graphic-design.tsx",
+            "path": "graphic-design"
+          },
+          {
+            "file": "routes/ecommerce.tsx",
+            "path": "ecommerce"
+          }
+        ]
+      }
+    ]
+  },
+  "viteConfig": {
+    "build": {
+      "assetsDir": "assets"
+    }
+  }
+}

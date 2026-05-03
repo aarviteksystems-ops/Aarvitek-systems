@@ -4,7 +4,10 @@ import { createReadableStreamFromReadable } from "@react-router/node";
 import { ServerRouter, Link, NavLink, UNSAFE_withComponentProps, Outlet, UNSAFE_withErrorBoundaryProps, isRouteErrorResponse, Meta, Links, ScrollRestoration, Scripts } from "react-router";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 const streamTimeout = 5e3;
 function handleRequest(request, responseStatusCode, responseHeaders, routerContext, loadContext) {
   if (request.method.toUpperCase() === "HEAD") {
@@ -61,15 +64,51 @@ const entryServer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineP
   default: handleRequest,
   streamTimeout
 }, Symbol.toStringTag, { value: "Module" }));
+gsap.registerPlugin(useGSAP);
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  return /* @__PURE__ */ jsxs("nav", { className: "fixed w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/10", children: [
+  const navRef = useRef(null);
+  const mobileMenuRef = useRef(null);
+  useGSAP(() => {
+    const tl = gsap.timeline();
+    tl.from(navRef.current, {
+      y: -100,
+      opacity: 0,
+      duration: 0.8,
+      ease: "power3.out"
+    }).from(".nav-item", {
+      y: -20,
+      opacity: 0,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: "power2.out"
+    }, "-=0.4");
+  }, { scope: navRef });
+  useGSAP(() => {
+    if (isOpen && mobileMenuRef.current) {
+      gsap.from(mobileMenuRef.current, {
+        height: 0,
+        opacity: 0,
+        duration: 0.4,
+        ease: "power3.out"
+      });
+      gsap.from(".mobile-nav-item", {
+        x: -20,
+        opacity: 0,
+        duration: 0.3,
+        stagger: 0.05,
+        ease: "power2.out",
+        delay: 0.1
+      });
+    }
+  }, { dependencies: [isOpen], scope: mobileMenuRef });
+  return /* @__PURE__ */ jsxs("nav", { ref: navRef, className: "fixed w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/10", children: [
     /* @__PURE__ */ jsx("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: /* @__PURE__ */ jsxs("div", { className: "flex justify-between h-20 items-center", children: [
-      /* @__PURE__ */ jsx("div", { className: "flex-shrink-0 flex items-center", children: /* @__PURE__ */ jsx(Link, { to: "/", className: "text-2xl font-black tracking-tighter text-white", children: "AARVITEK" }) }),
+      /* @__PURE__ */ jsx("div", { className: "flex-shrink-0 flex items-center nav-item", children: /* @__PURE__ */ jsx(Link, { to: "/", className: "text-2xl font-black tracking-tighter text-white", children: "AARVITEK" }) }),
       /* @__PURE__ */ jsxs("div", { className: "hidden md:flex space-x-8 items-center bg-white/5 px-6 py-2 rounded-full border border-white/10", children: [
-        /* @__PURE__ */ jsx(NavLink, { to: "/", className: ({ isActive }) => `text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Home" }),
-        /* @__PURE__ */ jsx(NavLink, { to: "/about", className: ({ isActive }) => `text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "About Us" }),
-        /* @__PURE__ */ jsxs("div", { className: "relative group", children: [
+        /* @__PURE__ */ jsx(NavLink, { to: "/", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Home" }),
+        /* @__PURE__ */ jsx(NavLink, { to: "/about", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "About Us" }),
+        /* @__PURE__ */ jsxs("div", { className: "relative group nav-item", children: [
           /* @__PURE__ */ jsxs("button", { className: "text-sm font-medium text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer", children: [
             "Services",
             /* @__PURE__ */ jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M19 9l-7 7-7-7" }) })
@@ -81,24 +120,24 @@ function Navbar() {
             /* @__PURE__ */ jsx(Link, { to: "/ecommerce", className: "block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors", children: "E-Commerce" })
           ] }) })
         ] }),
-        /* @__PURE__ */ jsx(NavLink, { to: "/clients", className: ({ isActive }) => `text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Clients" })
+        /* @__PURE__ */ jsx(NavLink, { to: "/clients", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Clients" })
       ] }),
-      /* @__PURE__ */ jsx("div", { className: "hidden md:flex items-center", children: /* @__PURE__ */ jsx(Link, { to: "/contact", className: "px-6 py-2.5 rounded-full bg-purple-600 text-white text-sm font-medium hover:bg-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]", children: "Book a Call" }) }),
-      /* @__PURE__ */ jsx("div", { className: "flex md:hidden", children: /* @__PURE__ */ jsx("button", { onClick: () => setIsOpen(!isOpen), className: "text-slate-300 hover:text-white focus:outline-none", children: /* @__PURE__ */ jsx("svg", { className: "h-6 w-6", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: isOpen ? /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M6 18L18 6M6 6l12 12" }) : /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M4 6h16M4 12h16M4 18h16" }) }) }) })
+      /* @__PURE__ */ jsx("div", { className: "hidden md:flex items-center nav-item", children: /* @__PURE__ */ jsx(Link, { to: "/contact", className: "px-6 py-2.5 rounded-full bg-purple-600 text-white text-sm font-medium hover:bg-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]", children: "Book a Call" }) }),
+      /* @__PURE__ */ jsx("div", { className: "flex md:hidden nav-item", children: /* @__PURE__ */ jsx("button", { onClick: () => setIsOpen(!isOpen), className: "text-slate-300 hover:text-white focus:outline-none", children: /* @__PURE__ */ jsx("svg", { className: "h-6 w-6", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: isOpen ? /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M6 18L18 6M6 6l12 12" }) : /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M4 6h16M4 12h16M4 18h16" }) }) }) })
     ] }) }),
-    isOpen && /* @__PURE__ */ jsx("div", { className: "md:hidden bg-black border-b border-white/10 shadow-2xl", children: /* @__PURE__ */ jsxs("div", { className: "px-4 pt-2 pb-6 space-y-1", children: [
-      /* @__PURE__ */ jsx(Link, { to: "/", className: "block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Home" }),
-      /* @__PURE__ */ jsx(Link, { to: "/about", className: "block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "About Us" }),
+    /* @__PURE__ */ jsx("div", { ref: mobileMenuRef, className: "md:hidden", children: isOpen && /* @__PURE__ */ jsx("div", { className: "bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-2xl", children: /* @__PURE__ */ jsxs("div", { className: "px-4 pt-2 pb-6 space-y-1", children: [
+      /* @__PURE__ */ jsx(Link, { to: "/", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Home" }),
+      /* @__PURE__ */ jsx(Link, { to: "/about", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "About Us" }),
       /* @__PURE__ */ jsxs("div", { className: "py-2 pl-4", children: [
-        /* @__PURE__ */ jsx("p", { className: "px-3 py-2 text-xs font-bold text-slate-500 uppercase tracking-widest", children: "Services" }),
-        /* @__PURE__ */ jsx(Link, { to: "/web-development", className: "block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Web Development" }),
-        /* @__PURE__ */ jsx(Link, { to: "/website-design", className: "block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Website Design" }),
-        /* @__PURE__ */ jsx(Link, { to: "/graphic-design", className: "block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Graphic Design" }),
-        /* @__PURE__ */ jsx(Link, { to: "/ecommerce", className: "block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "E-Commerce" })
+        /* @__PURE__ */ jsx("p", { className: "mobile-nav-item px-3 py-2 text-xs font-bold text-slate-500 uppercase tracking-widest", children: "Services" }),
+        /* @__PURE__ */ jsx(Link, { to: "/web-development", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Web Development" }),
+        /* @__PURE__ */ jsx(Link, { to: "/website-design", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Website Design" }),
+        /* @__PURE__ */ jsx(Link, { to: "/graphic-design", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Graphic Design" }),
+        /* @__PURE__ */ jsx(Link, { to: "/ecommerce", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "E-Commerce" })
       ] }),
-      /* @__PURE__ */ jsx(Link, { to: "/clients", className: "block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Clients" }),
-      /* @__PURE__ */ jsx(Link, { to: "/contact", className: "block w-full text-center mt-6 px-4 py-3 rounded-xl bg-purple-600 text-white font-medium hover:bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)]", children: "Book a Call" })
-    ] }) })
+      /* @__PURE__ */ jsx(Link, { to: "/clients", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Clients" }),
+      /* @__PURE__ */ jsx("div", { className: "mobile-nav-item mt-6", children: /* @__PURE__ */ jsx(Link, { to: "/contact", onClick: () => setIsOpen(false), className: "block w-full text-center px-4 py-3 rounded-xl bg-purple-600 text-white font-medium hover:bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)]", children: "Book a Call" }) })
+    ] }) }) })
   ] });
 }
 function Footer() {
@@ -245,6 +284,7 @@ const route0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: root,
   links
 }, Symbol.toStringTag, { value: "Module" }));
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 function meta$8({}) {
   return [{
     title: "Aarvitek Systems - Intelligent IT & Automation"
@@ -254,7 +294,67 @@ function meta$8({}) {
   }];
 }
 const home = UNSAFE_withComponentProps(function Home() {
+  const container = useRef(null);
+  useGSAP(() => {
+    gsap.from(".hero-content > *", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      delay: 0.1
+    });
+    const sections = gsap.utils.toArray(".reveal-section");
+    sections.forEach((sec) => {
+      gsap.from(sec, {
+        y: 60,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sec,
+          start: "top 85%"
+        }
+      });
+    });
+    gsap.from(".logo-item", {
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: "back.out(1.5)",
+      scrollTrigger: {
+        trigger: ".logos-section",
+        start: "top 90%"
+      }
+    });
+    gsap.from(".process-card", {
+      y: 40,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.15,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".process-section",
+        start: "top 80%"
+      }
+    });
+    gsap.from(".benefit-card", {
+      scale: 0.95,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".benefits-section",
+        start: "top 80%"
+      }
+    });
+  }, {
+    scope: container
+  });
   return /* @__PURE__ */ jsxs("div", {
+    ref: container,
     className: "flex flex-col min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30",
     children: [/* @__PURE__ */ jsxs("section", {
       className: "relative pt-40 pb-20 lg:pt-56 lg:pb-32 overflow-hidden",
@@ -265,7 +365,7 @@ const home = UNSAFE_withComponentProps(function Home() {
       }), /* @__PURE__ */ jsx("div", {
         className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-30 pointer-events-none"
       }), /* @__PURE__ */ jsxs("div", {
-        className: "relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10",
+        className: "relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 hero-content",
         children: [/* @__PURE__ */ jsxs("div", {
           className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-md mb-8",
           children: [/* @__PURE__ */ jsx("span", {
@@ -297,7 +397,7 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })]
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-12 border-y border-white/5 bg-white/[0.02]",
+      className: "py-12 border-y border-white/5 bg-white/[0.02] logos-section reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsx("p", {
@@ -306,25 +406,25 @@ const home = UNSAFE_withComponentProps(function Home() {
         }), /* @__PURE__ */ jsxs("div", {
           className: "flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-opacity duration-500",
           children: [/* @__PURE__ */ jsx("h3", {
-            className: "text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
+            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
             children: "Acme Corp"
           }), /* @__PURE__ */ jsx("h3", {
-            className: "text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
+            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
             children: "GlobalTech"
           }), /* @__PURE__ */ jsx("h3", {
-            className: "text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
+            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
             children: "Innovate"
           }), /* @__PURE__ */ jsx("h3", {
-            className: "text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
+            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
             children: "Stark Ind."
           }), /* @__PURE__ */ jsx("h3", {
-            className: "text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
+            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
             children: "Wayne Ent."
           })]
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-24 lg:py-32 relative",
+      className: "py-24 lg:py-32 relative reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsxs("div", {
@@ -442,7 +542,7 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-24 bg-[#050505] border-y border-white/5",
+      className: "py-24 bg-[#050505] border-y border-white/5 process-section reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsx("div", {
@@ -470,7 +570,7 @@ const home = UNSAFE_withComponentProps(function Home() {
             title: "Continuous Optimization",
             desc: "Monitoring, maintenance, and future-proofing."
           }].map((step, idx) => /* @__PURE__ */ jsxs("div", {
-            className: "bg-white/5 border border-white/5 rounded-2xl p-8 hover:bg-white/10 transition-colors",
+            className: "process-card bg-white/5 border border-white/5 rounded-2xl p-8 hover:bg-white/10 transition-colors",
             children: [/* @__PURE__ */ jsx("div", {
               className: "w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6 border border-white/10",
               children: /* @__PURE__ */ jsx("svg", {
@@ -496,7 +596,7 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-24 lg:py-32",
+      className: "py-24 lg:py-32 benefits-section reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsx("div", {
@@ -508,7 +608,7 @@ const home = UNSAFE_withComponentProps(function Home() {
         }), /* @__PURE__ */ jsxs("div", {
           className: "grid grid-cols-1 md:grid-cols-3 gap-6",
           children: [/* @__PURE__ */ jsxs("div", {
-            className: "md:col-span-2 bg-[#050505] border border-white/10 rounded-3xl p-10 relative overflow-hidden group",
+            className: "benefit-card md:col-span-2 bg-[#050505] border border-white/10 rounded-3xl p-10 relative overflow-hidden group",
             children: [/* @__PURE__ */ jsx("div", {
               className: "absolute top-0 right-0 w-64 h-64 bg-purple-500/20 blur-[80px] group-hover:bg-purple-500/30 transition-all rounded-full"
             }), /* @__PURE__ */ jsx("h3", {
@@ -519,7 +619,7 @@ const home = UNSAFE_withComponentProps(function Home() {
               children: "Automating repetitive manual tasks so your team can focus on complex, high-impact strategies."
             })]
           }), /* @__PURE__ */ jsxs("div", {
-            className: "bg-[#050505] border border-white/10 rounded-3xl p-10",
+            className: "benefit-card bg-[#050505] border border-white/10 rounded-3xl p-10",
             children: [/* @__PURE__ */ jsx("h3", {
               className: "text-xl font-bold text-white mb-4",
               children: "Scalability"
@@ -528,7 +628,7 @@ const home = UNSAFE_withComponentProps(function Home() {
               children: "Architecture built to handle massive traffic spikes without sweating."
             })]
           }), /* @__PURE__ */ jsxs("div", {
-            className: "bg-[#050505] border border-white/10 rounded-3xl p-10",
+            className: "benefit-card bg-[#050505] border border-white/10 rounded-3xl p-10",
             children: [/* @__PURE__ */ jsx("h3", {
               className: "text-xl font-bold text-white mb-4",
               children: "Cost Efficient"
@@ -537,7 +637,7 @@ const home = UNSAFE_withComponentProps(function Home() {
               children: "Reduce manual labor and server costs through optimized tech stacks."
             })]
           }), /* @__PURE__ */ jsxs("div", {
-            className: "md:col-span-2 bg-[#050505] border border-white/10 rounded-3xl p-10 relative overflow-hidden group",
+            className: "benefit-card md:col-span-2 bg-[#050505] border border-white/10 rounded-3xl p-10 relative overflow-hidden group",
             children: [/* @__PURE__ */ jsx("div", {
               className: "absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/20 blur-[80px] group-hover:bg-indigo-500/30 transition-all rounded-full"
             }), /* @__PURE__ */ jsx("h3", {
@@ -551,7 +651,7 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-24 bg-[#050505] border-y border-white/5",
+      className: "py-24 bg-[#050505] border-y border-white/5 reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsxs("div", {
@@ -613,7 +713,7 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-24 lg:py-32",
+      className: "py-24 lg:py-32 reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-3xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsx("div", {
@@ -1533,7 +1633,7 @@ const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: ecommerce,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-B2xPDlin.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-BvwjPg5_.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": ["/assets/root-DRdDv3gZ.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-DytF2S94.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-bVyaMsuU.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-D__fUAPf.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-DswuvKa9.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-B1S9PgDF.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-BHLevdAH.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-CJ87NZS3.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-C-_Cmigo.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-3eN_U28j.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-913bfa2a.js", "version": "913bfa2a", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-B2xPDlin.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-BEgn5HvD.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js", "/assets/index-BoBIT6wE.js"], "css": ["/assets/root-DYDzxx6Z.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-CdwiMPID.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js", "/assets/index-BoBIT6wE.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-bVyaMsuU.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-D__fUAPf.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-DswuvKa9.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-B1S9PgDF.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-BHLevdAH.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-CJ87NZS3.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-C-_Cmigo.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-3eN_U28j.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-416fd66b.js", "version": "416fd66b", "sri": void 0 };
 const assetsBuildDirectory = "build\\client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "unstable_subResourceIntegrity": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };
