@@ -4078,7 +4078,7 @@ gsap$2.registerPlugin(CSSPlugin);
 var gsapWithCSS = gsap$2.registerPlugin(CSSPlugin) || gsap$2;
 gsapWithCSS.core.Tween;
 let useIsomorphicLayoutEffect = typeof document !== "undefined" ? useLayoutEffect : useEffect, isConfig = (value) => value && !Array.isArray(value) && typeof value === "object", emptyArray = [], defaultConfig = {}, _gsap = gsapWithCSS;
-const useGSAP$9 = (callback, dependencies = emptyArray) => {
+const useGSAP = (callback, dependencies = emptyArray) => {
   let config3 = defaultConfig;
   if (isConfig(callback)) {
     config3 = callback;
@@ -4103,15 +4103,11 @@ const useGSAP$9 = (callback, dependencies = emptyArray) => {
   }, dependencies);
   return { context: context3.current, contextSafe: contextSafe.current };
 };
-useGSAP$9.register = (core) => {
+useGSAP.register = (core) => {
   _gsap = core;
 };
-useGSAP$9.headless = true;
-const GSAPReact = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  useGSAP: useGSAP$9
-}, Symbol.toStringTag, { value: "Module" }));
-gsapWithCSS.registerPlugin(useGSAP$9);
+useGSAP.headless = true;
+gsapWithCSS.registerPlugin(useGSAP);
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -4124,7 +4120,7 @@ function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  useGSAP$9(() => {
+  useGSAP(() => {
     const tl = gsapWithCSS.timeline();
     tl.from(navRef.current, {
       y: -100,
@@ -4139,7 +4135,7 @@ function Navbar() {
       ease: "power2.out"
     }, "-=0.4");
   }, { scope: navRef });
-  useGSAP$9(() => {
+  useGSAP(() => {
     if (isOpen && mobileMenuRef.current) {
       gsapWithCSS.from(mobileMenuRef.current, {
         height: 0,
@@ -4415,12 +4411,12 @@ function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   return Constructor;
 }
-var gsap$1, _coreInitted$1, _win$1, _doc$1, _docEl$1, _body$1, _isTouch, _pointerType, ScrollTrigger$a, _root$1, _normalizer$1, _eventTypes, _context$1, _getGSAP$1 = function _getGSAP() {
+var gsap$1, _coreInitted$1, _win$1, _doc$1, _docEl$1, _body$1, _isTouch, _pointerType, ScrollTrigger$1, _root$1, _normalizer$1, _eventTypes, _context$1, _getGSAP$1 = function _getGSAP() {
   return gsap$1 || typeof window !== "undefined" && (gsap$1 = window.gsap) && gsap$1.registerPlugin && gsap$1;
 }, _startup$1 = 1, _observers = [], _scrollers = [], _proxies = [], _getTime$1 = Date.now, _bridge = function _bridge2(name, value) {
   return value;
 }, _integrate = function _integrate2() {
-  var core = ScrollTrigger$a.core, data = core.bridge || {}, scrollers = core._scrollers, proxies = core._proxies;
+  var core = ScrollTrigger$1.core, data = core.bridge || {}, scrollers = core._scrollers, proxies = core._proxies;
   scrollers.push.apply(scrollers, _scrollers);
   proxies.push.apply(proxies, _proxies);
   _scrollers = scrollers;
@@ -4538,8 +4534,8 @@ var gsap$1, _coreInitted$1, _win$1, _doc$1, _docEl$1, _body$1, _isTouch, _pointe
   var max = Math.max.apply(Math, a), min = Math.min.apply(Math, a);
   return Math.abs(max) >= Math.abs(min) ? max : min;
 }, _setScrollTrigger = function _setScrollTrigger2() {
-  ScrollTrigger$a = gsap$1.core.globals().ScrollTrigger;
-  ScrollTrigger$a && ScrollTrigger$a.core && _integrate();
+  ScrollTrigger$1 = gsap$1.core.globals().ScrollTrigger;
+  ScrollTrigger$1 && ScrollTrigger$1.core && _integrate();
 }, _initCore2 = function _initCore3(core) {
   gsap$1 = core || _getGSAP$1();
   if (!_coreInitted$1 && gsap$1 && typeof document !== "undefined" && document.body) {
@@ -4571,7 +4567,7 @@ var Observer = /* @__PURE__ */ (function() {
   var _proto = Observer2.prototype;
   _proto.init = function init4(vars) {
     _coreInitted$1 || _initCore2(gsap$1) || console.warn("Please gsap.registerPlugin(Observer)");
-    ScrollTrigger$a || _setScrollTrigger();
+    ScrollTrigger$1 || _setScrollTrigger();
     var tolerance = vars.tolerance, dragMinimum = vars.dragMinimum, type = vars.type, target = vars.target, lineHeight = vars.lineHeight, debounce = vars.debounce, preventDefault = vars.preventDefault, onStop = vars.onStop, onStopDelay = vars.onStopDelay, ignore = vars.ignore, wheelSpeed = vars.wheelSpeed, event = vars.event, onDragStart = vars.onDragStart, onDragEnd = vars.onDragEnd, onDrag = vars.onDrag, onPress = vars.onPress, onRelease = vars.onRelease, onRight = vars.onRight, onLeft = vars.onLeft, onUp = vars.onUp, onDown = vars.onDown, onChangeX = vars.onChangeX, onChangeY = vars.onChangeY, onChange = vars.onChange, onToggleX = vars.onToggleX, onToggleY = vars.onToggleY, onHover = vars.onHover, onHoverEnd = vars.onHoverEnd, onMove = vars.onMove, ignoreCheck = vars.ignoreCheck, isNormalizer = vars.isNormalizer, onGestureStart = vars.onGestureStart, onGestureEnd = vars.onGestureEnd, onWheel = vars.onWheel, onEnable = vars.onEnable, onDisable = vars.onDisable, onClick = vars.onClick, scrollSpeed = vars.scrollSpeed, capture = vars.capture, allowClicks = vars.allowClicks, lockAxis = vars.lockAxis, onLockAxis = vars.onLockAxis;
     this.target = target = _getTarget(target) || _docEl$1;
     this.vars = vars;
@@ -5076,7 +5072,7 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
   _scrollers.cache++;
   (force === true || !_refreshing && !_ignoreResize && !_doc.fullscreenElement && !_doc.webkitFullscreenElement && (!_ignoreMobileResize || _baseScreenWidth !== _win.innerWidth || Math.abs(_win.innerHeight - _baseScreenHeight) > _win.innerHeight * 0.25)) && _resizeDelay.restart(true);
 }, _listeners = {}, _emptyArray = [], _softRefresh = function _softRefresh2() {
-  return _removeListener2(ScrollTrigger$9, "scrollEnd", _softRefresh2) || _refreshAll(true);
+  return _removeListener2(ScrollTrigger, "scrollEnd", _softRefresh2) || _refreshAll(true);
 }, _dispatch2 = function _dispatch3(type) {
   return _listeners[type] && _listeners[type].map(function(f) {
     return f();
@@ -5134,14 +5130,14 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
   _body = _doc.body;
   _root = [_win, _doc, _docEl, _body];
   if (_lastScrollTime && !force && !_isReverted) {
-    _addListener2(ScrollTrigger$9, "scrollEnd", _softRefresh);
+    _addListener2(ScrollTrigger, "scrollEnd", _softRefresh);
     return;
   }
   _refresh100vh();
-  _refreshingAll = ScrollTrigger$9.isRefreshing = true;
+  _refreshingAll = ScrollTrigger.isRefreshing = true;
   _isReverted || _recordScrollPositions();
   var refreshInits = _dispatch2("refreshInit");
-  _sort && ScrollTrigger$9.sort();
+  _sort && ScrollTrigger.sort();
   skipRevert || _revertAll();
   _scrollers.forEach(function(obj) {
     if (_isFunction2(obj)) {
@@ -5188,11 +5184,11 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
   _triggers.forEach(function(t) {
     return _isFunction2(t.vars.onRefresh) && t.vars.onRefresh(t);
   });
-  _refreshingAll = ScrollTrigger$9.isRefreshing = false;
+  _refreshingAll = ScrollTrigger.isRefreshing = false;
   _dispatch2("refresh");
 }, _lastScroll = 0, _direction = 1, _primary, _updateAll = function _updateAll2(force) {
   if (force === 2 || !_refreshingAll && !_isReverted) {
-    ScrollTrigger$9.isUpdating = true;
+    ScrollTrigger.isUpdating = true;
     _primary && _primary.update(0);
     var l = _triggers.length, time = _getTime(), recordVelocity = time - _time1 >= 50, scroll = l && _triggers[0].scroll();
     _direction = _lastScroll > scroll ? -1 : 1;
@@ -5216,7 +5212,7 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
         _triggers[_i] && _triggers[_i].update(0, recordVelocity);
       }
     }
-    ScrollTrigger$9.isUpdating = false;
+    ScrollTrigger.isUpdating = false;
   }
   _rafID = 0;
 }, _propNamesToCopy = [_left, _top, _bottom, _right, _margin + _Bottom, _margin + _Right, _margin + _Top, _margin + _Left, "display", "flexShrink", "float", "zIndex", "gridColumnStart", "gridColumnEnd", "gridRowStart", "gridRowEnd", "gridArea", "justifySelf", "alignSelf", "placeSelf", "order"], _stateProps = _propNamesToCopy.concat([_width, _height, "boxSizing", "max" + _Width, "max" + _Height, "position", _margin, _padding, _padding + _Top, _padding + _Right, _padding + _Bottom, _padding + _Left]), _swapPinOut = function _swapPinOut2(pin, spacer, state) {
@@ -5408,10 +5404,10 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
     return getTween.tween && getTween.tween.kill() && (getTween.tween = 0);
   };
   _addListener2(scroller, "wheel", getScroll.wheelHandler);
-  ScrollTrigger$9.isTouch && _addListener2(scroller, "touchmove", getScroll.wheelHandler);
+  ScrollTrigger.isTouch && _addListener2(scroller, "touchmove", getScroll.wheelHandler);
   return getTween;
 };
-var ScrollTrigger$9 = /* @__PURE__ */ (function() {
+var ScrollTrigger = /* @__PURE__ */ (function() {
   function ScrollTrigger2(vars, animation) {
     _coreInitted || ScrollTrigger2.register(gsap) || console.warn("Please gsap.registerPlugin(ScrollTrigger)");
     _context(this);
@@ -6272,8 +6268,8 @@ var ScrollTrigger$9 = /* @__PURE__ */ (function() {
   };
   return ScrollTrigger2;
 })();
-ScrollTrigger$9.version = "3.14.2";
-ScrollTrigger$9.saveStyles = function(targets) {
+ScrollTrigger.version = "3.14.2";
+ScrollTrigger.saveStyles = function(targets) {
   return targets ? _toArray(targets).forEach(function(target) {
     if (target && target.style) {
       var i = _savedStyles.indexOf(target);
@@ -6282,46 +6278,46 @@ ScrollTrigger$9.saveStyles = function(targets) {
     }
   }) : _savedStyles;
 };
-ScrollTrigger$9.revert = function(soft, media) {
+ScrollTrigger.revert = function(soft, media) {
   return _revertAll(!soft, media);
 };
-ScrollTrigger$9.create = function(vars, animation) {
-  return new ScrollTrigger$9(vars, animation);
+ScrollTrigger.create = function(vars, animation) {
+  return new ScrollTrigger(vars, animation);
 };
-ScrollTrigger$9.refresh = function(safe) {
-  return safe ? _onResize(true) : (_coreInitted || ScrollTrigger$9.register()) && _refreshAll(true);
+ScrollTrigger.refresh = function(safe) {
+  return safe ? _onResize(true) : (_coreInitted || ScrollTrigger.register()) && _refreshAll(true);
 };
-ScrollTrigger$9.update = function(force) {
+ScrollTrigger.update = function(force) {
   return ++_scrollers.cache && _updateAll(force === true ? 2 : 0);
 };
-ScrollTrigger$9.clearScrollMemory = _clearScrollMemory;
-ScrollTrigger$9.maxScroll = function(element, horizontal) {
+ScrollTrigger.clearScrollMemory = _clearScrollMemory;
+ScrollTrigger.maxScroll = function(element, horizontal) {
   return _maxScroll(element, horizontal ? _horizontal : _vertical);
 };
-ScrollTrigger$9.getScrollFunc = function(element, horizontal) {
+ScrollTrigger.getScrollFunc = function(element, horizontal) {
   return _getScrollFunc(_getTarget(element), horizontal ? _horizontal : _vertical);
 };
-ScrollTrigger$9.getById = function(id) {
+ScrollTrigger.getById = function(id) {
   return _ids[id];
 };
-ScrollTrigger$9.getAll = function() {
+ScrollTrigger.getAll = function() {
   return _triggers.filter(function(t) {
     return t.vars.id !== "ScrollSmoother";
   });
 };
-ScrollTrigger$9.isScrolling = function() {
+ScrollTrigger.isScrolling = function() {
   return !!_lastScrollTime;
 };
-ScrollTrigger$9.snapDirectional = _snapDirectional;
-ScrollTrigger$9.addEventListener = function(type, callback) {
+ScrollTrigger.snapDirectional = _snapDirectional;
+ScrollTrigger.addEventListener = function(type, callback) {
   var a = _listeners[type] || (_listeners[type] = []);
   ~a.indexOf(callback) || a.push(callback);
 };
-ScrollTrigger$9.removeEventListener = function(type, callback) {
+ScrollTrigger.removeEventListener = function(type, callback) {
   var a = _listeners[type], i = a && a.indexOf(callback);
   i >= 0 && a.splice(i, 1);
 };
-ScrollTrigger$9.batch = function(targets, vars) {
+ScrollTrigger.batch = function(targets, vars) {
   var result = [], varsCopy = {}, interval = vars.interval || 0.016, batchMax = vars.batchMax || 1e9, proxyCallback = function proxyCallback2(type, callback) {
     var elements = [], triggers = [], delay = gsap.delayedCall(interval, function() {
       callback(elements, triggers);
@@ -6340,7 +6336,7 @@ ScrollTrigger$9.batch = function(targets, vars) {
   }
   if (_isFunction2(batchMax)) {
     batchMax = batchMax();
-    _addListener2(ScrollTrigger$9, "refresh", function() {
+    _addListener2(ScrollTrigger, "refresh", function() {
       return batchMax = vars.batchMax();
     });
   }
@@ -6350,7 +6346,7 @@ ScrollTrigger$9.batch = function(targets, vars) {
       config3[p] = varsCopy[p];
     }
     config3.trigger = target;
-    result.push(ScrollTrigger$9.create(config3));
+    result.push(ScrollTrigger.create(config3));
   });
   return result;
 };
@@ -6512,7 +6508,7 @@ var _clampScrollAndGetDurationMultiplier = function _clampScrollAndGetDurationMu
   };
   vars.onEnable = function() {
     _allowNativePanning(target, normalizeScrollX ? false : "x");
-    ScrollTrigger$9.addEventListener("refresh", onResize);
+    ScrollTrigger.addEventListener("refresh", onResize);
     _addListener2(_win, "resize", onResize);
     if (scrollFuncY.smooth) {
       scrollFuncY.target.style.scrollBehavior = "auto";
@@ -6523,7 +6519,7 @@ var _clampScrollAndGetDurationMultiplier = function _clampScrollAndGetDurationMu
   vars.onDisable = function() {
     _allowNativePanning(target, true);
     _removeListener2(_win, "resize", onResize);
-    ScrollTrigger$9.removeEventListener("refresh", onResize);
+    ScrollTrigger.removeEventListener("refresh", onResize);
     inputObserver.kill();
   };
   vars.lockAxis = vars.lockAxis !== false;
@@ -6548,22 +6544,22 @@ var _clampScrollAndGetDurationMultiplier = function _clampScrollAndGetDurationMu
   });
   return self;
 };
-ScrollTrigger$9.sort = function(func) {
+ScrollTrigger.sort = function(func) {
   if (_isFunction2(func)) {
     return _triggers.sort(func);
   }
   var scroll = _win.pageYOffset || 0;
-  ScrollTrigger$9.getAll().forEach(function(t) {
+  ScrollTrigger.getAll().forEach(function(t) {
     return t._sortY = t.trigger ? scroll + t.trigger.getBoundingClientRect().top : t.start + _win.innerHeight;
   });
   return _triggers.sort(func || function(a, b) {
     return (a.vars.refreshPriority || 0) * -1e6 + (a.vars.containerAnimation ? 1e6 : a._sortY) - ((b.vars.containerAnimation ? 1e6 : b._sortY) + (b.vars.refreshPriority || 0) * -1e6);
   });
 };
-ScrollTrigger$9.observe = function(vars) {
+ScrollTrigger.observe = function(vars) {
   return new Observer(vars);
 };
-ScrollTrigger$9.normalizeScroll = function(vars) {
+ScrollTrigger.normalizeScroll = function(vars) {
   if (typeof vars === "undefined") {
     return _normalizer;
   }
@@ -6580,7 +6576,7 @@ ScrollTrigger$9.normalizeScroll = function(vars) {
   _isViewport2(normalizer.target) && (_normalizer = normalizer);
   return normalizer;
 };
-ScrollTrigger$9.core = {
+ScrollTrigger.core = {
   // smaller file size way to leverage in ScrollSmoother and Observer
   _getVelocityProp,
   _inputObserver,
@@ -6598,15 +6594,8 @@ ScrollTrigger$9.core = {
     }
   }
 };
-_getGSAP2() && gsap.registerPlugin(ScrollTrigger$9);
-const ScrollTriggerModule = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  ScrollTrigger: ScrollTrigger$9,
-  default: ScrollTrigger$9
-}, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger$8 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
-const useGSAP$8 = useGSAP$9 || void 0 || GSAPReact;
-gsapWithCSS.registerPlugin(useGSAP$8, ScrollTrigger$8);
+_getGSAP2() && gsap.registerPlugin(ScrollTrigger);
+gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$k({}) {
   return [{
     title: "Aarvitek Systems - Intelligent IT & Automation"
@@ -6617,7 +6606,7 @@ function meta$k({}) {
 }
 const home = UNSAFE_withComponentProps(function Home() {
   const container = useRef(null);
-  useGSAP$8(() => {
+  useGSAP(() => {
     gsapWithCSS.from(".hero-content > *", {
       y: 40,
       opacity: 0,
@@ -7694,9 +7683,7 @@ const route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: career,
   meta: meta$g
 }, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger$7 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
-const useGSAP$7 = useGSAP$9 || void 0 || GSAPReact;
-gsapWithCSS.registerPlugin(useGSAP$7, ScrollTrigger$7);
+gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$f({}) {
   return [{
     title: "Our Custom Web & Graphic Design Portfolio | Aarvitek Systems"
@@ -7710,7 +7697,7 @@ function meta$f({}) {
 }
 const portfolio = UNSAFE_withComponentProps(function Portfolio() {
   const container = useRef(null);
-  useGSAP$7(() => {
+  useGSAP(() => {
     gsapWithCSS.from(".hero-text-animate > *", {
       y: 40,
       opacity: 0,
@@ -7933,9 +7920,7 @@ const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: portfolio,
   meta: meta$f
 }, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger$6 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
-const useGSAP$6 = useGSAP$9 || void 0 || GSAPReact;
-gsapWithCSS.registerPlugin(useGSAP$6, ScrollTrigger$6);
+gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$e({}) {
   return [{
     title: "Custom Web Development Services & Scalable SaaS Apps | Aarvitek Systems"
@@ -7949,7 +7934,7 @@ function meta$e({}) {
 }
 const webDevelopment = UNSAFE_withComponentProps(function WebDevelopment() {
   const container = useRef(null);
-  useGSAP$6(() => {
+  useGSAP(() => {
     gsapWithCSS.from(".hero-text-animate > *", {
       y: 40,
       opacity: 0,
@@ -8452,9 +8437,7 @@ const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: webDevelopment,
   meta: meta$e
 }, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger$5 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
-const useGSAP$5 = useGSAP$9 || void 0 || GSAPReact;
-gsapWithCSS.registerPlugin(useGSAP$5, ScrollTrigger$5);
+gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$d({}) {
   return [{
     title: "Premium UI/UX Website Design & Branding | Aarvitek Systems"
@@ -8468,7 +8451,7 @@ function meta$d({}) {
 }
 const websiteDesign = UNSAFE_withComponentProps(function WebsiteDesign() {
   const container = useRef(null);
-  useGSAP$5(() => {
+  useGSAP(() => {
     gsapWithCSS.from(".hero-text-animate > *", {
       y: 40,
       opacity: 0,
@@ -8934,9 +8917,7 @@ const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: websiteDesign,
   meta: meta$d
 }, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger$4 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
-const useGSAP$4 = useGSAP$9 || void 0 || GSAPReact;
-gsapWithCSS.registerPlugin(useGSAP$4, ScrollTrigger$4);
+gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$c({}) {
   return [{
     title: "Premium Graphic Design Services & Branding | Aarvitek Systems"
@@ -8950,7 +8931,7 @@ function meta$c({}) {
 }
 const graphicDesign = UNSAFE_withComponentProps(function GraphicDesign() {
   const container = useRef(null);
-  useGSAP$4(() => {
+  useGSAP(() => {
     gsapWithCSS.from(".hero-text-animate > *", {
       y: 40,
       opacity: 0,
@@ -9435,9 +9416,7 @@ const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   default: graphicDesign,
   meta: meta$c
 }, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger$3 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
-const useGSAP$3 = useGSAP$9 || void 0 || GSAPReact;
-gsapWithCSS.registerPlugin(useGSAP$3, ScrollTrigger$3);
+gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$b({}) {
   return [{
     title: "Scalable E-Commerce Web Development & Shopify Expert | Aarvitek Systems"
@@ -9451,7 +9430,7 @@ function meta$b({}) {
 }
 const ecommerce = UNSAFE_withComponentProps(function Ecommerce() {
   const container = useRef(null);
-  useGSAP$3(() => {
+  useGSAP(() => {
     gsapWithCSS.from(".hero-text-animate > *", {
       y: 40,
       opacity: 0,
@@ -9925,9 +9904,7 @@ const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   default: ecommerce,
   meta: meta$b
 }, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger$2 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
-const useGSAP$2 = useGSAP$9 || void 0 || GSAPReact;
-gsapWithCSS.registerPlugin(useGSAP$2, ScrollTrigger$2);
+gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$a({}) {
   return [{
     title: "Privacy Policy & Data Protection | Aarvitek Systems"
@@ -9941,7 +9918,7 @@ function meta$a({}) {
 }
 const privacyPolicy = UNSAFE_withComponentProps(function PrivacyPolicy() {
   const container = useRef(null);
-  useGSAP$2(() => {
+  useGSAP(() => {
     gsapWithCSS.from(".fade-in-animate > *", {
       y: 30,
       opacity: 0,
@@ -10182,9 +10159,7 @@ const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   default: privacyPolicy,
   meta: meta$a
 }, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger$1 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
-const useGSAP$1 = useGSAP$9 || void 0 || GSAPReact;
-gsapWithCSS.registerPlugin(useGSAP$1, ScrollTrigger$1);
+gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$9({}) {
   return [{
     title: "Terms of Service & Agreements | Aarvitek Systems"
@@ -10198,7 +10173,7 @@ function meta$9({}) {
 }
 const terms = UNSAFE_withComponentProps(function Terms() {
   const container = useRef(null);
-  useGSAP$1(() => {
+  useGSAP(() => {
     gsapWithCSS.from(".fade-in-animate > *", {
       y: 30,
       opacity: 0,
@@ -10455,8 +10430,6 @@ const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   default: terms,
   meta: meta$9
 }, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
-const useGSAP = useGSAP$9 || void 0 || GSAPReact;
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$8({}) {
   return [{
@@ -11540,7 +11513,7 @@ const route21 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   default: availability,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-BT4-KF5v.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-D0wva8Yh.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js"], "css": ["/assets/root-BYrHS7CN.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-NNpNAzqb.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-eqFalpT3.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-BBWyNN16.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-UcqBn6e4.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-DhzFPKqg.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/portfolio": { "id": "routes/portfolio", "parentId": "root", "path": "portfolio", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/portfolio-i3xT8-g1.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-UcgRahXG.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-DgD_1I4d.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-D0xpAlwX.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-ClbZJVF_.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/privacy-policy": { "id": "routes/privacy-policy", "parentId": "root", "path": "privacy-policy", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/privacy-policy-DXA4EeV3.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/terms": { "id": "routes/terms", "parentId": "root", "path": "terms", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/terms-C6JBb3q9.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/video-editing": { "id": "routes/video-editing", "parentId": "root", "path": "video-editing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/video-editing-BlmAqClu.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-Be9zI-44.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CAWhtf4O.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-BL6zxfkT.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-BD5CvlyI.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/enhanced-productivity": { "id": "routes/enhanced-productivity", "parentId": "root", "path": "enhanced-productivity", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/enhanced-productivity-FuZSzuyS.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/scalability": { "id": "routes/scalability", "parentId": "root", "path": "scalability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/scalability-CAyktpaY.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/cost-efficient": { "id": "routes/cost-efficient", "parentId": "root", "path": "cost-efficient", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/cost-efficient-DWkkS3B1.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/availability": { "id": "routes/availability", "parentId": "root", "path": "availability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/availability-CF2HqRPm.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-f91cc304.js", "version": "f91cc304", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-BT4-KF5v.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-CeukzCS2.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js"], "css": ["/assets/root-BYrHS7CN.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-4Kfgt5Jk.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-eqFalpT3.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-BBWyNN16.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-UcqBn6e4.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-DhzFPKqg.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/portfolio": { "id": "routes/portfolio", "parentId": "root", "path": "portfolio", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/portfolio-mQ6xGfCv.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-B293kKtM.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-DsiTskWA.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-B1T_Tpwo.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-DGk55x14.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/privacy-policy": { "id": "routes/privacy-policy", "parentId": "root", "path": "privacy-policy", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/privacy-policy-BNsl1vXD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/terms": { "id": "routes/terms", "parentId": "root", "path": "terms", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/terms-DXGHJjbY.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/video-editing": { "id": "routes/video-editing", "parentId": "root", "path": "video-editing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/video-editing-DGCV3Qda.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-Be9zI-44.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CAWhtf4O.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-BL6zxfkT.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-BD5CvlyI.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/enhanced-productivity": { "id": "routes/enhanced-productivity", "parentId": "root", "path": "enhanced-productivity", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/enhanced-productivity-FuZSzuyS.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/scalability": { "id": "routes/scalability", "parentId": "root", "path": "scalability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/scalability-CAyktpaY.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/cost-efficient": { "id": "routes/cost-efficient", "parentId": "root", "path": "cost-efficient", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/cost-efficient-DWkkS3B1.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/availability": { "id": "routes/availability", "parentId": "root", "path": "availability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/availability-CF2HqRPm.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-d1d3baec.js", "version": "d1d3baec", "sri": void 0 };
 const assetsBuildDirectory = "build\\client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "unstable_subResourceIntegrity": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };

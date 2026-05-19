@@ -2,11 +2,8 @@ import type { Route } from "./+types/terms";
 import { Link } from "react-router";
 import { useRef } from "react";
 import gsap from "gsap";
-import * as ScrollTriggerModule from "gsap/ScrollTrigger";
-import * as GSAPReact from "@gsap/react";
-
-const ScrollTrigger = (ScrollTriggerModule as any).ScrollTrigger || (ScrollTriggerModule as any).default || ScrollTriggerModule;
-const useGSAP = (GSAPReact as any).useGSAP || (GSAPReact as any).default?.useGSAP || GSAPReact;
+import ScrollTrigger from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
