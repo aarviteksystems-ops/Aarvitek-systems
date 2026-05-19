@@ -25,6 +25,7 @@ export const links: Route.LinksFunction = () => [
 
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
+import { Dock } from "./components/Dock";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -40,6 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <main className="min-h-screen pt-16">
           {children}
         </main>
+        <Dock />
         <Footer />
         <ScrollRestoration />
         <Scripts />

@@ -18,7 +18,11 @@
       "routes/web-development": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/website-design": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/graphic-design": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/ecommerce": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+      "routes/ecommerce": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/smart-analyzing": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/agile-development": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/seamless-integration": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/continuous-optimization": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
       "root": {
@@ -107,6 +111,42 @@
         "config": {
           "runtime": "nodejs"
         }
+      },
+      "routes/smart-analyzing": {
+        "id": "routes/smart-analyzing",
+        "parentId": "root",
+        "file": "app/routes/smart-analyzing.tsx",
+        "path": "smart-analyzing",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/agile-development": {
+        "id": "routes/agile-development",
+        "parentId": "root",
+        "file": "app/routes/agile-development.tsx",
+        "path": "agile-development",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/seamless-integration": {
+        "id": "routes/seamless-integration",
+        "parentId": "root",
+        "file": "app/routes/seamless-integration.tsx",
+        "path": "seamless-integration",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/continuous-optimization": {
+        "id": "routes/continuous-optimization",
+        "parentId": "root",
+        "file": "app/routes/continuous-optimization.tsx",
+        "path": "continuous-optimization",
+        "config": {
+          "runtime": "nodejs"
+        }
       }
     }
   },
@@ -180,6 +220,30 @@
         "parentId": "root",
         "file": "routes/ecommerce.tsx",
         "path": "ecommerce"
+      },
+      "routes/smart-analyzing": {
+        "id": "routes/smart-analyzing",
+        "parentId": "root",
+        "file": "routes/smart-analyzing.tsx",
+        "path": "smart-analyzing"
+      },
+      "routes/agile-development": {
+        "id": "routes/agile-development",
+        "parentId": "root",
+        "file": "routes/agile-development.tsx",
+        "path": "agile-development"
+      },
+      "routes/seamless-integration": {
+        "id": "routes/seamless-integration",
+        "parentId": "root",
+        "file": "routes/seamless-integration.tsx",
+        "path": "seamless-integration"
+      },
+      "routes/continuous-optimization": {
+        "id": "routes/continuous-optimization",
+        "parentId": "root",
+        "file": "routes/continuous-optimization.tsx",
+        "path": "continuous-optimization"
       }
     },
     "routeDiscovery": {
@@ -230,6 +294,22 @@
           {
             "file": "routes/ecommerce.tsx",
             "path": "ecommerce"
+          },
+          {
+            "file": "routes/smart-analyzing.tsx",
+            "path": "smart-analyzing"
+          },
+          {
+            "file": "routes/agile-development.tsx",
+            "path": "agile-development"
+          },
+          {
+            "file": "routes/seamless-integration.tsx",
+            "path": "seamless-integration"
+          },
+          {
+            "file": "routes/continuous-optimization.tsx",
+            "path": "continuous-optimization"
           }
         ]
       }

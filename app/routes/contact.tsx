@@ -2,7 +2,7 @@ import type { Route } from "./+types/contact";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Contact Us - Aarvitek Systems" },
+        { title: "Book a call - Aarvitek Systems" },
         { name: "description", content: "Get in touch with us for your web development and design needs." },
     ];
 }
@@ -71,7 +71,7 @@ export default function Contact() {
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-gray-900 dark:text-white">Our Office</h3>
-                                        <p className="text-gray-600 dark:text-gray-400">123 Tech Park, Innovation Street<br />Digital City, DC 10001</p>
+                                        <p className="text-gray-600 dark:text-gray-400">New Delhi, India</p>
                                     </div>
                                 </div>
 
@@ -81,8 +81,8 @@ export default function Contact() {
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-gray-900 dark:text-white">Email Us</h3>
-                                        <p className="text-gray-600 dark:text-gray-400">info@aarvitek.com</p>
-                                        <p className="text-gray-600 dark:text-gray-400">support@aarvitek.com</p>
+                                        <p className="text-gray-600 dark:text-gray-400">aarvitexsystems@gmail.com</p>
+                                        {/* <p className="text-gray-600 dark:text-gray-400">support@aarvitek.com</p> */}
                                     </div>
                                 </div>
 
@@ -92,8 +92,8 @@ export default function Contact() {
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-gray-900 dark:text-white">Call Us</h3>
-                                        <p className="text-gray-600 dark:text-gray-400">+1 (234) 567-8900</p>
-                                        <p className="text-gray-500 text-sm">Mon-Fri: 9am - 6pm EST</p>
+                                        <p className="text-gray-600 dark:text-gray-400">+91 787 090 1336</p>
+                                        <p className="text-gray-500 text-sm">Mon-Fri: 9am - 6pm IST</p>
                                     </div>
                                 </div>
                             </div>

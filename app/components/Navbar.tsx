@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -7,8 +7,17 @@ gsap.registerPlugin(useGSAP);
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const navRef = useRef<HTMLElement>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 150);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     useGSAP(() => {
         const tl = gsap.timeline();
@@ -46,7 +55,7 @@ export function Navbar() {
     }, { dependencies: [isOpen], scope: mobileMenuRef });
 
     return (
-        <nav ref={navRef} className="fixed w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/10">
+        <nav ref={navRef} className={`fixed w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/10 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isScrolled ? '-top-32 opacity-0 pointer-events-none' : 'top-0 opacity-100'}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-20 items-center">
                     <div className="flex-shrink-0 flex items-center nav-item">
@@ -64,20 +73,24 @@ export function Navbar() {
                         </NavLink>
 
                         <div className="relative group nav-item">
-                            <button className="text-sm font-medium text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer">
+                            <button className="text-sm font-medium text-slate-400 group-hover:text-white flex items-center gap-1 cursor-pointer h-10">
                                 Services
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div className="absolute left-0 mt-4 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl overflow-hidden">
-                                <div className="py-2">
+                            <div className="absolute left-0 top-full pt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                                <div className="bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl overflow-hidden py-2">
                                     <Link to="/web-development" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Web Development</Link>
                                     <Link to="/website-design" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Website Design</Link>
                                     <Link to="/graphic-design" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Graphic Design</Link>
                                     <Link to="/ecommerce" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">E-Commerce</Link>
+                                    <Link to="/video-editing" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Video Editing</Link>
                                 </div>
                             </div>
                         </div>
                         
+                        <NavLink to="/portfolio" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                            Portfolio
+                        </NavLink>
                         <NavLink to="/clients" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
                             Clients
                         </NavLink>
@@ -116,7 +129,9 @@ export function Navbar() {
                                 <Link to="/website-design" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5">Website Design</Link>
                                 <Link to="/graphic-design" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5">Graphic Design</Link>
                                 <Link to="/ecommerce" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5">E-Commerce</Link>
+                                <Link to="/video-editing" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5">Video Editing</Link>
                             </div>
+                            <Link to="/portfolio" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5">Portfolio</Link>
                             <Link to="/clients" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5">Clients</Link>
                             <div className="mobile-nav-item mt-6">
                                 <Link to="/contact" onClick={() => setIsOpen(false)} className="block w-full text-center px-4 py-3 rounded-xl bg-purple-600 text-white font-medium hover:bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)]">Book a Call</Link>
