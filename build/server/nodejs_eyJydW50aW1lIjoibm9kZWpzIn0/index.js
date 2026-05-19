@@ -1,7 +1,7 @@
-import { jsx, jsxs } from "react/jsx-runtime";
+import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { PassThrough } from "node:stream";
 import { createReadableStreamFromReadable } from "@react-router/node";
-import { ServerRouter, Link, NavLink, UNSAFE_withComponentProps, Outlet, UNSAFE_withErrorBoundaryProps, isRouteErrorResponse, Meta, Links, ScrollRestoration, Scripts } from "react-router";
+import { ServerRouter, Link, NavLink, useLocation, useNavigate, UNSAFE_withComponentProps, Outlet, UNSAFE_withErrorBoundaryProps, isRouteErrorResponse, Meta, Links, ScrollRestoration, Scripts } from "react-router";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { useRef, useLayoutEffect, useEffect, useState } from "react";
@@ -4078,7 +4078,7 @@ gsap$2.registerPlugin(CSSPlugin);
 var gsapWithCSS = gsap$2.registerPlugin(CSSPlugin) || gsap$2;
 gsapWithCSS.core.Tween;
 let useIsomorphicLayoutEffect = typeof document !== "undefined" ? useLayoutEffect : useEffect, isConfig = (value) => value && !Array.isArray(value) && typeof value === "object", emptyArray = [], defaultConfig = {}, _gsap = gsapWithCSS;
-const useGSAP$1 = (callback, dependencies = emptyArray) => {
+const useGSAP$9 = (callback, dependencies = emptyArray) => {
   let config3 = defaultConfig;
   if (isConfig(callback)) {
     config3 = callback;
@@ -4103,20 +4103,28 @@ const useGSAP$1 = (callback, dependencies = emptyArray) => {
   }, dependencies);
   return { context: context3.current, contextSafe: contextSafe.current };
 };
-useGSAP$1.register = (core) => {
+useGSAP$9.register = (core) => {
   _gsap = core;
 };
-useGSAP$1.headless = true;
+useGSAP$9.headless = true;
 const GSAPReact = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  useGSAP: useGSAP$1
+  useGSAP: useGSAP$9
 }, Symbol.toStringTag, { value: "Module" }));
-gsapWithCSS.registerPlugin(useGSAP$1);
+gsapWithCSS.registerPlugin(useGSAP$9);
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const navRef = useRef(null);
   const mobileMenuRef = useRef(null);
-  useGSAP$1(() => {
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 150);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  useGSAP$9(() => {
     const tl = gsapWithCSS.timeline();
     tl.from(navRef.current, {
       y: -100,
@@ -4131,7 +4139,7 @@ function Navbar() {
       ease: "power2.out"
     }, "-=0.4");
   }, { scope: navRef });
-  useGSAP$1(() => {
+  useGSAP$9(() => {
     if (isOpen && mobileMenuRef.current) {
       gsapWithCSS.from(mobileMenuRef.current, {
         height: 0,
@@ -4149,24 +4157,26 @@ function Navbar() {
       });
     }
   }, { dependencies: [isOpen], scope: mobileMenuRef });
-  return /* @__PURE__ */ jsxs("nav", { ref: navRef, className: "fixed w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/10", children: [
+  return /* @__PURE__ */ jsxs("nav", { ref: navRef, className: `fixed w-full z-50 bg-black/70 backdrop-blur-xl border-b border-white/10 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isScrolled ? "-top-32 opacity-0 pointer-events-none" : "top-0 opacity-100"}`, children: [
     /* @__PURE__ */ jsx("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8", children: /* @__PURE__ */ jsxs("div", { className: "flex justify-between h-20 items-center", children: [
       /* @__PURE__ */ jsx("div", { className: "flex-shrink-0 flex items-center nav-item", children: /* @__PURE__ */ jsx(Link, { to: "/", className: "text-2xl font-black tracking-tighter text-white", children: "AARVITEK" }) }),
       /* @__PURE__ */ jsxs("div", { className: "hidden md:flex space-x-8 items-center bg-white/5 px-6 py-2 rounded-full border border-white/10", children: [
         /* @__PURE__ */ jsx(NavLink, { to: "/", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Home" }),
         /* @__PURE__ */ jsx(NavLink, { to: "/about", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "About Us" }),
         /* @__PURE__ */ jsxs("div", { className: "relative group nav-item", children: [
-          /* @__PURE__ */ jsxs("button", { className: "text-sm font-medium text-slate-400 hover:text-white flex items-center gap-1 cursor-pointer", children: [
+          /* @__PURE__ */ jsxs("button", { className: "text-sm font-medium text-slate-400 group-hover:text-white flex items-center gap-1 cursor-pointer h-10", children: [
             "Services",
             /* @__PURE__ */ jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M19 9l-7 7-7-7" }) })
           ] }),
-          /* @__PURE__ */ jsx("div", { className: "absolute left-0 mt-4 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl overflow-hidden", children: /* @__PURE__ */ jsxs("div", { className: "py-2", children: [
+          /* @__PURE__ */ jsx("div", { className: "absolute left-0 top-full pt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50", children: /* @__PURE__ */ jsxs("div", { className: "bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl overflow-hidden py-2", children: [
             /* @__PURE__ */ jsx(Link, { to: "/web-development", className: "block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors", children: "Web Development" }),
             /* @__PURE__ */ jsx(Link, { to: "/website-design", className: "block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors", children: "Website Design" }),
             /* @__PURE__ */ jsx(Link, { to: "/graphic-design", className: "block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors", children: "Graphic Design" }),
-            /* @__PURE__ */ jsx(Link, { to: "/ecommerce", className: "block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors", children: "E-Commerce" })
+            /* @__PURE__ */ jsx(Link, { to: "/ecommerce", className: "block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors", children: "E-Commerce" }),
+            /* @__PURE__ */ jsx(Link, { to: "/video-editing", className: "block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors", children: "Video Editing" })
           ] }) })
         ] }),
+        /* @__PURE__ */ jsx(NavLink, { to: "/portfolio", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Portfolio" }),
         /* @__PURE__ */ jsx(NavLink, { to: "/clients", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Clients" })
       ] }),
       /* @__PURE__ */ jsx("div", { className: "hidden md:flex items-center nav-item", children: /* @__PURE__ */ jsx(Link, { to: "/contact", className: "px-6 py-2.5 rounded-full bg-purple-600 text-white text-sm font-medium hover:bg-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]", children: "Book a Call" }) }),
@@ -4180,8 +4190,10 @@ function Navbar() {
         /* @__PURE__ */ jsx(Link, { to: "/web-development", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Web Development" }),
         /* @__PURE__ */ jsx(Link, { to: "/website-design", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Website Design" }),
         /* @__PURE__ */ jsx(Link, { to: "/graphic-design", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Graphic Design" }),
-        /* @__PURE__ */ jsx(Link, { to: "/ecommerce", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "E-Commerce" })
+        /* @__PURE__ */ jsx(Link, { to: "/ecommerce", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "E-Commerce" }),
+        /* @__PURE__ */ jsx(Link, { to: "/video-editing", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Video Editing" })
       ] }),
+      /* @__PURE__ */ jsx(Link, { to: "/portfolio", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Portfolio" }),
       /* @__PURE__ */ jsx(Link, { to: "/clients", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Clients" }),
       /* @__PURE__ */ jsx("div", { className: "mobile-nav-item mt-6", children: /* @__PURE__ */ jsx(Link, { to: "/contact", onClick: () => setIsOpen(false), className: "block w-full text-center px-4 py-3 rounded-xl bg-purple-600 text-white font-medium hover:bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)]", children: "Book a Call" }) })
     ] }) }) })
@@ -4219,16 +4231,17 @@ function Footer() {
       ] }),
       /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsx("h3", { className: "font-bold text-white mb-6", children: "Services" }),
-        /* @__PURE__ */ jsxs("ul", { className: "space-y-4", children: [
+        /* @__PURE__ */ jsxs("ul", { className: "space-y-2", children: [
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/web-development", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Web Development" }) }),
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/website-design", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Website Design" }) }),
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/graphic-design", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Graphic Design" }) }),
-          /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/ecommerce", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "E-Commerce Solutions" }) })
+          /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/ecommerce", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "E-Commerce Solutions" }) }),
+          /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/video-editing", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Video Editing" }) })
         ] })
       ] }),
       /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsx("h3", { className: "font-bold text-white mb-6", children: "Company" }),
-        /* @__PURE__ */ jsxs("ul", { className: "space-y-4", children: [
+        /* @__PURE__ */ jsxs("ul", { className: "space-y-2", children: [
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/about", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "About Us" }) }),
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/portfolio", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Portfolio" }) }),
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/privacy-policy", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Privacy Policy" }) }),
@@ -4237,7 +4250,7 @@ function Footer() {
       ] }),
       /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsx("h3", { className: "font-bold text-white mb-6", children: "Contact" }),
-        /* @__PURE__ */ jsxs("ul", { className: "space-y-4", children: [
+        /* @__PURE__ */ jsxs("ul", { className: "space-y-2", children: [
           /* @__PURE__ */ jsxs("li", { className: "flex items-start gap-3 text-sm text-slate-400", children: [
             /* @__PURE__ */ jsxs("svg", { className: "w-5 h-5 text-purple-500 shrink-0", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: [
               /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" }),
@@ -4263,6 +4276,68 @@ function Footer() {
         " Aarvitek Systems. All rights reserved."
       ] }),
       /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-600", children: "Crafted with precision in New Delhi" })
+    ] })
+  ] }) });
+}
+function Dock() {
+  const [showDock, setShowDock] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const handleScroll = () => {
+      const isNearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 150;
+      if (window.scrollY > 300 && !isNearBottom) {
+        setShowDock(true);
+      } else {
+        setShowDock(false);
+      }
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [location.pathname]);
+  const handleNav = (id) => {
+    if (location.pathname === "/") {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate(`/#${id}`);
+    }
+  };
+  return /* @__PURE__ */ jsx("div", { className: `fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${showDock ? "translate-y-0 opacity-100 scale-100" : "translate-y-24 opacity-0 scale-90 pointer-events-none"}`, children: /* @__PURE__ */ jsxs("div", { className: "flex items-end gap-2 px-4 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.4)] h-[72px]", children: [
+    /* @__PURE__ */ jsxs(Link, { to: "/", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-purple-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" }) }),
+      /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Home" })
+    ] }),
+    /* @__PURE__ */ jsxs(Link, { to: "/about", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-pink-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" }) }),
+      /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "About Us" })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "group relative mx-1 flex flex-col justify-end", children: [
+      /* @__PURE__ */ jsxs("div", { className: "absolute bottom-full left-1/2 -translate-x-1/2 pb-4 flex flex-col gap-2 items-center opacity-0 translate-y-4 scale-95 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 z-50 origin-bottom", children: [
+        /* @__PURE__ */ jsx(Link, { to: "/video-editing", className: "w-40 px-4 py-2.5 bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-center transition-all", children: "Video Editing" }),
+        /* @__PURE__ */ jsx(Link, { to: "/ecommerce", className: "w-40 px-4 py-2.5 bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-center transition-all", children: "eCommerce" }),
+        /* @__PURE__ */ jsx(Link, { to: "/graphic-design", className: "w-40 px-4 py-2.5 bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-center transition-all", children: "Graphic Design" }),
+        /* @__PURE__ */ jsx(Link, { to: "/website-design", className: "w-40 px-4 py-2.5 bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-center transition-all", children: "Website Design" }),
+        /* @__PURE__ */ jsx(Link, { to: "/web-development", className: "w-40 px-4 py-2.5 bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-center transition-all", children: "Web Dev" })
+      ] }),
+      /* @__PURE__ */ jsx("button", { onClick: () => handleNav("services"), className: "relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 group-hover:bg-white/10 transition-all duration-300 group-hover:w-16 group-hover:h-16 group-hover:-translate-y-2 border border-white/5 group-hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-blue-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" }) }) })
+    ] }),
+    /* @__PURE__ */ jsxs(Link, { to: "/portfolio", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-amber-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" }) }),
+      /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Portfolio" })
+    ] }),
+    /* @__PURE__ */ jsxs(Link, { to: "/clients", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-yellow-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" }) }),
+      /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Clients" })
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "w-px h-8 bg-white/20 mx-2 self-center" }),
+    /* @__PURE__ */ jsxs(Link, { to: "/contact", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-indigo-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" }) }),
+      /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Book a call" })
+    ] }),
+    /* @__PURE__ */ jsxs("button", { onClick: () => window.scrollTo({ top: 0, behavior: "smooth" }), className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-emerald-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M5 15l7-7 7 7" }) }),
+      /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Top" })
     ] })
   ] }) });
 }
@@ -4294,7 +4369,7 @@ function Layout({
       children: [/* @__PURE__ */ jsx(Navbar, {}), /* @__PURE__ */ jsx("main", {
         className: "min-h-screen pt-16",
         children
-      }), /* @__PURE__ */ jsx(Footer, {}), /* @__PURE__ */ jsx(ScrollRestoration, {}), /* @__PURE__ */ jsx(Scripts, {})]
+      }), /* @__PURE__ */ jsx(Dock, {}), /* @__PURE__ */ jsx(Footer, {}), /* @__PURE__ */ jsx(ScrollRestoration, {}), /* @__PURE__ */ jsx(Scripts, {})]
     })]
   });
 }
@@ -4340,12 +4415,12 @@ function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   return Constructor;
 }
-var gsap$1, _coreInitted$1, _win$1, _doc$1, _docEl$1, _body$1, _isTouch, _pointerType, ScrollTrigger$2, _root$1, _normalizer$1, _eventTypes, _context$1, _getGSAP$1 = function _getGSAP() {
+var gsap$1, _coreInitted$1, _win$1, _doc$1, _docEl$1, _body$1, _isTouch, _pointerType, ScrollTrigger$a, _root$1, _normalizer$1, _eventTypes, _context$1, _getGSAP$1 = function _getGSAP() {
   return gsap$1 || typeof window !== "undefined" && (gsap$1 = window.gsap) && gsap$1.registerPlugin && gsap$1;
 }, _startup$1 = 1, _observers = [], _scrollers = [], _proxies = [], _getTime$1 = Date.now, _bridge = function _bridge2(name, value) {
   return value;
 }, _integrate = function _integrate2() {
-  var core = ScrollTrigger$2.core, data = core.bridge || {}, scrollers = core._scrollers, proxies = core._proxies;
+  var core = ScrollTrigger$a.core, data = core.bridge || {}, scrollers = core._scrollers, proxies = core._proxies;
   scrollers.push.apply(scrollers, _scrollers);
   proxies.push.apply(proxies, _proxies);
   _scrollers = scrollers;
@@ -4463,8 +4538,8 @@ var gsap$1, _coreInitted$1, _win$1, _doc$1, _docEl$1, _body$1, _isTouch, _pointe
   var max = Math.max.apply(Math, a), min = Math.min.apply(Math, a);
   return Math.abs(max) >= Math.abs(min) ? max : min;
 }, _setScrollTrigger = function _setScrollTrigger2() {
-  ScrollTrigger$2 = gsap$1.core.globals().ScrollTrigger;
-  ScrollTrigger$2 && ScrollTrigger$2.core && _integrate();
+  ScrollTrigger$a = gsap$1.core.globals().ScrollTrigger;
+  ScrollTrigger$a && ScrollTrigger$a.core && _integrate();
 }, _initCore2 = function _initCore3(core) {
   gsap$1 = core || _getGSAP$1();
   if (!_coreInitted$1 && gsap$1 && typeof document !== "undefined" && document.body) {
@@ -4496,7 +4571,7 @@ var Observer = /* @__PURE__ */ (function() {
   var _proto = Observer2.prototype;
   _proto.init = function init4(vars) {
     _coreInitted$1 || _initCore2(gsap$1) || console.warn("Please gsap.registerPlugin(Observer)");
-    ScrollTrigger$2 || _setScrollTrigger();
+    ScrollTrigger$a || _setScrollTrigger();
     var tolerance = vars.tolerance, dragMinimum = vars.dragMinimum, type = vars.type, target = vars.target, lineHeight = vars.lineHeight, debounce = vars.debounce, preventDefault = vars.preventDefault, onStop = vars.onStop, onStopDelay = vars.onStopDelay, ignore = vars.ignore, wheelSpeed = vars.wheelSpeed, event = vars.event, onDragStart = vars.onDragStart, onDragEnd = vars.onDragEnd, onDrag = vars.onDrag, onPress = vars.onPress, onRelease = vars.onRelease, onRight = vars.onRight, onLeft = vars.onLeft, onUp = vars.onUp, onDown = vars.onDown, onChangeX = vars.onChangeX, onChangeY = vars.onChangeY, onChange = vars.onChange, onToggleX = vars.onToggleX, onToggleY = vars.onToggleY, onHover = vars.onHover, onHoverEnd = vars.onHoverEnd, onMove = vars.onMove, ignoreCheck = vars.ignoreCheck, isNormalizer = vars.isNormalizer, onGestureStart = vars.onGestureStart, onGestureEnd = vars.onGestureEnd, onWheel = vars.onWheel, onEnable = vars.onEnable, onDisable = vars.onDisable, onClick = vars.onClick, scrollSpeed = vars.scrollSpeed, capture = vars.capture, allowClicks = vars.allowClicks, lockAxis = vars.lockAxis, onLockAxis = vars.onLockAxis;
     this.target = target = _getTarget(target) || _docEl$1;
     this.vars = vars;
@@ -5001,7 +5076,7 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
   _scrollers.cache++;
   (force === true || !_refreshing && !_ignoreResize && !_doc.fullscreenElement && !_doc.webkitFullscreenElement && (!_ignoreMobileResize || _baseScreenWidth !== _win.innerWidth || Math.abs(_win.innerHeight - _baseScreenHeight) > _win.innerHeight * 0.25)) && _resizeDelay.restart(true);
 }, _listeners = {}, _emptyArray = [], _softRefresh = function _softRefresh2() {
-  return _removeListener2(ScrollTrigger$1, "scrollEnd", _softRefresh2) || _refreshAll(true);
+  return _removeListener2(ScrollTrigger$9, "scrollEnd", _softRefresh2) || _refreshAll(true);
 }, _dispatch2 = function _dispatch3(type) {
   return _listeners[type] && _listeners[type].map(function(f) {
     return f();
@@ -5059,14 +5134,14 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
   _body = _doc.body;
   _root = [_win, _doc, _docEl, _body];
   if (_lastScrollTime && !force && !_isReverted) {
-    _addListener2(ScrollTrigger$1, "scrollEnd", _softRefresh);
+    _addListener2(ScrollTrigger$9, "scrollEnd", _softRefresh);
     return;
   }
   _refresh100vh();
-  _refreshingAll = ScrollTrigger$1.isRefreshing = true;
+  _refreshingAll = ScrollTrigger$9.isRefreshing = true;
   _isReverted || _recordScrollPositions();
   var refreshInits = _dispatch2("refreshInit");
-  _sort && ScrollTrigger$1.sort();
+  _sort && ScrollTrigger$9.sort();
   skipRevert || _revertAll();
   _scrollers.forEach(function(obj) {
     if (_isFunction2(obj)) {
@@ -5113,11 +5188,11 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
   _triggers.forEach(function(t) {
     return _isFunction2(t.vars.onRefresh) && t.vars.onRefresh(t);
   });
-  _refreshingAll = ScrollTrigger$1.isRefreshing = false;
+  _refreshingAll = ScrollTrigger$9.isRefreshing = false;
   _dispatch2("refresh");
 }, _lastScroll = 0, _direction = 1, _primary, _updateAll = function _updateAll2(force) {
   if (force === 2 || !_refreshingAll && !_isReverted) {
-    ScrollTrigger$1.isUpdating = true;
+    ScrollTrigger$9.isUpdating = true;
     _primary && _primary.update(0);
     var l = _triggers.length, time = _getTime(), recordVelocity = time - _time1 >= 50, scroll = l && _triggers[0].scroll();
     _direction = _lastScroll > scroll ? -1 : 1;
@@ -5141,7 +5216,7 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
         _triggers[_i] && _triggers[_i].update(0, recordVelocity);
       }
     }
-    ScrollTrigger$1.isUpdating = false;
+    ScrollTrigger$9.isUpdating = false;
   }
   _rafID = 0;
 }, _propNamesToCopy = [_left, _top, _bottom, _right, _margin + _Bottom, _margin + _Right, _margin + _Top, _margin + _Left, "display", "flexShrink", "float", "zIndex", "gridColumnStart", "gridColumnEnd", "gridRowStart", "gridRowEnd", "gridArea", "justifySelf", "alignSelf", "placeSelf", "order"], _stateProps = _propNamesToCopy.concat([_width, _height, "boxSizing", "max" + _Width, "max" + _Height, "position", _margin, _padding, _padding + _Top, _padding + _Right, _padding + _Bottom, _padding + _Left]), _swapPinOut = function _swapPinOut2(pin, spacer, state) {
@@ -5333,10 +5408,10 @@ var gsap, _coreInitted, _win, _doc, _docEl, _body, _root, _resizeDelay, _toArray
     return getTween.tween && getTween.tween.kill() && (getTween.tween = 0);
   };
   _addListener2(scroller, "wheel", getScroll.wheelHandler);
-  ScrollTrigger$1.isTouch && _addListener2(scroller, "touchmove", getScroll.wheelHandler);
+  ScrollTrigger$9.isTouch && _addListener2(scroller, "touchmove", getScroll.wheelHandler);
   return getTween;
 };
-var ScrollTrigger$1 = /* @__PURE__ */ (function() {
+var ScrollTrigger$9 = /* @__PURE__ */ (function() {
   function ScrollTrigger2(vars, animation) {
     _coreInitted || ScrollTrigger2.register(gsap) || console.warn("Please gsap.registerPlugin(ScrollTrigger)");
     _context(this);
@@ -6197,8 +6272,8 @@ var ScrollTrigger$1 = /* @__PURE__ */ (function() {
   };
   return ScrollTrigger2;
 })();
-ScrollTrigger$1.version = "3.14.2";
-ScrollTrigger$1.saveStyles = function(targets) {
+ScrollTrigger$9.version = "3.14.2";
+ScrollTrigger$9.saveStyles = function(targets) {
   return targets ? _toArray(targets).forEach(function(target) {
     if (target && target.style) {
       var i = _savedStyles.indexOf(target);
@@ -6207,46 +6282,46 @@ ScrollTrigger$1.saveStyles = function(targets) {
     }
   }) : _savedStyles;
 };
-ScrollTrigger$1.revert = function(soft, media) {
+ScrollTrigger$9.revert = function(soft, media) {
   return _revertAll(!soft, media);
 };
-ScrollTrigger$1.create = function(vars, animation) {
-  return new ScrollTrigger$1(vars, animation);
+ScrollTrigger$9.create = function(vars, animation) {
+  return new ScrollTrigger$9(vars, animation);
 };
-ScrollTrigger$1.refresh = function(safe) {
-  return safe ? _onResize(true) : (_coreInitted || ScrollTrigger$1.register()) && _refreshAll(true);
+ScrollTrigger$9.refresh = function(safe) {
+  return safe ? _onResize(true) : (_coreInitted || ScrollTrigger$9.register()) && _refreshAll(true);
 };
-ScrollTrigger$1.update = function(force) {
+ScrollTrigger$9.update = function(force) {
   return ++_scrollers.cache && _updateAll(force === true ? 2 : 0);
 };
-ScrollTrigger$1.clearScrollMemory = _clearScrollMemory;
-ScrollTrigger$1.maxScroll = function(element, horizontal) {
+ScrollTrigger$9.clearScrollMemory = _clearScrollMemory;
+ScrollTrigger$9.maxScroll = function(element, horizontal) {
   return _maxScroll(element, horizontal ? _horizontal : _vertical);
 };
-ScrollTrigger$1.getScrollFunc = function(element, horizontal) {
+ScrollTrigger$9.getScrollFunc = function(element, horizontal) {
   return _getScrollFunc(_getTarget(element), horizontal ? _horizontal : _vertical);
 };
-ScrollTrigger$1.getById = function(id) {
+ScrollTrigger$9.getById = function(id) {
   return _ids[id];
 };
-ScrollTrigger$1.getAll = function() {
+ScrollTrigger$9.getAll = function() {
   return _triggers.filter(function(t) {
     return t.vars.id !== "ScrollSmoother";
   });
 };
-ScrollTrigger$1.isScrolling = function() {
+ScrollTrigger$9.isScrolling = function() {
   return !!_lastScrollTime;
 };
-ScrollTrigger$1.snapDirectional = _snapDirectional;
-ScrollTrigger$1.addEventListener = function(type, callback) {
+ScrollTrigger$9.snapDirectional = _snapDirectional;
+ScrollTrigger$9.addEventListener = function(type, callback) {
   var a = _listeners[type] || (_listeners[type] = []);
   ~a.indexOf(callback) || a.push(callback);
 };
-ScrollTrigger$1.removeEventListener = function(type, callback) {
+ScrollTrigger$9.removeEventListener = function(type, callback) {
   var a = _listeners[type], i = a && a.indexOf(callback);
   i >= 0 && a.splice(i, 1);
 };
-ScrollTrigger$1.batch = function(targets, vars) {
+ScrollTrigger$9.batch = function(targets, vars) {
   var result = [], varsCopy = {}, interval = vars.interval || 0.016, batchMax = vars.batchMax || 1e9, proxyCallback = function proxyCallback2(type, callback) {
     var elements = [], triggers = [], delay = gsap.delayedCall(interval, function() {
       callback(elements, triggers);
@@ -6265,7 +6340,7 @@ ScrollTrigger$1.batch = function(targets, vars) {
   }
   if (_isFunction2(batchMax)) {
     batchMax = batchMax();
-    _addListener2(ScrollTrigger$1, "refresh", function() {
+    _addListener2(ScrollTrigger$9, "refresh", function() {
       return batchMax = vars.batchMax();
     });
   }
@@ -6275,7 +6350,7 @@ ScrollTrigger$1.batch = function(targets, vars) {
       config3[p] = varsCopy[p];
     }
     config3.trigger = target;
-    result.push(ScrollTrigger$1.create(config3));
+    result.push(ScrollTrigger$9.create(config3));
   });
   return result;
 };
@@ -6437,7 +6512,7 @@ var _clampScrollAndGetDurationMultiplier = function _clampScrollAndGetDurationMu
   };
   vars.onEnable = function() {
     _allowNativePanning(target, normalizeScrollX ? false : "x");
-    ScrollTrigger$1.addEventListener("refresh", onResize);
+    ScrollTrigger$9.addEventListener("refresh", onResize);
     _addListener2(_win, "resize", onResize);
     if (scrollFuncY.smooth) {
       scrollFuncY.target.style.scrollBehavior = "auto";
@@ -6448,7 +6523,7 @@ var _clampScrollAndGetDurationMultiplier = function _clampScrollAndGetDurationMu
   vars.onDisable = function() {
     _allowNativePanning(target, true);
     _removeListener2(_win, "resize", onResize);
-    ScrollTrigger$1.removeEventListener("refresh", onResize);
+    ScrollTrigger$9.removeEventListener("refresh", onResize);
     inputObserver.kill();
   };
   vars.lockAxis = vars.lockAxis !== false;
@@ -6473,22 +6548,22 @@ var _clampScrollAndGetDurationMultiplier = function _clampScrollAndGetDurationMu
   });
   return self;
 };
-ScrollTrigger$1.sort = function(func) {
+ScrollTrigger$9.sort = function(func) {
   if (_isFunction2(func)) {
     return _triggers.sort(func);
   }
   var scroll = _win.pageYOffset || 0;
-  ScrollTrigger$1.getAll().forEach(function(t) {
+  ScrollTrigger$9.getAll().forEach(function(t) {
     return t._sortY = t.trigger ? scroll + t.trigger.getBoundingClientRect().top : t.start + _win.innerHeight;
   });
   return _triggers.sort(func || function(a, b) {
     return (a.vars.refreshPriority || 0) * -1e6 + (a.vars.containerAnimation ? 1e6 : a._sortY) - ((b.vars.containerAnimation ? 1e6 : b._sortY) + (b.vars.refreshPriority || 0) * -1e6);
   });
 };
-ScrollTrigger$1.observe = function(vars) {
+ScrollTrigger$9.observe = function(vars) {
   return new Observer(vars);
 };
-ScrollTrigger$1.normalizeScroll = function(vars) {
+ScrollTrigger$9.normalizeScroll = function(vars) {
   if (typeof vars === "undefined") {
     return _normalizer;
   }
@@ -6505,7 +6580,7 @@ ScrollTrigger$1.normalizeScroll = function(vars) {
   _isViewport2(normalizer.target) && (_normalizer = normalizer);
   return normalizer;
 };
-ScrollTrigger$1.core = {
+ScrollTrigger$9.core = {
   // smaller file size way to leverage in ScrollSmoother and Observer
   _getVelocityProp,
   _inputObserver,
@@ -6523,16 +6598,16 @@ ScrollTrigger$1.core = {
     }
   }
 };
-_getGSAP2() && gsap.registerPlugin(ScrollTrigger$1);
+_getGSAP2() && gsap.registerPlugin(ScrollTrigger$9);
 const ScrollTriggerModule = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  ScrollTrigger: ScrollTrigger$1,
-  default: ScrollTrigger$1
+  ScrollTrigger: ScrollTrigger$9,
+  default: ScrollTrigger$9
 }, Symbol.toStringTag, { value: "Module" }));
-const ScrollTrigger = ScrollTrigger$1 || ScrollTrigger$1 || ScrollTriggerModule;
-const useGSAP = useGSAP$1 || void 0 || GSAPReact;
-gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$c({}) {
+const ScrollTrigger$8 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
+const useGSAP$8 = useGSAP$9 || void 0 || GSAPReact;
+gsapWithCSS.registerPlugin(useGSAP$8, ScrollTrigger$8);
+function meta$k({}) {
   return [{
     title: "Aarvitek Systems - Intelligent IT & Automation"
   }, {
@@ -6542,7 +6617,7 @@ function meta$c({}) {
 }
 const home = UNSAFE_withComponentProps(function Home() {
   const container = useRef(null);
-  useGSAP(() => {
+  useGSAP$8(() => {
     gsapWithCSS.from(".hero-content > *", {
       y: 40,
       opacity: 0,
@@ -6613,7 +6688,25 @@ const home = UNSAFE_withComponentProps(function Home() {
         className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-30 pointer-events-none"
       }), /* @__PURE__ */ jsxs("div", {
         className: "relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 hero-content",
-        children: [/* @__PURE__ */ jsxs("div", {
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "flex justify-center mb-10",
+          children: /* @__PURE__ */ jsxs("div", {
+            className: "flex items-center gap-3",
+            children: [/* @__PURE__ */ jsx("div", {
+              className: "w-12 h-12 bg-gradient-to-tr from-purple-600 to-indigo-500 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)]",
+              children: /* @__PURE__ */ jsx("span", {
+                className: "text-white font-black text-2xl",
+                children: "A"
+              })
+            }), /* @__PURE__ */ jsxs("span", {
+              className: "text-3xl font-black tracking-tight text-white",
+              children: ["Aarvitek ", /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400",
+                children: "Systems"
+              })]
+            })]
+          })
+        }), /* @__PURE__ */ jsxs("div", {
           className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-md mb-8",
           children: [/* @__PURE__ */ jsx("span", {
             className: "flex h-2 w-2 rounded-full bg-purple-500"
@@ -6644,12 +6737,13 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })]
     }), /* @__PURE__ */ jsx("section", {
+      id: "clients",
       className: "py-12 border-y border-white/5 bg-white/[0.02] logos-section reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsx("p", {
           className: "text-center text-sm text-slate-500 font-semibold tracking-widest uppercase mb-8",
-          children: "Trusted by innovatve companies worldwide"
+          children: "Trusted by innovative companies worldwide"
         }), /* @__PURE__ */ jsxs("div", {
           className: "flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-opacity duration-500",
           children: [/* @__PURE__ */ jsx("h3", {
@@ -6671,6 +6765,7 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
+      id: "services",
       className: "py-24 lg:py-32 relative reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
@@ -6712,7 +6807,7 @@ const home = UNSAFE_withComponentProps(function Home() {
                 children: "We build enterprise-grade, highly scalable custom web applications leveraging modern architectures. Performance optimization, clean code, and advanced SEO best practices are at the heart of our engineering process."
               }), /* @__PURE__ */ jsx("ul", {
                 className: "space-y-3",
-                children: ["React & Next.js Ecosystems", "Node.js Microservices", "High Performance & SEO"].map((item, i) => /* @__PURE__ */ jsxs("li", {
+                children: ["React, Next.js & WordPress", "Node.js Microservices", "High Performance & SEO"].map((item, i) => /* @__PURE__ */ jsxs("li", {
                   className: "flex items-center gap-3 text-slate-300",
                   children: [/* @__PURE__ */ jsx("svg", {
                     className: "w-5 h-5 text-purple-400",
@@ -6775,6 +6870,7 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
+      id: "process",
       className: "py-24 bg-[#050505] border-y border-white/5 process-section reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
@@ -6806,30 +6902,38 @@ const home = UNSAFE_withComponentProps(function Home() {
             title: "Continuous Optimization",
             desc: "Monitoring, maintenance, and future-proofing.",
             link: "/continuous-optimization"
-          }].map((step, idx) => /* @__PURE__ */ jsxs(Link, {
-            to: step.link,
-            className: "block process-card bg-white/5 border border-white/5 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] group cursor-pointer",
-            children: [/* @__PURE__ */ jsx("div", {
-              className: "w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6 border border-white/10 transition-transform duration-300 group-hover:rotate-12 group-hover:bg-white/20",
-              children: /* @__PURE__ */ jsx("svg", {
-                className: "w-6 h-6 text-white group-hover:text-purple-400 transition-colors",
-                fill: "none",
-                stroke: "currentColor",
-                viewBox: "0 0 24 24",
-                children: /* @__PURE__ */ jsx("path", {
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  strokeWidth: "2",
-                  d: step.icon
-                })
-              })
-            }), /* @__PURE__ */ jsxs("h3", {
-              className: "text-xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors",
-              children: ["0", idx + 1, ". ", step.title]
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-slate-400",
-              children: step.desc
-            })]
+          }].map((step, idx) => /* @__PURE__ */ jsx("div", {
+            className: "process-card",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative group rounded-2xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] h-full bg-white/5 border border-white/5 hover:border-transparent",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#a855f7_50%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs(Link, {
+                to: step.link,
+                className: "relative block h-full bg-[#0a0a0a] rounded-[15px] p-8 z-10 cursor-pointer",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6 border border-white/10 transition-transform duration-300 group-hover:rotate-12 group-hover:bg-white/20",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-6 h-6 text-white group-hover:text-purple-400 transition-colors",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "2",
+                      d: step.icon
+                    })
+                  })
+                }), /* @__PURE__ */ jsxs("h3", {
+                  className: "text-xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors",
+                  children: ["0", idx + 1, ". ", step.title]
+                }), /* @__PURE__ */ jsx("p", {
+                  className: "text-slate-400",
+                  children: step.desc
+                })]
+              })]
+            })
           }, idx))
         })]
       })
@@ -6845,50 +6949,87 @@ const home = UNSAFE_withComponentProps(function Home() {
           })
         }), /* @__PURE__ */ jsxs("div", {
           className: "grid grid-cols-1 md:grid-cols-3 gap-6",
-          children: [/* @__PURE__ */ jsxs("div", {
-            className: "benefit-card md:col-span-2 bg-[#050505] border border-white/10 rounded-3xl p-10 relative overflow-hidden group",
-            children: [/* @__PURE__ */ jsx("div", {
-              className: "absolute top-0 right-0 w-64 h-64 bg-purple-500/20 blur-[80px] group-hover:bg-purple-500/30 transition-all rounded-full"
-            }), /* @__PURE__ */ jsx("h3", {
-              className: "text-2xl font-bold text-white mb-4 relative z-10",
-              children: "Enhanced Productivity"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-slate-400 text-lg relative z-10 max-w-md",
-              children: "Automating repetitive manual tasks so your team can focus on complex, high-impact strategies."
-            })]
-          }), /* @__PURE__ */ jsxs("div", {
-            className: "benefit-card bg-[#050505] border border-white/10 rounded-3xl p-10",
-            children: [/* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-white mb-4",
-              children: "Scalability"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-slate-400",
-              children: "Architecture built to handle massive traffic spikes without sweating."
-            })]
-          }), /* @__PURE__ */ jsxs("div", {
-            className: "benefit-card bg-[#050505] border border-white/10 rounded-3xl p-10",
-            children: [/* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-white mb-4",
-              children: "Cost Efficient"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-slate-400",
-              children: "Reduce manual labor and server costs through optimized tech stacks."
-            })]
-          }), /* @__PURE__ */ jsxs("div", {
-            className: "benefit-card md:col-span-2 bg-[#050505] border border-white/10 rounded-3xl p-10 relative overflow-hidden group",
-            children: [/* @__PURE__ */ jsx("div", {
-              className: "absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/20 blur-[80px] group-hover:bg-indigo-500/30 transition-all rounded-full"
-            }), /* @__PURE__ */ jsx("h3", {
-              className: "text-2xl font-bold text-white mb-4 relative z-10",
-              children: "24/7 Availability"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-slate-400 text-lg relative z-10 max-w-md",
-              children: "Our systems run flawlessly around the clock, ensuring business continuity."
-            })]
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "benefit-card md:col-span-2",
+            children: /* @__PURE__ */ jsxs(Link, {
+              to: "/enhanced-productivity",
+              className: "block relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] h-full bg-white/5 border border-white/5 hover:border-transparent cursor-pointer",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#a855f7_50%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-10 z-10 overflow-hidden",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "absolute top-0 right-0 w-64 h-64 bg-purple-500/20 blur-[80px] group-hover:bg-purple-500/30 transition-all rounded-full"
+                }), /* @__PURE__ */ jsx("h3", {
+                  className: "text-2xl font-bold text-white mb-4 relative z-10 group-hover:text-purple-300 transition-colors",
+                  children: "Enhanced Productivity"
+                }), /* @__PURE__ */ jsx("p", {
+                  className: "text-slate-400 text-lg relative z-10 max-w-md",
+                  children: "Automating repetitive manual tasks so your team can focus on complex, high-impact strategies."
+                })]
+              })]
+            })
+          }), /* @__PURE__ */ jsx("div", {
+            className: "benefit-card",
+            children: /* @__PURE__ */ jsxs(Link, {
+              to: "/scalability",
+              className: "block relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] h-full bg-white/5 border border-white/5 hover:border-transparent cursor-pointer",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#a855f7_50%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-10 z-10",
+                children: [/* @__PURE__ */ jsx("h3", {
+                  className: "text-xl font-bold text-white mb-4 group-hover:text-purple-300 transition-colors",
+                  children: "Scalability"
+                }), /* @__PURE__ */ jsx("p", {
+                  className: "text-slate-400",
+                  children: "Architecture built to handle massive traffic spikes without sweating."
+                })]
+              })]
+            })
+          }), /* @__PURE__ */ jsx("div", {
+            className: "benefit-card",
+            children: /* @__PURE__ */ jsxs(Link, {
+              to: "/cost-efficient",
+              className: "block relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] h-full bg-white/5 border border-white/5 hover:border-transparent cursor-pointer",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#a855f7_50%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-10 z-10",
+                children: [/* @__PURE__ */ jsx("h3", {
+                  className: "text-xl font-bold text-white mb-4 group-hover:text-purple-300 transition-colors",
+                  children: "Cost Efficient"
+                }), /* @__PURE__ */ jsx("p", {
+                  className: "text-slate-400",
+                  children: "Reduce manual labor and server costs through optimized tech stacks."
+                })]
+              })]
+            })
+          }), /* @__PURE__ */ jsx("div", {
+            className: "benefit-card md:col-span-2",
+            children: /* @__PURE__ */ jsxs(Link, {
+              to: "/availability",
+              className: "block relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_30px_rgba(99,102,241,0.15)] h-full bg-white/5 border border-white/5 hover:border-transparent cursor-pointer",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#6366f1_50%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-10 z-10 overflow-hidden",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/20 blur-[80px] group-hover:bg-indigo-500/30 transition-all rounded-full"
+                }), /* @__PURE__ */ jsx("h3", {
+                  className: "text-2xl font-bold text-white mb-4 relative z-10 group-hover:text-indigo-300 transition-colors",
+                  children: "24/7 Availability"
+                }), /* @__PURE__ */ jsx("p", {
+                  className: "text-slate-400 text-lg relative z-10 max-w-md",
+                  children: "Our systems run flawlessly around the clock, ensuring business continuity."
+                })]
+              })]
+            })
           })]
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
+      id: "pricing",
       className: "py-24 bg-[#050505] border-y border-white/5 reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
@@ -6896,105 +7037,187 @@ const home = UNSAFE_withComponentProps(function Home() {
           className: "text-center mb-16",
           children: [/* @__PURE__ */ jsx("h2", {
             className: "text-3xl md:text-5xl font-bold text-white mb-6",
-            children: "Simple, Transparent Pricing"
+            children: "Transparent Web Development Packages"
           }), /* @__PURE__ */ jsx("p", {
-            className: "text-slate-400",
-            children: "Tailored solutions for businesses of all sizes."
+            className: "text-slate-400 max-w-2xl mx-auto",
+            children: "Affordable, high-performance IT solutions and custom pricing plans designed for Indian startups and growing businesses."
           })]
         }), /* @__PURE__ */ jsx("div", {
-          className: "grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto",
+          className: "grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto",
           children: [{
-            name: "Starter",
-            price: "Custom",
-            popular: false
+            name: "Starter Business",
+            price: "₹4,999",
+            desc: "Perfect for establishing a strong, professional digital presence.",
+            popular: false,
+            features: ["5 Page Responsive Website", "Essential SEO Setup", "Contact Form & Integrations", "Mobile-First UI/UX", "1 Year Domain & Hosting Free"]
           }, {
-            name: "Professional",
-            price: "Custom",
-            popular: true
+            name: "Pro E-Commerce",
+            price: "₹14,999",
+            desc: "Robust full-stack platforms designed to drive online sales and scale.",
+            popular: true,
+            features: ["React/Next.js Architecture", "Payment Gateway Integration", "Custom Admin Dashboard", "Advanced SEO Optimization", "High Performance & Speed Setup"]
           }, {
-            name: "Enterprise",
+            name: "Enterprise Custom",
             price: "Custom",
-            popular: false
-          }].map((tier, i) => /* @__PURE__ */ jsxs("div", {
-            className: `rounded-3xl p-8 border ${tier.popular ? "border-purple-500 bg-purple-500/5 shadow-[0_0_30px_rgba(168,85,247,0.1)] relative" : "border-white/10 bg-white/5"}`,
-            children: [tier.popular && /* @__PURE__ */ jsx("span", {
-              className: "absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider",
-              children: "Popular"
-            }), /* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-white mb-2",
-              children: tier.name
-            }), /* @__PURE__ */ jsx("div", {
-              className: "text-4xl font-black text-white mb-6",
-              children: tier.price
-            }), /* @__PURE__ */ jsx("ul", {
-              className: "space-y-4 mb-8",
-              children: ["Custom Development", "Technical Support", "Monthly Retainer"].map((f, idx) => /* @__PURE__ */ jsxs("li", {
-                className: "flex gap-3 text-slate-300 text-sm",
-                children: [/* @__PURE__ */ jsx("svg", {
-                  className: `w-5 h-5 shrink-0 ${tier.popular ? "text-purple-400" : "text-slate-500"}`,
-                  fill: "none",
-                  stroke: "currentColor",
-                  viewBox: "0 0 24 24",
-                  children: /* @__PURE__ */ jsx("path", {
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    strokeWidth: "2",
-                    d: "M5 13l4 4L19 7"
-                  })
-                }), f]
-              }, idx))
-            }), /* @__PURE__ */ jsx("button", {
-              className: `w-full py-3 rounded-xl font-semibold transition-colors ${tier.popular ? "bg-purple-600 text-white hover:bg-purple-500" : "bg-white/10 text-white hover:bg-white/20"}`,
-              children: "Get a Quote"
-            })]
+            desc: "Complex architectures and AI integrations for large-scale operations.",
+            popular: false,
+            features: ["Custom Software & SaaS", "AI Automation Integrations", "Dedicated Cloud Infrastructure", "24/7 Priority Support", "Monthly Maintenance Retainer"]
+          }].map((tier, i) => /* @__PURE__ */ jsx("div", {
+            className: "relative group",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: `relative rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform ${tier.popular ? "lg:scale-105 shadow-[0_0_40px_rgba(168,85,247,0.2)]" : "hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]"} h-full bg-white/5 border border-white/5 hover:border-transparent`,
+              children: [/* @__PURE__ */ jsx("div", {
+                className: `absolute inset-[-150%] ${tier.popular ? "bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#a855f7_50%,#00000000_100%)] opacity-100 animate-[spin_3s_linear_infinite]" : "bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#a855f7_50%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2s_linear_infinite]"} transition-opacity duration-500`
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-8 z-10 flex flex-col overflow-hidden",
+                children: [tier.popular && /* @__PURE__ */ jsxs(Fragment, {
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: "absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-purple-500/30 blur-[40px] rounded-full pointer-events-none"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "absolute top-0 left-1/2 -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-b-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-lg",
+                    children: "Most Popular"
+                  })]
+                }), /* @__PURE__ */ jsx("h3", {
+                  className: `text-2xl font-bold text-white mb-2 ${tier.popular ? "pt-4" : ""}`,
+                  children: tier.name
+                }), /* @__PURE__ */ jsx("p", {
+                  className: "text-slate-400 text-sm mb-6 h-10",
+                  children: tier.desc
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "flex items-baseline gap-2 mb-8",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "text-4xl font-black text-white",
+                    children: tier.price
+                  }), tier.price !== "Custom" && /* @__PURE__ */ jsx("span", {
+                    className: "text-slate-500 text-sm font-medium",
+                    children: "/ starting"
+                  })]
+                }), /* @__PURE__ */ jsx("ul", {
+                  className: "space-y-4 mb-8 flex-1",
+                  children: tier.features.map((f, idx) => /* @__PURE__ */ jsxs("li", {
+                    className: "flex gap-3 text-slate-300 text-sm",
+                    children: [/* @__PURE__ */ jsx("svg", {
+                      className: `w-5 h-5 shrink-0 ${tier.popular ? "text-purple-400" : "text-slate-500 group-hover:text-purple-400 transition-colors"}`,
+                      fill: "none",
+                      stroke: "currentColor",
+                      viewBox: "0 0 24 24",
+                      children: /* @__PURE__ */ jsx("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: "2",
+                        d: "M5 13l4 4L19 7"
+                      })
+                    }), f]
+                  }, idx))
+                }), /* @__PURE__ */ jsx(Link, {
+                  to: "/contact",
+                  className: `block text-center w-full py-3.5 rounded-xl font-semibold transition-all duration-300 ${tier.popular ? "bg-purple-600 text-white hover:bg-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.3)]" : "bg-white/10 text-white hover:bg-white/20"}`,
+                  children: tier.price === "Custom" ? "Book a call" : "Get Started"
+                })]
+              })]
+            })
           }, i))
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
+      id: "faq",
       className: "py-24 lg:py-32 reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
-        className: "max-w-3xl mx-auto px-4 sm:px-6 lg:px-8",
-        children: [/* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
           className: "text-center mb-16",
-          children: /* @__PURE__ */ jsx("h2", {
+          children: [/* @__PURE__ */ jsx("h2", {
             className: "text-3xl md:text-5xl font-bold text-white mb-6",
             children: "Frequently Asked Questions"
-          })
-        }), /* @__PURE__ */ jsx("div", {
-          className: "space-y-4",
-          children: [{
-            q: "How long does a typical project take?",
-            a: "Depending on scale, most initial MVP web applications take between 4 to 8 weeks to launch."
-          }, {
-            q: "Do you provide ongoing support?",
-            a: "Yes, we offer monthly maintenance retainers to keep systems updated, secure, and optimized."
-          }, {
-            q: "What tech stacks do you specialize in?",
-            a: "We primarily work with React, Next.js, Node.js, and modern CSS frameworks like Tailwind."
-          }].map((faq, i) => /* @__PURE__ */ jsxs("div", {
-            className: "border border-white/10 bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-colors cursor-pointer group",
-            children: [/* @__PURE__ */ jsxs("div", {
-              className: "flex justify-between items-center",
-              children: [/* @__PURE__ */ jsx("h3", {
-                className: "font-semibold text-white text-lg",
-                children: faq.q
-              }), /* @__PURE__ */ jsx("svg", {
-                className: "w-5 h-5 text-slate-500 group-hover:text-white transition-colors",
-                fill: "none",
-                stroke: "currentColor",
-                viewBox: "0 0 24 24",
-                children: /* @__PURE__ */ jsx("path", {
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  strokeWidth: "2",
-                  d: "M19 9l-7 7-7-7"
-                })
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg max-w-2xl mx-auto",
+            children: "Everything you need to know about our web development process, pricing, and ongoing support."
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto items-start",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "space-y-6",
+            children: [{
+              q: "How long does it take to build a custom website?",
+              a: "A standard 5-page responsive website takes about 2-4 weeks. Complex e-commerce platforms or custom SaaS applications can take 8-16 weeks depending on requirements."
+            }, {
+              q: "What is the cost of developing an e-commerce website?",
+              a: "E-commerce platforms start at ₹14,999. The final cost depends on the number of products, custom features, payment gateways, and third-party integrations you need."
+            }, {
+              q: "Do you provide ongoing website maintenance?",
+              a: "Yes, we offer monthly maintenance retainers. This covers security updates, performance monitoring, regular backups, and content updates to ensure your site runs flawlessly."
+            }, {
+              q: "Will my website be mobile-friendly and SEO optimized?",
+              a: "Absolutely. All our websites are built with a mobile-first approach and include fundamental technical SEO setup, ensuring your site ranks well and looks great on all devices."
+            }, {
+              q: "What technologies do you use for development?",
+              a: "We specialize in modern, high-performance tech stacks including React, Next.js, Node.js, Tailwind CSS, WordPress, and various headless CMS platforms."
+            }].map((faq, i) => /* @__PURE__ */ jsxs("details", {
+              className: "group border border-white/10 bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-colors cursor-pointer [&_summary::-webkit-details-marker]:hidden",
+              children: [/* @__PURE__ */ jsxs("summary", {
+                className: "flex justify-between items-center font-semibold text-white text-lg outline-none list-none",
+                children: [faq.q, /* @__PURE__ */ jsx("span", {
+                  className: "ml-4 flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 group-hover:bg-purple-500/20 transition-colors",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-5 h-5 text-slate-400 group-hover:text-purple-400 group-open:rotate-180 transition-transform duration-300",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "2",
+                      d: "M19 9l-7 7-7-7"
+                    })
+                  })
+                })]
+              }), /* @__PURE__ */ jsx("p", {
+                className: "mt-4 text-slate-400 leading-relaxed pr-8 animate-[fadeIn_0.3s_ease-in-out]",
+                children: faq.a
               })]
-            }), /* @__PURE__ */ jsx("p", {
-              className: "mt-4 text-slate-400 hidden group-hover:block transition-all",
-              children: faq.a
-            })]
-          }, i))
+            }, i))
+          }), /* @__PURE__ */ jsx("div", {
+            className: "space-y-6",
+            children: [{
+              q: "Can you redesign an existing website?",
+              a: "Yes! We frequently help brands modernize their digital presence. We analyze your current architecture, preserve your SEO rankings, and deliver a stunning new UI/UX."
+            }, {
+              q: "Who owns the code and the website once it is finished?",
+              a: "You do. Once the project is fully paid for and completed, we hand over all source code, design assets, and administrative access to you."
+            }, {
+              q: "Do you handle web hosting and domain registration?",
+              a: "Yes, our starter packages include 1-year free domain registration and hosting. We can also help migrate your site to scalable cloud providers like AWS or Vercel."
+            }, {
+              q: "How do we communicate during the project?",
+              a: "We maintain transparent communication via email, weekly video calls, and dedicated WhatsApp/Slack channels so you are always updated on our progress."
+            }, {
+              q: "What if I need custom features added later?",
+              a: "Our architectures are highly scalable. We can easily integrate new features, API connections, or additional pages down the line as your business grows."
+            }].map((faq, i) => /* @__PURE__ */ jsxs("details", {
+              className: "group border border-white/10 bg-white/5 rounded-2xl p-6 hover:bg-white/10 transition-colors cursor-pointer [&_summary::-webkit-details-marker]:hidden",
+              children: [/* @__PURE__ */ jsxs("summary", {
+                className: "flex justify-between items-center font-semibold text-white text-lg outline-none list-none",
+                children: [faq.q, /* @__PURE__ */ jsx("span", {
+                  className: "ml-4 flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 group-hover:bg-purple-500/20 transition-colors",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-5 h-5 text-slate-400 group-hover:text-purple-400 group-open:rotate-180 transition-transform duration-300",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "2",
+                      d: "M19 9l-7 7-7-7"
+                    })
+                  })
+                })]
+              }), /* @__PURE__ */ jsx("p", {
+                className: "mt-4 text-slate-400 leading-relaxed pr-8 animate-[fadeIn_0.3s_ease-in-out]",
+                children: faq.a
+              })]
+            }, i))
+          })]
         })]
       })
     })]
@@ -7003,9 +7226,9 @@ const home = UNSAFE_withComponentProps(function Home() {
 const route1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: home,
-  meta: meta$c
+  meta: meta$k
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$b({}) {
+function meta$j({}) {
   return [{
     title: "About Us - Aarvitek Systems"
   }, {
@@ -7087,11 +7310,11 @@ const about = UNSAFE_withComponentProps(function About() {
 const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: about,
-  meta: meta$b
+  meta: meta$j
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$a({}) {
+function meta$i({}) {
   return [{
-    title: "Contact Us - Aarvitek Systems"
+    title: "Book a call - Aarvitek Systems"
   }, {
     name: "description",
     content: "Get in touch with us for your web development and design needs."
@@ -7291,9 +7514,9 @@ const contact = UNSAFE_withComponentProps(function Contact() {
 const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: contact,
-  meta: meta$a
+  meta: meta$i
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$9({}) {
+function meta$h({}) {
   return [{
     title: "Our Clients - Aarvitek Systems"
   }, {
@@ -7356,9 +7579,9 @@ const clients = UNSAFE_withComponentProps(function Clients() {
 const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: clients,
-  meta: meta$9
+  meta: meta$h
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$8({}) {
+function meta$g({}) {
   return [{
     title: "Careers - Aarvitek Systems"
   }, {
@@ -7469,83 +7692,235 @@ const career = UNSAFE_withComponentProps(function Career() {
 const route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: career,
-  meta: meta$8
+  meta: meta$g
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$7({}) {
+const ScrollTrigger$7 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
+const useGSAP$7 = useGSAP$9 || void 0 || GSAPReact;
+gsapWithCSS.registerPlugin(useGSAP$7, ScrollTrigger$7);
+function meta$f({}) {
   return [{
-    title: "Web Development Services - Aarvitek Systems"
+    title: "Our Custom Web & Graphic Design Portfolio | Aarvitek Systems"
   }, {
     name: "description",
-    content: "Custom web development solutions using the latest technologies."
+    content: "Explore custom web applications, responsive Figma mockups, high-converting e-commerce storefronts, and professional motion graphic videos engineered by Aarvitek Systems."
+  }, {
+    name: "keywords",
+    content: "web development portfolio, custom UI/UX showcase, branding design case studies, shopify developer work, digital agency portfolio delhi"
   }];
 }
-const webDevelopment = UNSAFE_withComponentProps(function WebDevelopment() {
+const portfolio = UNSAFE_withComponentProps(function Portfolio() {
+  const container = useRef(null);
+  useGSAP$7(() => {
+    gsapWithCSS.from(".hero-text-animate > *", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      delay: 0.1
+    });
+    const cards = gsapWithCSS.utils.toArray(".reveal-card");
+    cards.forEach((card) => {
+      gsapWithCSS.from(card, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%"
+        }
+      });
+    });
+  }, {
+    scope: container
+  });
   return /* @__PURE__ */ jsxs("div", {
-    className: "pt-16 min-h-screen",
-    children: [/* @__PURE__ */ jsx("section", {
-      className: "bg-gradient-to-r from-blue-600 to-indigo-700 py-20 text-white",
+    ref: container,
+    className: "min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30 overflow-hidden pt-24 pb-12",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[5%] w-[500px] h-[500px] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute top-[30%] right-[-10%] w-[600px] h-[600px] bg-pink-500/10 blur-[180px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none"
+    }), /* @__PURE__ */ jsx("section", {
+      className: "relative pt-12 pb-20 lg:pt-20 lg:pb-24 z-10",
       children: /* @__PURE__ */ jsxs("div", {
-        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
-        children: [/* @__PURE__ */ jsx("h1", {
-          className: "text-4xl md:text-5xl font-bold mb-6",
-          children: "Custom Web Development"
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center hero-text-animate space-y-6",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-md",
+          children: [/* @__PURE__ */ jsx("span", {
+            className: "flex h-2 w-2 rounded-full bg-purple-500 animate-pulse"
+          }), /* @__PURE__ */ jsx("span", {
+            className: "text-sm font-semibold text-purple-200 tracking-wide",
+            children: "Featured Case Studies"
+          })]
+        }), /* @__PURE__ */ jsxs("h1", {
+          className: "text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-none",
+          children: ["Our Engineered ", /* @__PURE__ */ jsx("br", {}), /* @__PURE__ */ jsx("span", {
+            className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400",
+            children: "Digital Masterpieces"
+          })]
         }), /* @__PURE__ */ jsx("p", {
-          className: "text-xl max-w-3xl mx-auto text-blue-100",
-          children: "Building scalable, secure, and high-performance web applications tailored to your business goals."
+          className: "text-slate-400 text-lg md:text-xl max-w-3xl mx-auto font-medium",
+          children: "We don't settle for average. Explore our curated library of custom B2B web applications, high-converting checkout stores, bespoke brand guidelines, and high-retention video stories."
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-20 bg-white dark:bg-gray-950",
+      className: "py-12 relative z-10",
       children: /* @__PURE__ */ jsx("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
-        children: /* @__PURE__ */ jsxs("div", {
-          className: "grid grid-cols-1 md:grid-cols-2 gap-12 items-center",
-          children: [/* @__PURE__ */ jsxs("div", {
-            children: [/* @__PURE__ */ jsx("h2", {
-              className: "text-3xl font-bold text-gray-900 dark:text-white mb-6",
-              children: "Engineering Excellence"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-gray-600 dark:text-gray-400 mb-6 leading-relaxed",
-              children: "At Aarvitek Systems, we leverage the power of modern frameworks and libraries to create web applications that are robust, fast, and easy to maintain. Whether you need a simple content management system or a complex enterprise platform, we have the expertise to deliver."
-            }), /* @__PURE__ */ jsx("ul", {
-              className: "space-y-4 mb-8",
-              children: ["Full-Stack Development", "API Design & Integration", "Cloud Native Solutions", "Progressive Web Apps (PWA)"].map((item, i) => /* @__PURE__ */ jsxs("li", {
-                className: "flex items-center gap-3",
-                children: [/* @__PURE__ */ jsx("svg", {
-                  className: "w-5 h-5 text-green-500",
-                  fill: "none",
-                  stroke: "currentColor",
-                  viewBox: "0 0 24 24",
-                  children: /* @__PURE__ */ jsx("path", {
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    strokeWidth: "2",
-                    d: "M5 13l4 4L19 7"
-                  })
-                }), /* @__PURE__ */ jsx("span", {
-                  className: "text-gray-700 dark:text-gray-300 font-medium",
-                  children: item
+        children: /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 lg:grid-cols-2 gap-12",
+          children: [{
+            img: "/images/web-development.png",
+            cat: "Full-Stack Custom Web App",
+            title: "Apex Retail Solutions Platform",
+            desc: "Rebuilding a complex B2B logistics ecosystem using Next.js and serverless AWS architectures. Replaced a slow legacy dashboard with a high-performance system, cutting server latency times and improving database synchronization.",
+            stats: [{
+              val: "100/100",
+              lbl: "LCP speed score"
+            }, {
+              val: "+320%",
+              lbl: "Data speed boost"
+            }],
+            glow: "hover:shadow-[0_0_40px_rgba(168,85,247,0.15)] hover:border-purple-500/30",
+            border: "group-hover:bg-purple-500"
+          }, {
+            img: "/images/ui-ux-design.png",
+            cat: "Figma UI/UX & Interaction",
+            title: "Nexa Digital Bank Blueprints",
+            desc: "Crafting comprehensive mobile and desktop interactive mockup designs for an emerging digital banking product. Built custom vector component libraries, mapped complex buyer journeys, and tested click-through rates.",
+            stats: [{
+              val: "94%",
+              lbl: "First impressions rating"
+            }, {
+              val: "100%",
+              lbl: "Figma vector output"
+            }],
+            glow: "hover:shadow-[0_0_40px_rgba(244,63,94,0.15)] hover:border-pink-500/30",
+            border: "group-hover:bg-pink-500"
+          }, {
+            img: "/images/web-development.png",
+            cat: "Headless E-Commerce Solutions",
+            title: "Lumina Organic Storefront",
+            desc: "Engineering a fast, headless e-commerce store connected via Shopify store APIs. Replaced generic slow theme styles with a fully bespoke, conversion-rate optimized (CRO) React cart engine.",
+            stats: [{
+              val: "+82%",
+              lbl: "Checkouts increase"
+            }, {
+              val: "< 1.0s",
+              lbl: "Frictionless checkout speed"
+            }],
+            glow: "hover:shadow-[0_0_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/30",
+            border: "group-hover:bg-emerald-500"
+          }, {
+            img: "/images/ui-ux-design.png",
+            cat: "Cinematic Video Editing & VFX",
+            title: "Stellar Cloud Explainer Reel",
+            desc: "Editing a high-impact promotional campaign video for an enterprise SaaS product. Handcrafted kinetic text sequences, synced complex background audio masterings, and color styled all log clips.",
+            stats: [{
+              val: "+85%",
+              lbl: "User retention"
+            }, {
+              val: "4K UHD",
+              lbl: "Lossless resolution"
+            }],
+            glow: "hover:shadow-[0_0_40px_rgba(99,102,241,0.15)] hover:border-indigo-500/30",
+            border: "group-hover:bg-indigo-500"
+          }].map((item, idx) => /* @__PURE__ */ jsx("div", {
+            className: "reveal-card",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: `group rounded-[2rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-md overflow-hidden transition-all duration-500 transform hover:-translate-y-2 cursor-pointer shadow-2xl ${item.glow}`,
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "relative aspect-[16/9] w-full overflow-hidden bg-white/5 border-b border-white/5",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "absolute top-0 inset-x-0 h-10 px-4 bg-black/40 backdrop-blur-md border-b border-white/5 flex items-center justify-between z-20",
+                  children: [/* @__PURE__ */ jsxs("div", {
+                    className: "flex gap-1.5",
+                    children: [/* @__PURE__ */ jsx("span", {
+                      className: "w-2.5 h-2.5 rounded-full bg-white/10"
+                    }), /* @__PURE__ */ jsx("span", {
+                      className: "w-2.5 h-2.5 rounded-full bg-white/10"
+                    }), /* @__PURE__ */ jsx("span", {
+                      className: "w-2.5 h-2.5 rounded-full bg-white/10"
+                    })]
+                  }), /* @__PURE__ */ jsxs("span", {
+                    className: "text-[10px] font-mono text-slate-500 truncate max-w-xs",
+                    children: [item.title.toLowerCase().replace(/ /g, "-"), ".html"]
+                  }), /* @__PURE__ */ jsx("div", {
+                    className: "w-12"
+                  })]
+                }), /* @__PURE__ */ jsx("img", {
+                  src: item.img,
+                  alt: item.title,
+                  className: "w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 pt-10"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"
                 })]
-              }, i))
-            }), /* @__PURE__ */ jsx(Link, {
-              to: "/contact",
-              className: "inline-block px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors",
-              children: "Start Your Project"
-            })]
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "p-8 space-y-6",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "flex items-center justify-between",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "text-xs font-black tracking-widest text-slate-500 uppercase",
+                    children: item.cat
+                  }), /* @__PURE__ */ jsx("div", {
+                    className: `w-8 h-1 rounded ${item.border} transition-colors duration-300`
+                  })]
+                }), /* @__PURE__ */ jsx("h3", {
+                  className: "text-2xl font-black text-white group-hover:text-purple-300 transition-colors",
+                  children: item.title
+                }), /* @__PURE__ */ jsx("p", {
+                  className: "text-slate-400 text-sm leading-relaxed font-medium",
+                  children: item.desc
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "pt-6 border-t border-white/5 grid grid-cols-2 gap-4",
+                  children: item.stats.map((stat, sIdx) => /* @__PURE__ */ jsxs("div", {
+                    className: "bg-white/[0.02] border border-white/5 p-4 rounded-xl",
+                    children: [/* @__PURE__ */ jsx("span", {
+                      className: "block text-xl font-black text-white",
+                      children: stat.val
+                    }), /* @__PURE__ */ jsx("span", {
+                      className: "block text-[10px] text-slate-500 uppercase font-bold tracking-wider mt-0.5",
+                      children: stat.lbl
+                    })]
+                  }, sIdx))
+                })]
+              })]
+            })
+          }, idx))
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-16 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-4xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "relative rounded-[2rem] overflow-hidden p-12 text-center border border-white/10 bg-gradient-to-br from-[#0c051a] to-[#04010a] shadow-2xl",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "absolute top-[-30%] right-[-10%] w-[300px] h-[300px] bg-purple-500/20 blur-[80px] rounded-full pointer-events-none"
           }), /* @__PURE__ */ jsxs("div", {
-            className: "bg-gray-100 dark:bg-gray-900 rounded-2xl p-8 border border-gray-200 dark:border-gray-800",
-            children: [/* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-gray-900 dark:text-white mb-6",
-              children: "Our Tech Stack"
+            className: "relative z-10 space-y-6 max-w-2xl mx-auto",
+            children: [/* @__PURE__ */ jsxs("h2", {
+              className: "text-3xl md:text-4xl font-black text-white",
+              children: ["Ready to Build Your Own ", /* @__PURE__ */ jsx("br", {}), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400",
+                children: "Digital Authority?"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-sm leading-relaxed",
+              children: "Let's collaborate to architect a stunning custom codebase or graphic vector system that places you light years ahead of your competitors."
             }), /* @__PURE__ */ jsx("div", {
-              className: "grid grid-cols-2 sm:grid-cols-3 gap-4",
-              children: ["React", "Next.js", "Node.js", "TypeScript", "PostgreSQL", "AWS"].map((tech) => /* @__PURE__ */ jsx("div", {
-                className: "p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm text-center border border-gray-100 dark:border-gray-700",
-                children: /* @__PURE__ */ jsx("span", {
-                  className: "font-semibold text-gray-800 dark:text-gray-200",
-                  children: tech
-                })
-              }, tech))
+              className: "pt-4",
+              children: /* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "inline-block px-8 py-4 rounded-full bg-purple-600 text-white font-extrabold hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]",
+                children: "Book a Discovery Call"
+              })
             })]
           })]
         })
@@ -7555,220 +7930,998 @@ const webDevelopment = UNSAFE_withComponentProps(function WebDevelopment() {
 });
 const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: webDevelopment,
-  meta: meta$7
+  default: portfolio,
+  meta: meta$f
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$6({}) {
+const ScrollTrigger$6 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
+const useGSAP$6 = useGSAP$9 || void 0 || GSAPReact;
+gsapWithCSS.registerPlugin(useGSAP$6, ScrollTrigger$6);
+function meta$e({}) {
   return [{
-    title: "Website Design - Aarvitek Systems"
+    title: "Custom Web Development Services & Scalable SaaS Apps | Aarvitek Systems"
   }, {
     name: "description",
-    content: "Creative and responsive website design services."
+    content: "Aarvitek Systems delivers high-performance custom web development services, scalable headless CMS, and secure enterprise software architectures using React, Next.js, and Node.js. Speed and SEO optimized."
+  }, {
+    name: "keywords",
+    content: "custom web development, enterprise web application, nextjs web development, react developer, scalable ecommerce website, headless CMS development, full-stack software engineering, page speed optimization, delhi it company"
   }];
 }
-const websiteDesign = UNSAFE_withComponentProps(function WebsiteDesign() {
+const webDevelopment = UNSAFE_withComponentProps(function WebDevelopment() {
+  const container = useRef(null);
+  useGSAP$6(() => {
+    gsapWithCSS.from(".hero-text-animate > *", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      delay: 0.1
+    });
+    gsapWithCSS.from(".hero-visual-animate", {
+      scale: 0.95,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power3.out",
+      delay: 0.4
+    });
+    const cards = gsapWithCSS.utils.toArray(".reveal-card");
+    cards.forEach((card) => {
+      gsapWithCSS.from(card, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%"
+        }
+      });
+    });
+    gsapWithCSS.from(".tech-card-animate", {
+      scale: 0.9,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".tech-section-trigger",
+        start: "top 80%"
+      }
+    });
+  }, {
+    scope: container
+  });
   return /* @__PURE__ */ jsxs("div", {
-    className: "pt-16 min-h-screen",
-    children: [/* @__PURE__ */ jsx("section", {
-      className: "bg-gradient-to-r from-purple-600 to-pink-600 py-20 text-white",
-      children: /* @__PURE__ */ jsxs("div", {
-        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
-        children: [/* @__PURE__ */ jsx("h1", {
-          className: "text-4xl md:text-5xl font-bold mb-6",
-          children: "Creative Website Design"
-        }), /* @__PURE__ */ jsx("p", {
-          className: "text-xl max-w-3xl mx-auto text-purple-100",
-          children: "Crafting visually stunning and user-centric digital experiences that captivate your audience."
-        })]
+    ref: container,
+    className: "min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30 overflow-hidden pt-24 pb-12",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[5%] w-[500px] h-[500px] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-indigo-500/10 blur-[180px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-violet-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none"
+    }), /* @__PURE__ */ jsx("section", {
+      className: "relative pt-12 pb-20 lg:pt-20 lg:pb-32 z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-7 space-y-8 hero-text-animate",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-md",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "flex h-2 w-2 rounded-full bg-purple-500 animate-pulse"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-sm font-semibold text-purple-200 tracking-wide",
+                children: "Enterprise-Grade Architecture"
+              })]
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1]",
+              children: ["Custom Web ", /* @__PURE__ */ jsx("br", {}), "Development for ", /* @__PURE__ */ jsx("br", {}), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-400",
+                children: "High-Growth Brands"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed font-medium",
+              children: "We engineer lightning-fast custom web applications, highly scalable headless CMS systems, and API-driven enterprise SaaS architectures. Powered by React, Next.js, and Node.js, we guarantee impeccable performance, absolute core-vital optimization, and organic SEO prominence."
+            }), /* @__PURE__ */ jsx("ul", {
+              className: "grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-300",
+              children: [{
+                text: "Core Web Vitals & Speed-Optimized",
+                desc: "Average LCP under 1.2 seconds"
+              }, {
+                text: "SEO Semantic Code Architecture",
+                desc: "Build for crawling & high SERP ranking"
+              }, {
+                text: "Scalable Full-Stack Engineering",
+                desc: "API integrations & Node microservices"
+              }, {
+                text: "Ironclad Enterprise Security",
+                desc: "SSL, OAuth, and DDoS resistant clouds"
+              }].map((item, i) => /* @__PURE__ */ jsxs("li", {
+                className: "flex gap-3 items-start",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30 mt-1",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-3.5 h-3.5 text-purple-400",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "2.5",
+                      d: "M5 13l4 4L19 7"
+                    })
+                  })
+                }), /* @__PURE__ */ jsxs("div", {
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "block text-white font-bold text-sm tracking-wide",
+                    children: item.text
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "block text-slate-500 text-xs mt-0.5",
+                    children: item.desc
+                  })]
+                })]
+              }, i))
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "flex flex-col sm:flex-row gap-4 pt-4",
+              children: [/* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "px-8 py-4 rounded-full bg-purple-600 text-white font-semibold text-lg hover:bg-purple-500 transition-all text-center shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]",
+                children: "Launch Your Project"
+              }), /* @__PURE__ */ jsx("a", {
+                href: "#tech-stack",
+                className: "px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all text-center",
+                children: "Explore Tech Stack"
+              })]
+            })]
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-5 relative hero-visual-animate",
+            children: [/* @__PURE__ */ jsx("div", {
+              className: "absolute inset-0 bg-gradient-to-tr from-purple-500/10 to-indigo-500/10 blur-3xl -z-10 rounded-full"
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "relative rounded-[2rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden group",
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "flex items-center gap-2",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ff5f56]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ffbd2e]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#27c93f]"
+                  })]
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "px-4 py-1 rounded-lg bg-white/5 border border-white/5 text-[10px] text-slate-500 font-mono tracking-wider w-64 text-center truncate",
+                  children: "aarviteksystems.com/custom-web-dev"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "w-12 h-2"
+                }), " "]
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-purple-950/20 to-indigo-950/20 flex items-center justify-center",
+                children: [/* @__PURE__ */ jsx("img", {
+                  src: "/images/web-development.png",
+                  alt: "Full-Stack Custom Web Development Architecture Illustration",
+                  className: "w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -top-6 -right-6 md:-right-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_4s_infinite_ease-in-out]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-12 h-12 rounded-full border-2 border-emerald-500 border-t-transparent flex items-center justify-center relative",
+                children: /* @__PURE__ */ jsx("span", {
+                  className: "text-xs font-black text-emerald-400",
+                  children: "100"
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "Page Speed"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "Core Web Vitals Perfect"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -bottom-6 -left-6 md:-left-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_5s_infinite_ease-in-out_1s]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/40",
+                children: /* @__PURE__ */ jsx("svg", {
+                  className: "w-5 h-5 text-purple-400",
+                  fill: "none",
+                  stroke: "currentColor",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx("path", {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "2",
+                    d: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  })
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "SEO Rank"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "Optimized Core Indexing"
+                })]
+              })]
+            })]
+          })]
+        })
       })
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-20 bg-white dark:bg-gray-950",
+      className: "py-8 bg-white/[0.02] border-y border-white/5 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center",
+          children: [{
+            value: "LCP < 1.2s",
+            label: "Largest Contentful Paint"
+          }, {
+            value: "FID < 15ms",
+            label: "First Input Delay"
+          }, {
+            value: "CLS < 0.05",
+            label: "Cumulative Layout Shift"
+          }, {
+            value: "TTFB < 0.2s",
+            label: "Time To First Byte"
+          }].map((stat, i) => /* @__PURE__ */ jsxs("div", {
+            className: "text-center",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400",
+              children: stat.value
+            }), /* @__PURE__ */ jsx("span", {
+              className: "block text-slate-500 text-xs font-semibold tracking-wider uppercase mt-1",
+              children: stat.label
+            })]
+          }, i))
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24 relative z-10",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsxs("div", {
-          className: "grid grid-cols-1 lg:grid-cols-3 gap-8",
-          children: [/* @__PURE__ */ jsxs("div", {
-            className: "p-8 bg-gray-50 dark:bg-gray-900 rounded-2xl hover:shadow-lg transition-all",
-            children: [/* @__PURE__ */ jsx("div", {
-              className: "w-12 h-12 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-lg flex items-center justify-center mb-6",
-              children: /* @__PURE__ */ jsx("svg", {
-                className: "w-6 h-6",
-                fill: "none",
-                stroke: "currentColor",
-                viewBox: "0 0 24 24",
-                children: /* @__PURE__ */ jsx("path", {
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  strokeWidth: "2",
-                  d: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                })
-              })
-            }), /* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-gray-900 dark:text-white mb-3",
-              children: "Responsive Design"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-gray-600 dark:text-gray-400",
-              children: "We ensure your website looks perfect on every device, from desktops to smartphones, providing a seamless experience for all users."
-            })]
-          }), /* @__PURE__ */ jsxs("div", {
-            className: "p-8 bg-gray-50 dark:bg-gray-900 rounded-2xl hover:shadow-lg transition-all",
-            children: [/* @__PURE__ */ jsx("div", {
-              className: "w-12 h-12 bg-pink-100 dark:bg-pink-900/30 text-pink-600 rounded-lg flex items-center justify-center mb-6",
-              children: /* @__PURE__ */ jsx("svg", {
-                className: "w-6 h-6",
-                fill: "none",
-                stroke: "currentColor",
-                viewBox: "0 0 24 24",
-                children: /* @__PURE__ */ jsx("path", {
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  strokeWidth: "2",
-                  d: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                })
-              })
-            }), /* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-gray-900 dark:text-white mb-3",
-              children: "UI/UX Focus"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-gray-600 dark:text-gray-400",
-              children: "Our designs are grounded in user experience principles, ensuring intuitive navigation and clear calls-to-action that drive conversions."
-            })]
-          }), /* @__PURE__ */ jsxs("div", {
-            className: "p-8 bg-gray-50 dark:bg-gray-900 rounded-2xl hover:shadow-lg transition-all",
-            children: [/* @__PURE__ */ jsx("div", {
-              className: "w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 rounded-lg flex items-center justify-center mb-6",
-              children: /* @__PURE__ */ jsx("svg", {
-                className: "w-6 h-6",
-                fill: "none",
-                stroke: "currentColor",
-                viewBox: "0 0 24 24",
-                children: /* @__PURE__ */ jsx("path", {
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  strokeWidth: "2",
-                  d: "M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
-                })
-              })
-            }), /* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-gray-900 dark:text-white mb-3",
-              children: "Makeover & Redesign"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-gray-600 dark:text-gray-400",
-              children: "Already have a site? We can modernize its look and feel, improving performance and aesthetics without losing your core content."
-            })]
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Tailored Coding & Full-Stack Solutions"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We build enterprise solutions crafted precisely around your business bottlenecks. No bloated code, no standard templates—just robust, performance-optimized digital engines."
           })]
         }), /* @__PURE__ */ jsx("div", {
-          className: "mt-16 text-center",
-          children: /* @__PURE__ */ jsx(Link, {
-            to: "/contact",
-            className: "px-8 py-4 rounded-full bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors",
-            children: "Get a Design Consultation"
-          })
+          className: "grid grid-cols-1 md:grid-cols-2 gap-8",
+          children: [{
+            icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
+            title: "Enterprise Full-Stack Web Apps",
+            desc: "Custom designed SaaS systems, massive databases, secure admin dashboards, and custom backend engines engineered using TypeScript, Node, and React. Built to handle heavy workloads seamlessly.",
+            keywords: "GraphQL APIs, Node microservices, PostgreSQL architectures"
+          }, {
+            icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z",
+            title: "High-Converting Custom E-Commerce",
+            desc: "Fully tailored storefronts utilizing headless Commerce APIs. Integrated with smooth payment gateways, advanced inventory tracking, automated discount engines, and super-fast checkouts.",
+            keywords: "Stripe, Razorpay, conversion-rate optimized checkouts"
+          }, {
+            icon: "M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10",
+            title: "Headless CMS & Content Systems",
+            desc: "Lightning-fast static front-ends integrated with powerful headless CMS engines (Strapi, Sanity, WordPress REST). Allows marketing teams to manage content easily without affecting site speeds.",
+            keywords: "Static Site Generation (SSG), Incremental Regeneration"
+          }, {
+            icon: "M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z",
+            title: "API Integrations & Cloud Deployment",
+            desc: "Custom API development and seamless integrations with CRM networks, marketing automation channels, and ERP systems. Fully hosted on high-availability AWS/Vercel serverless configurations.",
+            keywords: "RESTful & gRPC APIs, Serverless Cloud Architectures"
+          }].map((card, idx) => /* @__PURE__ */ jsx("div", {
+            className: "reveal-card",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(168,85,247,0.15)] h-full bg-white/5 border border-white/5 hover:border-transparent",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#a855f7_40%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2.5s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-8 md:p-10 z-10 flex flex-col justify-between overflow-hidden",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "absolute top-0 right-0 w-48 h-48 bg-purple-500/5 blur-[50px] rounded-full pointer-events-none group-hover:bg-purple-500/10 transition-colors"
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "space-y-6",
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: "w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center border border-purple-500/20 group-hover:bg-purple-600 group-hover:border-purple-400 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all duration-300 group-hover:rotate-6",
+                    children: /* @__PURE__ */ jsx("svg", {
+                      className: "w-7 h-7 text-purple-400 group-hover:text-white transition-colors",
+                      fill: "none",
+                      stroke: "currentColor",
+                      viewBox: "0 0 24 24",
+                      children: /* @__PURE__ */ jsx("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: "2",
+                        d: card.icon
+                      })
+                    })
+                  }), /* @__PURE__ */ jsx("h3", {
+                    className: "text-2xl font-bold text-white group-hover:text-purple-300 transition-colors",
+                    children: card.title
+                  }), /* @__PURE__ */ jsx("p", {
+                    className: "text-slate-400 leading-relaxed text-sm md:text-base",
+                    children: card.desc
+                  })]
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "pt-6 mt-6 border-t border-white/5 flex flex-wrap gap-2 items-center",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "text-[10px] font-mono uppercase tracking-wider text-slate-500",
+                    children: "Keywords:"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "text-[11px] font-semibold text-purple-400 bg-purple-500/5 border border-purple-500/10 px-2.5 py-1 rounded-md",
+                    children: card.keywords
+                  })]
+                })]
+              })]
+            })
+          }, idx))
         })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      id: "tech-stack",
+      className: "py-24 bg-[#050505] border-y border-white/5 relative z-10 tech-section-trigger",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Next-Generation Tech Ecosystem"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We don't build on outdated frameworks. We utilize state-of-the-art architectures designed for blistering speeds, dynamic reactivity, and highly efficient cloud scalability."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6",
+          children: [{
+            name: "React",
+            type: "Frontend Library",
+            glow: "hover:shadow-[0_0_30px_rgba(14,165,233,0.25)] hover:border-sky-500/40",
+            badge: "Reactive UI",
+            desc: "Dynamic, fast user interfaces with reusable state hooks."
+          }, {
+            name: "Next.js",
+            type: "SSR Framework",
+            glow: "hover:shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:border-white/40",
+            badge: "Max SEO Speed",
+            desc: "Server-side rendering, static site generation, and perfect SEO indexing."
+          }, {
+            name: "Node.js",
+            type: "Backend Runtime",
+            glow: "hover:shadow-[0_0_30px_rgba(16,185,129,0.25)] hover:border-emerald-500/40",
+            badge: "Highly Concurrent",
+            desc: "Asynchronous backend loops built for fast operations."
+          }, {
+            name: "TypeScript",
+            type: "Strict Coding",
+            glow: "hover:shadow-[0_0_30px_rgba(59,130,246,0.25)] hover:border-blue-500/40",
+            badge: "Zero-Bug Code",
+            desc: "Type safety, auto-documentation, and self-validating interfaces."
+          }, {
+            name: "PostgreSQL",
+            type: "Relational DB",
+            glow: "hover:shadow-[0_0_30px_rgba(14,165,233,0.2)] hover:border-sky-400/40",
+            badge: "Structured Data",
+            desc: "Complex queries, ACID-compliance, and enterprise-grade datastores."
+          }, {
+            name: "AWS Cloud",
+            type: "Infrastructure",
+            glow: "hover:shadow-[0_0_30px_rgba(245,158,11,0.25)] hover:border-amber-500/40",
+            badge: "99.99% Uptime",
+            desc: "Scalable serverless lambda, secure S3 storage, and global CDN networks."
+          }, {
+            name: "Tailwind CSS",
+            type: "Styling Framework",
+            glow: "hover:shadow-[0_0_30px_rgba(6,182,212,0.25)] hover:border-cyan-500/40",
+            badge: "Clean Responsive",
+            desc: "Highly custom, responsive utility rendering with zero unused classes."
+          }, {
+            name: "GraphQL & REST",
+            type: "API Architectures",
+            glow: "hover:shadow-[0_0_30px_rgba(236,72,153,0.25)] hover:border-pink-500/40",
+            badge: "Ultra-Fast Fetching",
+            desc: "Lightweight API endpoints protecting client bandwidth."
+          }].map((tech, idx) => /* @__PURE__ */ jsx("div", {
+            className: "tech-card-animate",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: `group relative p-6 rounded-2xl border border-white/5 bg-[#0a0a0a] transition-all duration-300 transform hover:-translate-y-2 cursor-default ${tech.glow}`,
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-0 bg-gradient-to-b from-white/[0.01] to-transparent pointer-events-none rounded-2xl"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "flex justify-between items-center mb-4",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "block text-lg font-black text-white group-hover:text-purple-300 transition-colors",
+                    children: tech.name
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "block text-[11px] text-slate-500 mt-0.5",
+                    children: tech.type
+                  })]
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "text-[9px] font-mono tracking-widest uppercase px-2 py-0.5 border border-purple-500/20 bg-purple-500/5 text-purple-300 rounded",
+                  children: tech.badge
+                })]
+              }), /* @__PURE__ */ jsx("p", {
+                className: "text-slate-400 text-xs leading-relaxed",
+                children: tech.desc
+              })]
+            })
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24 relative z-10",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Our Web Development Roadmap"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "How we transform raw specifications into beautifully functional, blazingly fast custom web apps."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8",
+          children: [{
+            num: "01",
+            step: "SEO Discovery & Wireframing",
+            desc: "Analyzing target keywords, designing UX mapping, and establishing performance targets."
+          }, {
+            num: "02",
+            step: "Agile Coding Sprint",
+            desc: "Writing clean, type-safe full-stack scripts. Delivering functional sprint demos weekly."
+          }, {
+            num: "03",
+            step: "Core Vital & SEO Testing",
+            desc: "Rigorous automated load testing, validating mobile layout responsiveness, and auditing SERP tags."
+          }, {
+            num: "04",
+            step: "Cloud Infrastructure Setup",
+            desc: "Deploying on scalable serverless clouds with continuous delivery pipelines (CI/CD)."
+          }].map((phase, idx) => /* @__PURE__ */ jsxs("div", {
+            className: "relative group p-6 rounded-2xl border border-white/5 bg-[#0a0a0a]/50 backdrop-blur-md",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-4xl font-black text-purple-500/30 group-hover:text-purple-400/80 transition-colors",
+              children: phase.num
+            }), /* @__PURE__ */ jsx("h3", {
+              className: "text-lg font-bold text-white mt-4 mb-2 group-hover:text-purple-300 transition-colors",
+              children: phase.step
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-sm leading-relaxed",
+              children: phase.desc
+            })]
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-12 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "relative rounded-[2.5rem] overflow-hidden p-12 md:p-20 text-center border border-white/10 bg-gradient-to-br from-[#0c051a] to-[#04010a] shadow-2xl",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "absolute top-[-30%] right-[-10%] w-[300px] h-[300px] bg-purple-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsx("div", {
+            className: "absolute bottom-[-30%] left-[-10%] w-[300px] h-[300px] bg-indigo-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "relative z-10 max-w-3xl mx-auto space-y-6",
+            children: [/* @__PURE__ */ jsxs("h2", {
+              className: "text-3xl md:text-5xl font-black text-white leading-tight",
+              children: ["Ready to Architect a ", /* @__PURE__ */ jsx("br", {
+                className: "hidden sm:inline"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-400",
+                children: "High-Performance Custom Web App?"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto",
+              children: "Let's build a secure, fast, and completely search-optimized platform tailored to elevate your conversions and drive organic digital growth."
+            }), /* @__PURE__ */ jsx("div", {
+              className: "pt-6",
+              children: /* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "inline-block px-10 py-5 rounded-full bg-purple-600 text-white font-extrabold text-lg hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.7)]",
+                children: "Book a Free Consultation & Discovery Call"
+              })
+            })]
+          })]
+        })
       })
     })]
   });
 });
 const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: websiteDesign,
-  meta: meta$6
+  default: webDevelopment,
+  meta: meta$e
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$5({}) {
+const ScrollTrigger$5 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
+const useGSAP$5 = useGSAP$9 || void 0 || GSAPReact;
+gsapWithCSS.registerPlugin(useGSAP$5, ScrollTrigger$5);
+function meta$d({}) {
   return [{
-    title: "Graphic Design Services - Aarvitek Systems"
+    title: "Premium UI/UX Website Design & Branding | Aarvitek Systems"
   }, {
     name: "description",
-    content: "Professional graphic design and branding solutions."
+    content: "Aarvitek Systems crafts modern, responsive, and high-converting custom website designs. Specializing in high-fidelity Figma prototyping, brand UI/UX overhauls, and legacy site makeovers. 100% SEO-friendly."
+  }, {
+    name: "keywords",
+    content: "website design services, custom UI/UX design, Figma website designer, digital branding agency, responsive web layouts, website redesign company, legacy site modernization, conversion rate optimization, Delhi design studio"
   }];
 }
-const graphicDesign = UNSAFE_withComponentProps(function GraphicDesign() {
+const websiteDesign = UNSAFE_withComponentProps(function WebsiteDesign() {
+  const container = useRef(null);
+  useGSAP$5(() => {
+    gsapWithCSS.from(".hero-text-animate > *", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      delay: 0.1
+    });
+    gsapWithCSS.from(".hero-visual-animate", {
+      scale: 0.95,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power3.out",
+      delay: 0.4
+    });
+    const cards = gsapWithCSS.utils.toArray(".reveal-card");
+    cards.forEach((card) => {
+      gsapWithCSS.from(card, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%"
+        }
+      });
+    });
+    gsapWithCSS.from(".tool-card-animate", {
+      scale: 0.9,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".tool-section-trigger",
+        start: "top 80%"
+      }
+    });
+  }, {
+    scope: container
+  });
   return /* @__PURE__ */ jsxs("div", {
-    className: "pt-16 min-h-screen",
-    children: [/* @__PURE__ */ jsx("section", {
-      className: "bg-gradient-to-r from-pink-500 to-rose-500 py-20 text-white",
-      children: /* @__PURE__ */ jsxs("div", {
-        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
-        children: [/* @__PURE__ */ jsx("h1", {
-          className: "text-4xl md:text-5xl font-bold mb-6",
-          children: "Professional Graphic Design"
-        }), /* @__PURE__ */ jsx("p", {
-          className: "text-xl max-w-3xl mx-auto text-pink-100",
-          children: "Visual storytelling that builds brand identity and connects with your audience."
-        })]
-      })
+    ref: container,
+    className: "min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30 overflow-hidden pt-24 pb-12",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[5%] w-[500px] h-[500px] bg-pink-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-purple-500/10 blur-[180px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none"
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-20 bg-white dark:bg-gray-950",
+      className: "relative pt-12 pb-20 lg:pt-20 lg:pb-32 z-10",
       children: /* @__PURE__ */ jsx("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: /* @__PURE__ */ jsxs("div", {
-          className: "grid grid-cols-1 md:grid-cols-2 gap-12",
+          className: "grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center",
           children: [/* @__PURE__ */ jsxs("div", {
-            className: "space-y-8",
+            className: "lg:col-span-7 space-y-8 hero-text-animate",
             children: [/* @__PURE__ */ jsxs("div", {
-              className: "flex gap-4",
-              children: [/* @__PURE__ */ jsx("div", {
-                className: "flex-shrink-0 w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center text-pink-600",
-                children: /* @__PURE__ */ jsx("span", {
-                  className: "font-bold text-xl",
-                  children: "1"
-                })
-              }), /* @__PURE__ */ jsxs("div", {
-                children: [/* @__PURE__ */ jsx("h3", {
-                  className: "text-xl font-bold text-gray-900 dark:text-white mb-2",
-                  children: "Logo & Branding"
-                }), /* @__PURE__ */ jsx("p", {
-                  className: "text-gray-600 dark:text-gray-400",
-                  children: "Creating memorable logos and comprehensive brand style guides that define your business identity."
-                })]
+              className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-pink-500/30 bg-pink-500/10 backdrop-blur-md",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "flex h-2 w-2 rounded-full bg-pink-500 animate-pulse"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-sm font-semibold text-pink-200 tracking-wide",
+                children: "High-Fidelity UI/UX & Interaction"
               })]
-            }), /* @__PURE__ */ jsxs("div", {
-              className: "flex gap-4",
-              children: [/* @__PURE__ */ jsx("div", {
-                className: "flex-shrink-0 w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center text-pink-600",
-                children: /* @__PURE__ */ jsx("span", {
-                  className: "font-bold text-xl",
-                  children: "2"
-                })
-              }), /* @__PURE__ */ jsxs("div", {
-                children: [/* @__PURE__ */ jsx("h3", {
-                  className: "text-xl font-bold text-gray-900 dark:text-white mb-2",
-                  children: "Marketing Materials"
-                }), /* @__PURE__ */ jsx("p", {
-                  className: "text-gray-600 dark:text-gray-400",
-                  children: "Brochures, flyers, business cards, and social media assets consistent with your brand voice."
-                })]
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1]",
+              children: ["Custom Web ", /* @__PURE__ */ jsx("br", {}), "Design That ", /* @__PURE__ */ jsx("br", {}), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400",
+                children: "Captivates & Converts"
               })]
-            }), /* @__PURE__ */ jsxs("div", {
-              className: "flex gap-4",
-              children: [/* @__PURE__ */ jsx("div", {
-                className: "flex-shrink-0 w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center text-pink-600",
-                children: /* @__PURE__ */ jsx("span", {
-                  className: "font-bold text-xl",
-                  children: "3"
-                })
-              }), /* @__PURE__ */ jsxs("div", {
-                children: [/* @__PURE__ */ jsx("h3", {
-                  className: "text-xl font-bold text-gray-900 dark:text-white mb-2",
-                  children: "Digital Illustrations"
-                }), /* @__PURE__ */ jsx("p", {
-                  className: "text-gray-600 dark:text-gray-400",
-                  children: "Custom illustrations and infographics to explain complex concepts visually."
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed font-medium",
+              children: "We craft premium, user-centric, and conversion-focused digital designs. Grounded in cognitive ergonomics and dynamic visual brand identity, we turn complex interfaces into simple, elegant, and memorable digital experiences."
+            }), /* @__PURE__ */ jsx("ul", {
+              className: "grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-300",
+              children: [{
+                text: "User-Centric UI/UX Prototyping",
+                desc: "Intuitive workflows built for user action"
+              }, {
+                text: "Responsive Mobile-First Framework",
+                desc: "Pixel-perfect views on all modern screens"
+              }, {
+                text: "High-Converting Micro-animations",
+                desc: "Dynamic visuals that elevate bounce rates"
+              }, {
+                text: "Legacy Website Redesigns",
+                desc: "Modernize legacy systems without losing rankings"
+              }].map((item, i) => /* @__PURE__ */ jsxs("li", {
+                className: "flex gap-3 items-start",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "flex-shrink-0 w-6 h-6 rounded-full bg-pink-500/20 flex items-center justify-center border border-pink-500/30 mt-1",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-3.5 h-3.5 text-pink-400",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "2.5",
+                      d: "M5 13l4 4L19 7"
+                    })
+                  })
+                }), /* @__PURE__ */ jsxs("div", {
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "block text-white font-bold text-sm tracking-wide",
+                    children: item.text
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "block text-slate-500 text-xs mt-0.5",
+                    children: item.desc
+                  })]
                 })]
+              }, i))
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "flex flex-col sm:flex-row gap-4 pt-4",
+              children: [/* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "px-8 py-4 rounded-full bg-purple-600 text-white font-semibold text-lg hover:bg-purple-500 transition-all text-center shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]",
+                children: "Schedule Design Call"
+              }), /* @__PURE__ */ jsx("a", {
+                href: "#design-process",
+                className: "px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all text-center",
+                children: "Our Design Process"
               })]
             })]
           }), /* @__PURE__ */ jsxs("div", {
-            className: "bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl flex flex-col justify-center items-center text-center",
-            children: [/* @__PURE__ */ jsx("h3", {
-              className: "text-2xl font-bold text-gray-900 dark:text-white mb-6",
-              children: "Need a custom design?"
+            className: "lg:col-span-5 relative hero-visual-animate",
+            children: [/* @__PURE__ */ jsx("div", {
+              className: "absolute inset-0 bg-gradient-to-tr from-pink-500/10 to-purple-500/10 blur-3xl -z-10 rounded-full"
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "relative rounded-[2rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden group",
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "flex items-center gap-2",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ff5f56]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ffbd2e]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#27c93f]"
+                  })]
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "px-4 py-1 rounded-lg bg-white/5 border border-white/5 text-[10px] text-slate-500 font-mono tracking-wider w-64 text-center truncate",
+                  children: "aarviteksystems.com/custom-website-design"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "w-12 h-2"
+                })]
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-purple-950/20 to-pink-950/20 flex items-center justify-center",
+                children: [/* @__PURE__ */ jsx("img", {
+                  src: "/images/ui-ux-design.png",
+                  alt: "Responsive UI/UX Digital Branding and Custom Website Design Mockup",
+                  className: "w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -top-6 -right-6 md:-right-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_4s_infinite_ease-in-out]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center border border-pink-500/30 relative",
+                children: /* @__PURE__ */ jsx("span", {
+                  className: "text-xs font-black text-pink-400",
+                  children: "+3.2x"
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "Conversion rate"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "Average client impact"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -bottom-6 -left-6 md:-left-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_5s_infinite_ease-in-out_1s]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/40",
+                children: /* @__PURE__ */ jsx("span", {
+                  className: "font-black text-purple-400 text-sm",
+                  children: "Fi"
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "UI/UX Audit"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "100% Figma Prototype"
+                })]
+              })]
+            })]
+          })]
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-8 bg-white/[0.02] border-y border-white/5 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center",
+          children: [{
+            value: "94%",
+            label: "First Impression Metric"
+          }, {
+            value: "-88%",
+            label: "Average Bounce Reduction"
+          }, {
+            value: "320%",
+            label: "Conversion Lift Potential"
+          }, {
+            value: "100%",
+            label: "Pixel-Perfect Responsive"
+          }].map((stat, i) => /* @__PURE__ */ jsxs("div", {
+            className: "text-center",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400",
+              children: stat.value
+            }), /* @__PURE__ */ jsx("span", {
+              className: "block text-slate-500 text-xs font-semibold tracking-wider uppercase mt-1",
+              children: stat.label
+            })]
+          }, i))
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24 relative z-10",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Tailored Design Systems & UI/UX"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We don't buy generic theme assets. We map out bespoke color profiles, tailored icon assets, and complete interactive components mapped to your target market."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8",
+          children: [{
+            icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
+            title: "Responsive Web Layouts",
+            desc: "Dynamic screen layouts engineered to scale across small mobiles, tablets, and wide retina displays. Ensuring aesthetic visual balance regardless of client browser choice.",
+            tag: "Mobile First"
+          }, {
+            icon: "M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01",
+            title: "Intelligent UI/UX Prototyping",
+            desc: "Analyzing complete buyer personas, building user journey boards, and constructing detailed Figma blueprints to test user workflows and micro-triggers before coding starts.",
+            tag: "Conversion Focus"
+          }, {
+            icon: "M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z",
+            title: "Modern Website Redesigns",
+            desc: "Rebuilding slow, outdated websites into futuristic visual portals. Completely redesigning the interface, restructuring menus, and enhancing load-times without affecting Google SEO indexes.",
+            tag: "Brand Makeover"
+          }, {
+            icon: "M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122",
+            title: "Interaction & Micro-Animations",
+            desc: "Integrating custom SVG graphics, hover triggers, parallax depth systems, and smooth GSAP load transitions that keep users deeply engaged, increasing session times.",
+            tag: "Dynamic Interfaces"
+          }].map((card, idx) => /* @__PURE__ */ jsx("div", {
+            className: "reveal-card",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(244,63,94,0.12)] h-full bg-white/5 border border-white/5 hover:border-transparent",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#f43f5e_40%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2.5s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-6 md:p-8 z-10 flex flex-col justify-between overflow-hidden",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "space-y-6",
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: "w-12 h-12 bg-pink-500/10 rounded-xl flex items-center justify-center border border-pink-500/20 group-hover:bg-pink-600 group-hover:border-pink-400 group-hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all duration-300",
+                    children: /* @__PURE__ */ jsx("svg", {
+                      className: "w-6 h-6 text-pink-400 group-hover:text-white transition-colors",
+                      fill: "none",
+                      stroke: "currentColor",
+                      viewBox: "0 0 24 24",
+                      children: /* @__PURE__ */ jsx("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: "2",
+                        d: card.icon
+                      })
+                    })
+                  }), /* @__PURE__ */ jsx("h3", {
+                    className: "text-xl font-bold text-white group-hover:text-pink-300 transition-colors",
+                    children: card.title
+                  }), /* @__PURE__ */ jsx("p", {
+                    className: "text-slate-400 leading-relaxed text-sm",
+                    children: card.desc
+                  })]
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "pt-6 mt-6 border-t border-white/5 flex items-center justify-between",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "text-[10px] font-mono uppercase tracking-wider text-slate-500",
+                    children: "Strategy:"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "text-[11px] font-semibold text-pink-400 bg-pink-500/5 border border-pink-500/10 px-2.5 py-0.5 rounded-md",
+                    children: card.tag
+                  })]
+                })]
+              })]
+            })
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      id: "tools",
+      className: "py-24 bg-[#050505] border-y border-white/5 relative z-10 tool-section-trigger",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Our UI/UX Production Stack"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We use industry-standard tools to map visual ecosystems, design component wires, mock dynamic behaviors, and export clean assets for our engineers."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6",
+          children: [{
+            name: "Figma",
+            type: "Interface Design",
+            glow: "hover:shadow-[0_0_20px_rgba(242,78,30,0.2)] hover:border-orange-500/40",
+            icon: "Fi"
+          }, {
+            name: "Photoshop",
+            type: "Raster Editing",
+            glow: "hover:shadow-[0_0_20px_rgba(49,168,255,0.2)] hover:border-sky-500/40",
+            icon: "Ps"
+          }, {
+            name: "Illustrator",
+            type: "Vector Graphics",
+            glow: "hover:shadow-[0_0_20px_rgba(255,154,0,0.2)] hover:border-amber-500/40",
+            icon: "Ai"
+          }, {
+            name: "After Effects",
+            type: "Motion UX",
+            glow: "hover:shadow-[0_0_20px_rgba(153,153,255,0.2)] hover:border-indigo-500/40",
+            icon: "Ae"
+          }, {
+            name: "Tailwind CSS",
+            type: "Style Blueprint",
+            glow: "hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] hover:border-cyan-500/40",
+            icon: "Tw"
+          }, {
+            name: "GSAP Motion",
+            type: "UI Animation",
+            glow: "hover:shadow-[0_0_20px_rgba(136,255,0,0.2)] hover:border-lime-500/40",
+            icon: "Gs"
+          }].map((tool, idx) => /* @__PURE__ */ jsx("div", {
+            className: "tool-card-animate",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: `group relative p-6 rounded-2xl border border-white/5 bg-[#0a0a0a] transition-all duration-300 transform hover:-translate-y-2 text-center cursor-default ${tool.glow}`,
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 font-black text-lg mx-auto mb-4 group-hover:bg-purple-600/10 group-hover:text-purple-300 group-hover:border-purple-500/30 transition-all",
+                children: tool.icon
+              }), /* @__PURE__ */ jsx("span", {
+                className: "block text-sm font-bold text-white group-hover:text-purple-200 transition-colors",
+                children: tool.name
+              }), /* @__PURE__ */ jsx("span", {
+                className: "block text-[10px] text-slate-500 mt-1",
+                children: tool.type
+              })]
+            })
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      id: "design-process",
+      className: "py-24 relative z-10",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Structured UI/UX Flow"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "A transparent, iterative pipeline that ensures we align completely with your target demographics."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8",
+          children: [{
+            num: "01",
+            step: "Discovery & SEO Mapping",
+            desc: "Evaluating market niches, analyzing competing sites, defining color schemes, and planning index structure."
+          }, {
+            num: "02",
+            step: "Wireframes & UX Blueprint",
+            desc: "Constructing grayscale component wires in Figma. Drafting the navigation hierarchies and scroll maps."
+          }, {
+            num: "03",
+            step: "Hi-Fi Prototyping & Visuals",
+            desc: "Applying complete brand stylings, adding images, designing visual layouts, and creating interactive mockups."
+          }, {
+            num: "04",
+            step: "Handover & Developer Sync",
+            desc: "Preparing detailed layout specs, organizing color guides, and aligning with coding teams for flawless execution."
+          }].map((phase, idx) => /* @__PURE__ */ jsxs("div", {
+            className: "relative group p-6 rounded-2xl border border-white/5 bg-[#0a0a0a]/50 backdrop-blur-md",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-4xl font-black text-pink-500/30 group-hover:text-pink-400/80 transition-colors",
+              children: phase.num
+            }), /* @__PURE__ */ jsx("h3", {
+              className: "text-lg font-bold text-white mt-4 mb-2 group-hover:text-pink-300 transition-colors",
+              children: phase.step
             }), /* @__PURE__ */ jsx("p", {
-              className: "text-gray-600 dark:text-gray-400 mb-8 max-w-md",
-              children: "Our design team is ready to bring your ideas to life. Let's create something specific for your campaign."
-            }), /* @__PURE__ */ jsx(Link, {
-              to: "/contact",
-              className: "px-8 py-3 bg-pink-600 text-white font-medium rounded-lg hover:bg-pink-700 transition-colors",
-              children: "Contact Our Designers"
+              className: "text-slate-400 text-sm leading-relaxed",
+              children: phase.desc
+            })]
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-12 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "relative rounded-[2.5rem] overflow-hidden p-12 md:p-20 text-center border border-white/10 bg-gradient-to-br from-[#1a0510] to-[#0a0106] shadow-2xl",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "absolute top-[-30%] right-[-10%] w-[300px] h-[300px] bg-pink-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsx("div", {
+            className: "absolute bottom-[-30%] left-[-10%] w-[300px] h-[300px] bg-purple-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "relative z-10 max-w-3xl mx-auto space-y-6",
+            children: [/* @__PURE__ */ jsxs("h2", {
+              className: "text-3xl md:text-5xl font-black text-white leading-tight",
+              children: ["Ready to Redesign Your ", /* @__PURE__ */ jsx("br", {
+                className: "hidden sm:inline"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400",
+                children: "Digital Authority?"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto",
+              children: "Let's build a custom interactive UI design package to overhaul your brand value, keep users active, and significantly lift visual authority."
+            }), /* @__PURE__ */ jsx("div", {
+              className: "pt-6",
+              children: /* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "inline-block px-10 py-5 rounded-full bg-purple-600 text-white font-extrabold text-lg hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.7)]",
+                children: "Get a Free Custom UI/UX Website Audit"
+              })
             })]
           })]
         })
@@ -7778,97 +8931,2032 @@ const graphicDesign = UNSAFE_withComponentProps(function GraphicDesign() {
 });
 const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: graphicDesign,
-  meta: meta$5
+  default: websiteDesign,
+  meta: meta$d
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$4({}) {
+const ScrollTrigger$4 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
+const useGSAP$4 = useGSAP$9 || void 0 || GSAPReact;
+gsapWithCSS.registerPlugin(useGSAP$4, ScrollTrigger$4);
+function meta$c({}) {
   return [{
-    title: "E-Commerce Solutions - Aarvitek Systems"
+    title: "Premium Graphic Design Services & Branding | Aarvitek Systems"
   }, {
     name: "description",
-    content: "Robust e-commerce platforms to grow your online business."
+    content: "Aarvitek Systems delivers professional custom graphic design, memorable logo creation, corporate brand identity guides, and print-ready digital marketing assets. 100% SEO-optimized."
+  }, {
+    name: "keywords",
+    content: "graphic design services, custom logo designer, brand identity package, corporate style guide, vector illustration services, print marketing collateral, social media design pack, delhi branding agency"
   }];
 }
-const ecommerce = UNSAFE_withComponentProps(function Ecommerce() {
+const graphicDesign = UNSAFE_withComponentProps(function GraphicDesign() {
+  const container = useRef(null);
+  useGSAP$4(() => {
+    gsapWithCSS.from(".hero-text-animate > *", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      delay: 0.1
+    });
+    gsapWithCSS.from(".hero-visual-animate", {
+      scale: 0.95,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power3.out",
+      delay: 0.4
+    });
+    const cards = gsapWithCSS.utils.toArray(".reveal-card");
+    cards.forEach((card) => {
+      gsapWithCSS.from(card, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%"
+        }
+      });
+    });
+    gsapWithCSS.from(".tool-card-animate", {
+      scale: 0.9,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".tool-section-trigger",
+        start: "top 80%"
+      }
+    });
+  }, {
+    scope: container
+  });
   return /* @__PURE__ */ jsxs("div", {
-    className: "pt-16 min-h-screen",
-    children: [/* @__PURE__ */ jsx("section", {
-      className: "bg-gradient-to-r from-green-600 to-teal-600 py-20 text-white",
-      children: /* @__PURE__ */ jsxs("div", {
-        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
-        children: [/* @__PURE__ */ jsx("h1", {
-          className: "text-4xl md:text-5xl font-bold mb-6",
-          children: "E-Commerce Solutions"
-        }), /* @__PURE__ */ jsx("p", {
-          className: "text-xl max-w-3xl mx-auto text-green-100",
-          children: "Launch and scale your online store with powerful, secure, and user-friendly e-commerce platforms."
-        })]
+    ref: container,
+    className: "min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30 overflow-hidden pt-24 pb-12",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[5%] w-[500px] h-[500px] bg-rose-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-pink-500/10 blur-[180px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-violet-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none"
+    }), /* @__PURE__ */ jsx("section", {
+      className: "relative pt-12 pb-20 lg:pt-20 lg:pb-32 z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-7 space-y-8 hero-text-animate",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-500/30 bg-rose-500/10 backdrop-blur-md",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "flex h-2 w-2 rounded-full bg-rose-500 animate-pulse"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-sm font-semibold text-rose-200 tracking-wide",
+                children: "Dynamic Branding & Vector Artistry"
+              })]
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1]",
+              children: ["Visual Storytelling ", /* @__PURE__ */ jsx("br", {}), "That Builds ", /* @__PURE__ */ jsx("br", {}), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-violet-400",
+                children: "Brand Authority"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed font-medium",
+              children: "We engineer high-impact visual identities. From corporate logo packages and complete color system design guides to customized digital vector art and high-converting marketing print media, we transform abstract brand goals into striking graphical reality."
+            }), /* @__PURE__ */ jsx("ul", {
+              className: "grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-300",
+              children: [{
+                text: "Memorable Logos & Identity Guides",
+                desc: "Cohesive style sheets with custom typography"
+              }, {
+                text: "100% Handcrafted Scalable Vectors",
+                desc: "Clean SVG, EPS & AI vector assets"
+              }, {
+                text: "High-Converting Ad & Social Packs",
+                desc: "Dynamic banners designed to lift click-throughs"
+              }, {
+                text: "Print-Ready Corporate Collaterals",
+                desc: "High-DPI layout sheets ready for production"
+              }].map((item, i) => /* @__PURE__ */ jsxs("li", {
+                className: "flex gap-3 items-start",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "flex-shrink-0 w-6 h-6 rounded-full bg-rose-500/20 flex items-center justify-center border border-rose-500/30 mt-1",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-3.5 h-3.5 text-rose-400",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "2.5",
+                      d: "M5 13l4 4L19 7"
+                    })
+                  })
+                }), /* @__PURE__ */ jsxs("div", {
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "block text-white font-bold text-sm tracking-wide",
+                    children: item.text
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "block text-slate-500 text-xs mt-0.5",
+                    children: item.desc
+                  })]
+                })]
+              }, i))
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "flex flex-col sm:flex-row gap-4 pt-4",
+              children: [/* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "px-8 py-4 rounded-full bg-purple-600 text-white font-semibold text-lg hover:bg-purple-500 transition-all text-center shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]",
+                children: "Consult Our Designers"
+              }), /* @__PURE__ */ jsx("a", {
+                href: "#graphic-process",
+                className: "px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all text-center",
+                children: "Our Creative Process"
+              })]
+            })]
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-5 relative hero-visual-animate",
+            children: [/* @__PURE__ */ jsx("div", {
+              className: "absolute inset-0 bg-gradient-to-tr from-rose-500/10 to-violet-500/10 blur-3xl -z-10 rounded-full"
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "relative rounded-[2rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden group",
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "flex items-center gap-2",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ff5f56]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ffbd2e]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#27c93f]"
+                  })]
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "px-4 py-1 rounded-lg bg-white/5 border border-white/5 text-[10px] text-slate-500 font-mono tracking-wider w-64 text-center truncate",
+                  children: "artboard_canvas_v2.ai (300 DPI)"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "w-12 h-2"
+                })]
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-purple-950/20 to-rose-950/20 flex items-center justify-center",
+                children: [/* @__PURE__ */ jsx("img", {
+                  src: "/images/ui-ux-design.png",
+                  alt: "Vector illustrations and digital branding layouts",
+                  className: "w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute inset-0 border border-dashed border-rose-500/30 m-8 pointer-events-none"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute top-1/2 inset-x-0 border-t border-dashed border-violet-500/30 pointer-events-none"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute left-1/2 inset-y-0 border-l border-dashed border-violet-500/30 pointer-events-none"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -top-6 -right-6 md:-right-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_4s_infinite_ease-in-out]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center border border-rose-500/30",
+                children: /* @__PURE__ */ jsx("svg", {
+                  className: "w-5 h-5 text-rose-400",
+                  fill: "none",
+                  stroke: "currentColor",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx("path", {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "2.5",
+                    d: "M9 12l2 2 4-4"
+                  })
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "Scale Check"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "100% Scalable SVG"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -bottom-6 -left-6 md:-left-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_5s_infinite_ease-in-out_1s]",
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "flex gap-1.5 items-center",
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "w-3.5 h-3.5 rounded-full bg-rose-500"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "w-3.5 h-3.5 rounded-full bg-pink-500"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "w-3.5 h-3.5 rounded-full bg-purple-500"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "w-3.5 h-3.5 rounded-full bg-violet-500"
+                })]
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "Active Brand Palette"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "Harmonious CSS Matching"
+                })]
+              })]
+            })]
+          })]
+        })
       })
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-20 bg-white dark:bg-gray-950",
+      className: "py-8 bg-white/[0.02] border-y border-white/5 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center",
+          children: [{
+            value: "7.4x",
+            label: "Higher Visual Retention"
+          }, {
+            value: "300 DPI",
+            label: "High-DPI Print Precision"
+          }, {
+            value: "100%",
+            label: "Handcrafted Unique Logos"
+          }, {
+            value: "SVG/EPS",
+            label: "Lossless Vector Formats"
+          }].map((stat, i) => /* @__PURE__ */ jsxs("div", {
+            className: "text-center",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-400",
+              children: stat.value
+            }), /* @__PURE__ */ jsx("span", {
+              className: "block text-slate-500 text-xs font-semibold tracking-wider uppercase mt-1",
+              children: stat.label
+            })]
+          }, i))
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24 relative z-10",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsxs("div", {
-          className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16",
-          children: [/* @__PURE__ */ jsxs("div", {
-            className: "border border-green-100 dark:border-green-900 rounded-xl p-6 hover:bg-green-50 dark:hover:bg-green-900/10 transition-colors",
-            children: [/* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-gray-900 dark:text-white mb-3",
-              children: "Shopify Expert Setup"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-gray-600 dark:text-gray-400",
-              children: "Get your store up and running quickly with our expert Shopify setup and customization services."
-            })]
-          }), /* @__PURE__ */ jsxs("div", {
-            className: "border border-green-100 dark:border-green-900 rounded-xl p-6 hover:bg-green-50 dark:hover:bg-green-900/10 transition-colors",
-            children: [/* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-gray-900 dark:text-white mb-3",
-              children: "WooCommerce Development"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-gray-600 dark:text-gray-400",
-              children: "Turn your WordPress site into a selling machine with a custom WooCommerce integration tailored to your needs."
-            })]
-          }), /* @__PURE__ */ jsxs("div", {
-            className: "border border-green-100 dark:border-green-900 rounded-xl p-6 hover:bg-green-50 dark:hover:bg-green-900/10 transition-colors",
-            children: [/* @__PURE__ */ jsx("h3", {
-              className: "text-xl font-bold text-gray-900 dark:text-white mb-3",
-              children: "Custom E-com Platforms"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-gray-600 dark:text-gray-400",
-              children: "For complex requirements, we build bespoke e-commerce solutions using Node.js, Next.js, and Stripe."
-            })]
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Tailored Visual Systems"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We don't use stock graphics. We map out bespoke color profiles, tailored icon assets, and complete corporate identity styles customized to your audience."
           })]
-        }), /* @__PURE__ */ jsxs("div", {
-          className: "bg-green-900 rounded-3xl p-8 md:p-12 text-center text-white overflow-hidden relative",
-          children: [/* @__PURE__ */ jsxs("div", {
-            className: "relative z-10",
-            children: [/* @__PURE__ */ jsx("h2", {
-              className: "text-3xl font-bold mb-4",
-              children: "Start Selling Online Today"
-            }), /* @__PURE__ */ jsx("p", {
-              className: "text-green-100 max-w-2xl mx-auto mb-8",
-              children: "Don't let technical hurdles stop your sales. We handle the code so you can focus on your products."
-            }), /* @__PURE__ */ jsx(Link, {
-              to: "/contact",
-              className: "inline-block px-8 py-3 bg-white text-green-800 font-bold rounded-full hover:bg-green-50 transition-colors",
-              children: "Launch My Store"
-            })]
-          }), /* @__PURE__ */ jsx("div", {
-            className: "absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-green-500 rounded-full opacity-20 blur-3xl"
-          }), /* @__PURE__ */ jsx("div", {
-            className: "absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-teal-500 rounded-full opacity-20 blur-3xl"
-          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8",
+          children: [{
+            icon: "M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z",
+            title: "Brand Strategy & Logo Identity",
+            desc: "Forging dynamic corporate symbols and cohesive logotypes from scratch. Handing over exhaustive visual brand books defining your active colors, layouts, and font structures.",
+            tag: "Logo System"
+          }, {
+            icon: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z",
+            title: "Digital Ad & Social Design Packs",
+            desc: "Creating high-CTR Google display assets, visually aesthetic social grid wireframes (Instagram, LinkedIn), and targeted graphical banners aligned to fuel your digital marketing campaigns.",
+            tag: "Social & Ad Media"
+          }, {
+            icon: "M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+            title: "Custom Explainer Infographics",
+            desc: "Distilling complex statistics and abstract software concepts into simple, visually stunning explainer vectors. Highly shareable graphics customized to boost organic search backlinks.",
+            tag: "Vector Infographics"
+          }, {
+            icon: "M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9v4a2 2 0 00-2 2v2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h8z",
+            title: "Print-Ready Corporate Media",
+            desc: "Designing premium commercial pamphlets, visual booklets, elegant business cards, and sales flyers. Exported in strict high-DPI CMYK profiles with proper bleed zones.",
+            tag: "Print Collaterals"
+          }].map((card, idx) => /* @__PURE__ */ jsx("div", {
+            className: "reveal-card",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(244,63,94,0.12)] h-full bg-white/5 border border-white/5 hover:border-transparent",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#f43f5e_40%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2.5s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-6 md:p-8 z-10 flex flex-col justify-between overflow-hidden",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "space-y-6",
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: "w-12 h-12 bg-rose-500/10 rounded-xl flex items-center justify-center border border-rose-500/20 group-hover:bg-rose-600 group-hover:border-rose-400 group-hover:shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all duration-300",
+                    children: /* @__PURE__ */ jsx("svg", {
+                      className: "w-6 h-6 text-rose-400 group-hover:text-white transition-colors",
+                      fill: "none",
+                      stroke: "currentColor",
+                      viewBox: "0 0 24 24",
+                      children: /* @__PURE__ */ jsx("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: "2",
+                        d: card.icon
+                      })
+                    })
+                  }), /* @__PURE__ */ jsx("h3", {
+                    className: "text-xl font-bold text-white group-hover:text-rose-300 transition-colors",
+                    children: card.title
+                  }), /* @__PURE__ */ jsx("p", {
+                    className: "text-slate-400 leading-relaxed text-sm",
+                    children: card.desc
+                  })]
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "pt-6 mt-6 border-t border-white/5 flex items-center justify-between",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "text-[10px] font-mono uppercase tracking-wider text-slate-500",
+                    children: "Output:"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "text-[11px] font-semibold text-rose-400 bg-rose-500/5 border border-rose-500/10 px-2.5 py-0.5 rounded-md",
+                    children: card.tag
+                  })]
+                })]
+              })]
+            })
+          }, idx))
         })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      id: "tools",
+      className: "py-24 bg-[#050505] border-y border-white/5 relative z-10 tool-section-trigger",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Our Graphic Design Toolkit"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We deploy advanced graphic production suites to trace high-definition shapes, edit textures, arrange print boundaries, and compile vector packages."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6",
+          children: [{
+            name: "Illustrator",
+            type: "Vector Creator",
+            glow: "hover:shadow-[0_0_20px_rgba(255,154,0,0.2)] hover:border-amber-500/40",
+            icon: "Ai"
+          }, {
+            name: "Photoshop",
+            type: "Raster & Mockup",
+            glow: "hover:shadow-[0_0_20px_rgba(49,168,255,0.2)] hover:border-sky-500/40",
+            icon: "Ps"
+          }, {
+            name: "InDesign",
+            type: "Page Layout",
+            glow: "hover:shadow-[0_0_20px_rgba(255,0,102,0.2)] hover:border-rose-500/40",
+            icon: "Id"
+          }, {
+            name: "Figma",
+            type: "Component Vectors",
+            glow: "hover:shadow-[0_0_20px_rgba(242,78,30,0.2)] hover:border-orange-500/40",
+            icon: "Fi"
+          }, {
+            name: "CorelDRAW",
+            type: "Print Vectorizing",
+            glow: "hover:shadow-[0_0_20px_rgba(0,204,102,0.2)] hover:border-emerald-500/40",
+            icon: "Cd"
+          }, {
+            name: "Procreate",
+            type: "Digital Sketching",
+            glow: "hover:shadow-[0_0_20px_rgba(153,102,255,0.2)] hover:border-purple-500/40",
+            icon: "Pr"
+          }].map((tool, idx) => /* @__PURE__ */ jsx("div", {
+            className: "tool-card-animate",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: `group relative p-6 rounded-2xl border border-white/5 bg-[#0a0a0a] transition-all duration-300 transform hover:-translate-y-2 text-center cursor-default ${tool.glow}`,
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 font-black text-lg mx-auto mb-4 group-hover:bg-rose-600/10 group-hover:text-rose-300 group-hover:border-rose-500/30 transition-all",
+                children: tool.icon
+              }), /* @__PURE__ */ jsx("span", {
+                className: "block text-sm font-bold text-white group-hover:text-rose-200 transition-colors",
+                children: tool.name
+              }), /* @__PURE__ */ jsx("span", {
+                className: "block text-[10px] text-slate-500 mt-1",
+                children: tool.type
+              })]
+            })
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      id: "graphic-process",
+      className: "py-24 relative z-10",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Structured Creative Pipeline"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "A highly organized four-step creation pipeline ensuring your digital collateral conveys exactly what your business represents."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8",
+          children: [{
+            num: "01",
+            step: "Moodboards & Concepting",
+            desc: "Formulating initial shape ideas, checking color profiles, drawing rough layout lines, and checking logo structures."
+          }, {
+            num: "02",
+            step: "Vector Tracing Sprints",
+            desc: "Constructing scalable curve nodes in Illustrator. Designing high-DPI layouts and picking typography pairings."
+          }, {
+            num: "03",
+            step: "Palette & Context Testing",
+            desc: "Validating how graphic mockups render inside mobile websites, commercial mockups, and high-impact print collaterals."
+          }, {
+            num: "04",
+            step: "Production Delivery Sync",
+            desc: "Exporting raw layer formats (SVG, EPS, high-res PNG, bleed PDF) alongside the corporate brand guidelines book."
+          }].map((phase, idx) => /* @__PURE__ */ jsxs("div", {
+            className: "relative group p-6 rounded-2xl border border-white/5 bg-[#0a0a0a]/50 backdrop-blur-md",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-4xl font-black text-rose-500/30 group-hover:text-rose-400/80 transition-colors",
+              children: phase.num
+            }), /* @__PURE__ */ jsx("h3", {
+              className: "text-lg font-bold text-white mt-4 mb-2 group-hover:text-rose-300 transition-colors",
+              children: phase.step
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-sm leading-relaxed",
+              children: phase.desc
+            })]
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-12 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "relative rounded-[2.5rem] overflow-hidden p-12 md:p-20 text-center border border-white/10 bg-gradient-to-br from-[#1a0505] to-[#0a0101] shadow-2xl",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "absolute top-[-30%] right-[-10%] w-[300px] h-[300px] bg-rose-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsx("div", {
+            className: "absolute bottom-[-30%] left-[-10%] w-[300px] h-[300px] bg-violet-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "relative z-10 max-w-3xl mx-auto space-y-6",
+            children: [/* @__PURE__ */ jsxs("h2", {
+              className: "text-3xl md:text-5xl font-black text-white leading-tight",
+              children: ["Ready to Redesign Your ", /* @__PURE__ */ jsx("br", {
+                className: "hidden sm:inline"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-violet-400",
+                children: "Brand's Visual System?"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto",
+              children: "Let's architect high-impact brand guidelines and gorgeous marketing graphics to skyrocket click-throughs and secure instant user trust."
+            }), /* @__PURE__ */ jsx("div", {
+              className: "pt-6",
+              children: /* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "inline-block px-10 py-5 rounded-full bg-purple-600 text-white font-extrabold text-lg hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.7)]",
+                children: "Get a Free Custom Brand Style Session"
+              })
+            })]
+          })]
+        })
       })
     })]
   });
 });
 const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: ecommerce,
-  meta: meta$4
+  default: graphicDesign,
+  meta: meta$c
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$3({}) {
+const ScrollTrigger$3 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
+const useGSAP$3 = useGSAP$9 || void 0 || GSAPReact;
+gsapWithCSS.registerPlugin(useGSAP$3, ScrollTrigger$3);
+function meta$b({}) {
+  return [{
+    title: "Scalable E-Commerce Web Development & Shopify Expert | Aarvitek Systems"
+  }, {
+    name: "description",
+    content: "Aarvitek Systems delivers high-converting custom e-commerce web development, professional Shopify expert setups, and headless WooCommerce platforms. Speed, security, and checkout optimized."
+  }, {
+    name: "keywords",
+    content: "ecommerce web development, Shopify developer, custom online store builder, WooCommerce website development, custom shopping cart system, high converting checkouts, payment integrations, stripe razorpay delhi"
+  }];
+}
+const ecommerce = UNSAFE_withComponentProps(function Ecommerce() {
+  const container = useRef(null);
+  useGSAP$3(() => {
+    gsapWithCSS.from(".hero-text-animate > *", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      delay: 0.1
+    });
+    gsapWithCSS.from(".hero-visual-animate", {
+      scale: 0.95,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power3.out",
+      delay: 0.4
+    });
+    const cards = gsapWithCSS.utils.toArray(".reveal-card");
+    cards.forEach((card) => {
+      gsapWithCSS.from(card, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%"
+        }
+      });
+    });
+    gsapWithCSS.from(".tool-card-animate", {
+      scale: 0.9,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".tool-section-trigger",
+        start: "top 80%"
+      }
+    });
+  }, {
+    scope: container
+  });
+  return /* @__PURE__ */ jsxs("div", {
+    ref: container,
+    className: "min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30 overflow-hidden pt-24 pb-12",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[5%] w-[500px] h-[500px] bg-emerald-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-teal-500/10 blur-[180px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-violet-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none"
+    }), /* @__PURE__ */ jsx("section", {
+      className: "relative pt-12 pb-20 lg:pt-20 lg:pb-32 z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-7 space-y-8 hero-text-animate",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-sm font-semibold text-emerald-200 tracking-wide",
+                children: "High-Converting E-Commerce Engineering"
+              })]
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1]",
+              children: ["Custom E-Commerce ", /* @__PURE__ */ jsx("br", {}), "Platforms Built ", /* @__PURE__ */ jsx("br", {}), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-indigo-400",
+                children: "to Scale Sales"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed font-medium",
+              children: "We engineer high-performance online storefronts, headless e-commerce architectures, and frictionless checkout funnels. Powered by Next.js, Shopify APIs, and WooCommerce, we build scalable platforms optimized for maximum page speed, zero cart abandonment, and complete payment security."
+            }), /* @__PURE__ */ jsx("ul", {
+              className: "grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-300",
+              children: [{
+                text: "Bespoke Headless Architectures",
+                desc: "Speed-focused React & Next.js storefronts"
+              }, {
+                text: "Seamless Multi-Gateway Payment",
+                desc: "Integrated with Stripe, Razorpay, and PayPal"
+              }, {
+                text: "Frictionless Checkout Funnels",
+                desc: "Form setups designed to reduce cart drops"
+              }, {
+                text: "Automated CRM & Inventory Wires",
+                desc: "Real-time stock level synchronization"
+              }].map((item, i) => /* @__PURE__ */ jsxs("li", {
+                className: "flex gap-3 items-start",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30 mt-1",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-3.5 h-3.5 text-emerald-400",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "2.5",
+                      d: "M5 13l4 4L19 7"
+                    })
+                  })
+                }), /* @__PURE__ */ jsxs("div", {
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "block text-white font-bold text-sm tracking-wide",
+                    children: item.text
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "block text-slate-500 text-xs mt-0.5",
+                    children: item.desc
+                  })]
+                })]
+              }, i))
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "flex flex-col sm:flex-row gap-4 pt-4",
+              children: [/* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "px-8 py-4 rounded-full bg-purple-600 text-white font-semibold text-lg hover:bg-purple-500 transition-all text-center shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]",
+                children: "Launch My Store"
+              }), /* @__PURE__ */ jsx("a", {
+                href: "#ecommerce-stack",
+                className: "px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all text-center",
+                children: "Explore E-Com Stack"
+              })]
+            })]
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-5 relative hero-visual-animate",
+            children: [/* @__PURE__ */ jsx("div", {
+              className: "absolute inset-0 bg-gradient-to-tr from-emerald-500/10 to-indigo-500/10 blur-3xl -z-10 rounded-full"
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "relative rounded-[2rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden group",
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "flex items-center gap-2",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ff5f56]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ffbd2e]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#27c93f]"
+                  })]
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "px-4 py-1 rounded-lg bg-white/5 border border-white/5 text-[10px] text-slate-500 font-mono tracking-wider w-64 text-center truncate",
+                  children: "aarviteksystems.com/custom-ecommerce"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "w-12 h-2"
+                })]
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-indigo-950/20 to-emerald-950/20 flex items-center justify-center",
+                children: [/* @__PURE__ */ jsx("img", {
+                  src: "/images/web-development.png",
+                  alt: "High performance e-commerce platform and shopping cart design mockup",
+                  className: "w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -top-6 -right-6 md:-right-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_4s_infinite_ease-in-out]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30",
+                children: /* @__PURE__ */ jsx("svg", {
+                  className: "w-5 h-5 text-emerald-400",
+                  fill: "none",
+                  stroke: "currentColor",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx("path", {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "2.5",
+                    d: "M9 12l2 2 4-4"
+                  })
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "SSL secured"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "Stripe & PCI compliant"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -bottom-6 -left-6 md:-left-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_5s_infinite_ease-in-out_1s]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30 relative",
+                children: /* @__PURE__ */ jsx("span", {
+                  className: "text-xs font-black text-indigo-400",
+                  children: "+82%"
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "Checkout rate"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "Optimized forms"
+                })]
+              })]
+            })]
+          })]
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-8 bg-white/[0.02] border-y border-white/5 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center",
+          children: [{
+            value: "LCP < 1.0s",
+            label: "Blazing Store Speed"
+          }, {
+            value: "82%",
+            label: "Checkouts Lift Average"
+          }, {
+            value: "100%",
+            label: "Secure PCI Compliance"
+          }, {
+            value: "Real-Time",
+            label: "Inventory Sync Wires"
+          }].map((stat, i) => /* @__PURE__ */ jsxs("div", {
+            className: "text-center",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-indigo-400",
+              children: stat.value
+            }), /* @__PURE__ */ jsx("span", {
+              className: "block text-slate-500 text-xs font-semibold tracking-wider uppercase mt-1",
+              children: stat.label
+            })]
+          }, i))
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24 relative z-10",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Tailored Selling Systems & Storefronts"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We don't build standard stock templates. We engineer bespoke checkout steps, custom product grids, and complete automated pipelines to streamline merchant operations."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8",
+          children: [{
+            icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
+            title: "Custom Headless Storefronts",
+            desc: "Architecting React and Next.js frontends connected with headless Shopify or Commerce APIs. Guaranteeing blazing speeds and custom layout freedoms standard templates cannot offer.",
+            tag: "Headless E-Com"
+          }, {
+            icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z",
+            title: "Shopify Customization & Setup",
+            desc: "Delivering fast, beautiful stores on the world's most stable storefront framework. Providing completely bespoke Liquid theme customizations, app setup wires, and automated checkout rules.",
+            tag: "Shopify Specialist"
+          }, {
+            icon: "M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10",
+            title: "WooCommerce Engine Integration",
+            desc: "Turning standard WordPress portals into high-volume selling systems. Coding custom WooCommerce page layouts, cart hooks, and custom administrative dashboard management screens.",
+            tag: "WooCommerce Pro"
+          }, {
+            icon: "M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z",
+            title: "Secure Multi-Gateway Payment Rails",
+            desc: "Integrating secure payment gateways (Stripe, Razorpay, PayPal) with proper error auditing, webhook listeners, automated client invoicing, and secure SSL datastores.",
+            tag: "Payment Systems"
+          }].map((card, idx) => /* @__PURE__ */ jsx("div", {
+            className: "reveal-card",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(16,185,129,0.12)] h-full bg-white/5 border border-white/5 hover:border-transparent",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#10b981_40%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2.5s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-6 md:p-8 z-10 flex flex-col justify-between overflow-hidden",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "space-y-6",
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: "w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20 group-hover:bg-emerald-600 group-hover:border-emerald-400 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300",
+                    children: /* @__PURE__ */ jsx("svg", {
+                      className: "w-6 h-6 text-emerald-400 group-hover:text-white transition-colors",
+                      fill: "none",
+                      stroke: "currentColor",
+                      viewBox: "0 0 24 24",
+                      children: /* @__PURE__ */ jsx("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: "2",
+                        d: card.icon
+                      })
+                    })
+                  }), /* @__PURE__ */ jsx("h3", {
+                    className: "text-xl font-bold text-white group-hover:text-emerald-300 transition-colors",
+                    children: card.title
+                  }), /* @__PURE__ */ jsx("p", {
+                    className: "text-slate-400 leading-relaxed text-sm",
+                    children: card.desc
+                  })]
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "pt-6 mt-6 border-t border-white/5 flex items-center justify-between",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "text-[10px] font-mono uppercase tracking-wider text-slate-500",
+                    children: "Engine:"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "text-[11px] font-semibold text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 px-2.5 py-0.5 rounded-md",
+                    children: card.tag
+                  })]
+                })]
+              })]
+            })
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      id: "ecommerce-stack",
+      className: "py-24 bg-[#050505] border-y border-white/5 relative z-10 tool-section-trigger",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Our E-Commerce Stack"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We use industry-standard libraries to construct robust cart systems, process payments securely, build fast SSR front-ends, and host scaling online stores."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6",
+          children: [{
+            name: "Next.js",
+            type: "Store SSR",
+            glow: "hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:border-white/40",
+            icon: "Nx"
+          }, {
+            name: "Shopify API",
+            type: "Headless Sales",
+            glow: "hover:shadow-[0_0_20px_rgba(150,191,72,0.2)] hover:border-[#96bf48]/40",
+            icon: "Sh"
+          }, {
+            name: "WooCommerce",
+            type: "WP selling",
+            glow: "hover:shadow-[0_0_20px_rgba(150,90,200,0.2)] hover:border-purple-500/40",
+            icon: "Wc"
+          }, {
+            name: "Stripe",
+            type: "Payment gateway",
+            glow: "hover:shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:border-indigo-500/40",
+            icon: "St"
+          }, {
+            name: "PostgreSQL",
+            type: "Products DB",
+            glow: "hover:shadow-[0_0_20px_rgba(14,165,233,0.2)] hover:border-sky-500/40",
+            icon: "Pg"
+          }, {
+            name: "AWS Serverless",
+            type: "Scale Scaling",
+            glow: "hover:shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:border-amber-500/40",
+            icon: "Aw"
+          }].map((tool, idx) => /* @__PURE__ */ jsx("div", {
+            className: "tool-card-animate",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: `group relative p-6 rounded-2xl border border-white/5 bg-[#0a0a0a] transition-all duration-300 transform hover:-translate-y-2 text-center cursor-default ${tool.glow}`,
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 font-black text-lg mx-auto mb-4 group-hover:bg-purple-600/10 group-hover:text-purple-300 group-hover:border-purple-500/30 transition-all",
+                children: tool.icon
+              }), /* @__PURE__ */ jsx("span", {
+                className: "block text-sm font-bold text-white group-hover:text-purple-200 transition-colors",
+                children: tool.name
+              }), /* @__PURE__ */ jsx("span", {
+                className: "block text-[10px] text-slate-500 mt-1",
+                children: tool.type
+              })]
+            })
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      id: "ecommerce-process",
+      className: "py-24 relative z-10",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Structured E-Com Development Flow"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "A highly organized four-step creation pipeline ensuring your digital catalog sells exactly what your business yields."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8",
+          children: [{
+            num: "01",
+            step: "Catalog & Funnel Map",
+            desc: "Auditing product attributes, defining visual product categories, layout plans, and mapping the payment structures."
+          }, {
+            num: "02",
+            step: "Frictionless Cart Wires",
+            desc: "Constructing scalable shopping cart wires in Figma. Designing fast checkout forms and setting up payment methods."
+          }, {
+            num: "03",
+            step: "API Gate & Security Audit",
+            desc: "Testing payment gateway webhooks, checking stock level synchronization rules, and validating core speed stats."
+          }, {
+            num: "04",
+            step: "Scale Serverless Setup",
+            desc: "Deploying high-speed serverless setups on AWS or Vercel, hooked with automated analytical dashboard trackers."
+          }].map((phase, idx) => /* @__PURE__ */ jsxs("div", {
+            className: "relative group p-6 rounded-2xl border border-white/5 bg-[#0a0a0a]/50 backdrop-blur-md",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-4xl font-black text-emerald-500/30 group-hover:text-emerald-400/80 transition-colors",
+              children: phase.num
+            }), /* @__PURE__ */ jsx("h3", {
+              className: "text-lg font-bold text-white mt-4 mb-2 group-hover:text-emerald-300 transition-colors",
+              children: phase.step
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-sm leading-relaxed",
+              children: phase.desc
+            })]
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-12 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "relative rounded-[2.5rem] overflow-hidden p-12 md:p-20 text-center border border-white/10 bg-gradient-to-br from-[#051a10] to-[#010a06] shadow-2xl",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "absolute top-[-30%] right-[-10%] w-[300px] h-[300px] bg-emerald-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsx("div", {
+            className: "absolute bottom-[-30%] left-[-10%] w-[300px] h-[300px] bg-indigo-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "relative z-10 max-w-3xl mx-auto space-y-6",
+            children: [/* @__PURE__ */ jsxs("h2", {
+              className: "text-3xl md:text-5xl font-black text-white leading-tight",
+              children: ["Ready to Architect a ", /* @__PURE__ */ jsx("br", {
+                className: "hidden sm:inline"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-indigo-400",
+                children: "High-Performance Custom Store?"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto",
+              children: "Let's build a secure, fast, and completely checkout-optimized e-commerce platform tailored to elevate your sales and drive organic retail growth."
+            }), /* @__PURE__ */ jsx("div", {
+              className: "pt-6",
+              children: /* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "inline-block px-10 py-5 rounded-full bg-purple-600 text-white font-extrabold text-lg hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.7)]",
+                children: "Get a Free Custom Store CRO Audits"
+              })
+            })]
+          })]
+        })
+      })
+    })]
+  });
+});
+const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: ecommerce,
+  meta: meta$b
+}, Symbol.toStringTag, { value: "Module" }));
+const ScrollTrigger$2 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
+const useGSAP$2 = useGSAP$9 || void 0 || GSAPReact;
+gsapWithCSS.registerPlugin(useGSAP$2, ScrollTrigger$2);
+function meta$a({}) {
+  return [{
+    title: "Privacy Policy & Data Protection | Aarvitek Systems"
+  }, {
+    name: "description",
+    content: "Learn how Aarvitek Systems safeguards your personal details, cookies, and business intellectual property on our high-performance IT and custom web development systems."
+  }, {
+    name: "keywords",
+    content: "privacy policy aarvitek systems, data protection policy, gdpr compliance, secure web development, cloud data storage safety, cookies agreement"
+  }];
+}
+const privacyPolicy = UNSAFE_withComponentProps(function PrivacyPolicy() {
+  const container = useRef(null);
+  useGSAP$2(() => {
+    gsapWithCSS.from(".fade-in-animate > *", {
+      y: 30,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      delay: 0.1
+    });
+  }, {
+    scope: container
+  });
+  return /* @__PURE__ */ jsxs("div", {
+    ref: container,
+    className: "min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30 overflow-hidden pt-24 pb-12",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[5%] w-[500px] h-[500px] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] right-[-5%] w-[500px] h-[500px] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none"
+    }), /* @__PURE__ */ jsxs("div", {
+      className: "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 fade-in-animate",
+      children: [/* @__PURE__ */ jsxs("div", {
+        className: "text-center pt-12 pb-16 space-y-6",
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-500/10 border border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.2)] mb-4",
+          children: /* @__PURE__ */ jsx("svg", {
+            className: "w-8 h-8 text-purple-400",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+            children: /* @__PURE__ */ jsx("path", {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              strokeWidth: "2",
+              d: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            })
+          })
+        }), /* @__PURE__ */ jsxs("h1", {
+          className: "text-4xl md:text-6xl font-black tracking-tight text-white leading-tight",
+          children: ["Privacy Policy & ", /* @__PURE__ */ jsx("br", {}), /* @__PURE__ */ jsx("span", {
+            className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400",
+            children: "Data Protection"
+          })]
+        }), /* @__PURE__ */ jsx("p", {
+          className: "text-slate-400 text-base md:text-lg max-w-2xl mx-auto font-medium",
+          children: "Last Updated: May 19, 2026. At Aarvitek Systems, your digital privacy and business intellectual property security are foundational to our engineering values."
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "relative rounded-[2.5rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl p-8 md:p-16 shadow-2xl overflow-hidden space-y-12",
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "absolute top-0 right-0 w-64 h-64 bg-purple-500/5 blur-[80px] rounded-full pointer-events-none"
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "1. Information We Collect"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "When you browse our website, request a custom software design consult, or book a discovery call, we collect information that helps us serve you. This includes:"
+          }), /* @__PURE__ */ jsxs("ul", {
+            className: "space-y-2 pl-4 text-slate-300",
+            children: [/* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Contact Details**: Your name, corporate email address, phone number, and company name."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Usage & Device Data**: IP addresses, browser types, screen specifications, and page interaction flows collected via secure analytics."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Payment Details**: All transaction pipelines are handled by compliant, third-party payment gateways (Stripe & Razorpay); no raw card credentials are saved on our servers."
+              })]
+            })]
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "2. How We Process Your Data"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "Aarvitek Systems utilizes data solely to improve your technical systems integration and keep communication lines clear. We process personal and corporate details to:"
+          }), /* @__PURE__ */ jsxs("ul", {
+            className: "space-y-2 pl-4 text-slate-300",
+            children: [/* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Architect bespoke, custom web applications and full-stack software codes."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Deliver precise responsive website mockups, print vectors, and store catalogs."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Improve Core Web Vitals performance, security layers, and SEO search results."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Maintain transparent agile sprint scheduling and priority serverless deployments."
+              })]
+            })]
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "3. Data Security & Encrypted Clouds"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "Your personal data is encrypted both in transit (using robust Secure Socket Layers - SSL) and at rest. We house all digital storage configurations inside scalable, serverless AWS Cloud setups protected by automated IAM rules and DDoS resistant firewall routing protocols."
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "While we deploy industry-standard security architectures, no system is completely immune to risks. We perform regular security audits to identify and patch system flaws immediately."
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "4. Your Data Protection Rights"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "We support international data regulation rights, including the European Union's General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). You hold full authority to:"
+          }), /* @__PURE__ */ jsxs("ul", {
+            className: "space-y-2 pl-4 text-slate-300",
+            children: [/* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Request complete digital copies of all personal details saved in our databases."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Amend, correct, or refine outdated corporate accounts and listings."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: 'Request full deletion of all customer files (the "Right to be Forgotten").'
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Object to data processing for marketing, metrics reporting, and newsletters."
+              })]
+            })]
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "5. Cookies & Tracking Frameworks"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "Our platform utilizes cookies to enhance loading speed and preserve user settings. We run essential operational cookies (e.g., Stripe transaction cookies) and statistical analytics cookies (e.g., Google Analytics). You can manage or block cookies directly via your browser settings, although some interactive features may scale back as a result."
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "6. Reaching Out to Aarvitek"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "If you have specific questions regarding this Privacy Policy, your saved data profiles, or secure repository hosting methods, please reach out to our primary data officer:"
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "p-6 rounded-2xl border border-white/5 bg-white/[0.01] inline-block space-y-2 mt-2",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-white font-bold",
+              children: "Aarvitek Systems Data Compliance Team"
+            }), /* @__PURE__ */ jsx("span", {
+              className: "block text-sm text-slate-400",
+              children: "New Delhi, India"
+            }), /* @__PURE__ */ jsx("a", {
+              href: "mailto:aarvitexsystems@gmail.com",
+              className: "block text-sm text-purple-400 hover:text-purple-300 transition-colors font-medium",
+              children: "aarvitexsystems@gmail.com"
+            }), /* @__PURE__ */ jsx("a", {
+              href: "tel:+917870901336",
+              className: "block text-sm text-slate-400 hover:text-white transition-colors",
+              children: "+91 787 090 1336"
+            })]
+          })]
+        })]
+      }), /* @__PURE__ */ jsx("div", {
+        className: "text-center mt-12",
+        children: /* @__PURE__ */ jsxs(Link, {
+          to: "/",
+          className: "inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors group font-semibold",
+          children: [/* @__PURE__ */ jsx("svg", {
+            className: "w-4 h-4 group-hover:-translate-x-1 transition-transform",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+            children: /* @__PURE__ */ jsx("path", {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              strokeWidth: "2.5",
+              d: "M10 19l-7-7m0 0l7-7m-7 7h18"
+            })
+          }), "Return to Homepage"]
+        })
+      })]
+    })]
+  });
+});
+const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: privacyPolicy,
+  meta: meta$a
+}, Symbol.toStringTag, { value: "Module" }));
+const ScrollTrigger$1 = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
+const useGSAP$1 = useGSAP$9 || void 0 || GSAPReact;
+gsapWithCSS.registerPlugin(useGSAP$1, ScrollTrigger$1);
+function meta$9({}) {
+  return [{
+    title: "Terms of Service & Agreements | Aarvitek Systems"
+  }, {
+    name: "description",
+    content: "Read the Terms of Service governing code delivery, Figma layouts ownership, secure payment processing, and agile development contracts at Aarvitek Systems."
+  }, {
+    name: "keywords",
+    content: "terms of service aarvitek systems, digital development contract, custom code ownership, figma design rights, payment terms"
+  }];
+}
+const terms = UNSAFE_withComponentProps(function Terms() {
+  const container = useRef(null);
+  useGSAP$1(() => {
+    gsapWithCSS.from(".fade-in-animate > *", {
+      y: 30,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      delay: 0.1
+    });
+  }, {
+    scope: container
+  });
+  return /* @__PURE__ */ jsxs("div", {
+    ref: container,
+    className: "min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30 overflow-hidden pt-24 pb-12",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] right-[5%] w-[500px] h-[500px] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none"
+    }), /* @__PURE__ */ jsxs("div", {
+      className: "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 fade-in-animate",
+      children: [/* @__PURE__ */ jsxs("div", {
+        className: "text-center pt-12 pb-16 space-y-6",
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-500/10 border border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.2)] mb-4",
+          children: /* @__PURE__ */ jsx("svg", {
+            className: "w-8 h-8 text-purple-400",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+            children: /* @__PURE__ */ jsx("path", {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              strokeWidth: "2",
+              d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            })
+          })
+        }), /* @__PURE__ */ jsxs("h1", {
+          className: "text-4xl md:text-6xl font-black tracking-tight text-white leading-tight",
+          children: ["Terms of ", /* @__PURE__ */ jsx("br", {}), /* @__PURE__ */ jsx("span", {
+            className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400",
+            children: "Service Agreement"
+          })]
+        }), /* @__PURE__ */ jsx("p", {
+          className: "text-slate-400 text-base md:text-lg max-w-2xl mx-auto font-medium",
+          children: "Last Updated: May 19, 2026. These Terms govern your engagement with aarviteksystems.com and define how we deliver high-performance code and branding systems."
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "relative rounded-[2.5rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl p-8 md:p-16 shadow-2xl overflow-hidden space-y-12",
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "absolute top-0 left-0 w-64 h-64 bg-purple-500/5 blur-[80px] rounded-full pointer-events-none"
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "1. Agreement to Terms"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "By navigating our website, interacting with our digital interfaces, or contracting Aarvitek Systems for custom software engineering, e-commerce builds, or vector design packs, you agree to comply with and be legally bound by these Terms of Service. If you disagree with any terms defined here, you must immediately halt platform access."
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "2. Code & Intellectual Property Rights"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "We believe in absolute client ownership. Our intellectual property transfer guarantees the following:"
+          }), /* @__PURE__ */ jsxs("ul", {
+            className: "space-y-2 pl-4 text-slate-300",
+            children: [/* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Full Codebase Ownership**: Upon receipt of final payment, Aarvitek Systems transfers **100% full, unrestricted ownership** of the custom-written code, databases, and visual mockup assets to the client."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Open-Source Dependencies**: Any open-source packages (e.g. React Router, GSAP, Tailwind CSS) incorporated remain governed by their respective licenses."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Design Blueprints**: Custom Figma artboards and print-ready vector sheets belong completely to the paying client."
+              })]
+            })]
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "3. User Conduct & Security Rules"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "When interacting with Aarvitek Systems' digital platforms or serverless channels, you agree not to:"
+          }), /* @__PURE__ */ jsxs("ul", {
+            className: "space-y-2 pl-4 text-slate-300",
+            children: [/* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Attempt unauthorized network penetration testing, hacking, or DDoS attacks on our AWS hosted setups."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Deploy scraping bots, automated extractors, or spam frameworks on our contact portals."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Use Aarvitek engineered systems for illegal, malicious, or highly deceptive digital practices."
+              })]
+            })]
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "4. Project Timelines & Agile Milestones"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "Aarvitek Systems delivers visual designs and systems code under an agile sprint methodology:"
+          }), /* @__PURE__ */ jsxs("ul", {
+            className: "space-y-2 pl-4 text-slate-300",
+            children: [/* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Sprint Timelines**: Projects are organized into 2-week active sprints with defined milestones."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Revision Approvals**: Visual wireframes and layouts are submitted for client review; sprint progress requires written sign-offs."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Delay Audits**: Project completion dates are estimated; we aren't liable for delays caused by client assets collection, third-party API downtimes, or communication halts."
+              })]
+            })]
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "5. Invoicing & Secure Payment Rules"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "Engagement invoicing adheres to secure, standard billing pathways:"
+          }), /* @__PURE__ */ jsxs("ul", {
+            className: "space-y-2 pl-4 text-slate-300",
+            children: [/* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Standard Installment Split**: Typically structured as 50% initial design/scoping retainer fee, and 50% upon successful system deployment."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Payment Gateway compliance**: Secure transaction processes are cleared through compliant channels (Stripe or Razorpay). We hold no local financial credentials."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "**Late Retainer Suspension**: Delays in installment payments past 7 business days may lead to active code repository suspension."
+              })]
+            })]
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "6. Disclaimers & Limitation of Liability"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "Aarvitek Systems delivers high-performance code and branding guides engineered to meet strict modern security metrics. However, we do not claim:"
+          }), /* @__PURE__ */ jsxs("ul", {
+            className: "space-y-2 pl-4 text-slate-300",
+            children: [/* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "That third-party server hosting providers (e.g. AWS, Vercel, Netlify) will be 100% immune to all operational server downtimes."
+              })]
+            }), /* @__PURE__ */ jsxs("li", {
+              className: "flex gap-2 items-center",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "w-1.5 h-1.5 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                children: "Liability for sudden changes or deprecations of third-party system APIs (such as Shopify API upgrades, Google Map API changes, etc.) made post-handover."
+              })]
+            })]
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "space-y-4",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white tracking-wide border-l-4 border-purple-500 pl-4",
+            children: "7. Governing Law"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 leading-relaxed",
+            children: "These Terms of Service and any digital contracts entered into with Aarvitek Systems are governed by and construed in accordance with the laws of **Delhi, India**, without regard to conflict of law principles. Any legal actions or proceedings must be initiated solely in competent courts located in Delhi, India."
+          })]
+        })]
+      }), /* @__PURE__ */ jsx("div", {
+        className: "text-center mt-12",
+        children: /* @__PURE__ */ jsxs(Link, {
+          to: "/",
+          className: "inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors group font-semibold",
+          children: [/* @__PURE__ */ jsx("svg", {
+            className: "w-4 h-4 group-hover:-translate-x-1 transition-transform",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+            children: /* @__PURE__ */ jsx("path", {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              strokeWidth: "2.5",
+              d: "M10 19l-7-7m0 0l7-7m-7 7h18"
+            })
+          }), "Return to Homepage"]
+        })
+      })]
+    })]
+  });
+});
+const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: terms,
+  meta: meta$9
+}, Symbol.toStringTag, { value: "Module" }));
+const ScrollTrigger = ScrollTrigger$9 || ScrollTrigger$9 || ScrollTriggerModule;
+const useGSAP = useGSAP$9 || void 0 || GSAPReact;
+gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
+function meta$8({}) {
+  return [{
+    title: "Premium Video Editing & Visual Production | Aarvitek Systems"
+  }, {
+    name: "description",
+    content: "Aarvitek Systems delivers high-impact custom video editing, dynamic motion graphics, corporate video production, and high-retention social media reels. 100% SEO-optimized."
+  }, {
+    name: "keywords",
+    content: "video editing services, professional video editor, corporate video production, post production agency, social media reels editing, motion graphics expert, youtube editor"
+  }];
+}
+const videoEditing = UNSAFE_withComponentProps(function VideoEditing() {
+  const container = useRef(null);
+  useGSAP(() => {
+    gsapWithCSS.from(".hero-text-animate > *", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out",
+      delay: 0.1
+    });
+    gsapWithCSS.from(".hero-visual-animate", {
+      scale: 0.95,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power3.out",
+      delay: 0.4
+    });
+    const cards = gsapWithCSS.utils.toArray(".reveal-card");
+    cards.forEach((card) => {
+      gsapWithCSS.from(card, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%"
+        }
+      });
+    });
+    gsapWithCSS.from(".tool-card-animate", {
+      scale: 0.9,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.08,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".tool-section-trigger",
+        start: "top 80%"
+      }
+    });
+  }, {
+    scope: container
+  });
+  return /* @__PURE__ */ jsxs("div", {
+    ref: container,
+    className: "min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30 overflow-hidden pt-24 pb-12",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[5%] w-[500px] h-[500px] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-rose-500/10 blur-[180px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-violet-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff05_1px,_transparent_1px)] bg-[size:40px_40px] opacity-40 pointer-events-none"
+    }), /* @__PURE__ */ jsx("section", {
+      className: "relative pt-12 pb-20 lg:pt-20 lg:pb-32 z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-7 space-y-8 hero-text-animate",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-md",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "flex h-2 w-2 rounded-full bg-purple-500 animate-pulse"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-sm font-semibold text-purple-200 tracking-wide",
+                children: "Cinematic Motion & Post-Production"
+              })]
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.1]",
+              children: ["Custom Video ", /* @__PURE__ */ jsx("br", {}), "Editing That ", /* @__PURE__ */ jsx("br", {}), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400",
+                children: "Multiplies Views"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed font-medium",
+              children: "We engineer high-retention video stories. By combining professional timeline sequencing, precise audio enhancement, cinema-grade color styling, and dynamic motion typography overlays, we transform raw rushes into engaging brand assets."
+            }), /* @__PURE__ */ jsx("ul", {
+              className: "grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-300",
+              children: [{
+                text: "Cinematic Color & Grading",
+                desc: "Cohesive lut schemes matching corporate guides"
+              }, {
+                text: "Dynamic Motion & VFX Layers",
+                desc: "Engaging 2D/3D title sequences and tracks"
+              }, {
+                text: "High-Retention Social Formats",
+                desc: "Optimized reels, shorts, and explainer clips"
+              }, {
+                text: "Pristine Sound Design & SFX",
+                desc: "Voice cleaning, licensing, and audio effects"
+              }].map((item, i) => /* @__PURE__ */ jsxs("li", {
+                className: "flex gap-3 items-start",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "flex-shrink-0 w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30 mt-1",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-3.5 h-3.5 text-purple-400",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "2.5",
+                      d: "M5 13l4 4L19 7"
+                    })
+                  })
+                }), /* @__PURE__ */ jsxs("div", {
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "block text-white font-bold text-sm tracking-wide",
+                    children: item.text
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "block text-slate-500 text-xs mt-0.5",
+                    children: item.desc
+                  })]
+                })]
+              }, i))
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "flex flex-col sm:flex-row gap-4 pt-4",
+              children: [/* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "px-8 py-4 rounded-full bg-purple-600 text-white font-semibold text-lg hover:bg-purple-500 transition-all text-center shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]",
+                children: "Schedule Visual Consult"
+              }), /* @__PURE__ */ jsx("a", {
+                href: "#editing-process",
+                className: "px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all text-center",
+                children: "Our Creative Process"
+              })]
+            })]
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-5 relative hero-visual-animate",
+            children: [/* @__PURE__ */ jsx("div", {
+              className: "absolute inset-0 bg-gradient-to-tr from-purple-500/10 to-rose-500/10 blur-3xl -z-10 rounded-full"
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "relative rounded-[2rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden group",
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "flex items-center gap-2",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ff5f56]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#ffbd2e]"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "w-3.5 h-3.5 rounded-full bg-[#27c93f]"
+                  })]
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "px-4 py-1 rounded-lg bg-white/5 border border-white/5 text-[10px] text-slate-500 font-mono tracking-wider w-64 text-center truncate",
+                  children: "video_timeline_v4.prproj (4K UHD)"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "w-12 h-2"
+                })]
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-purple-950/20 to-rose-950/20 flex items-center justify-center",
+                children: [/* @__PURE__ */ jsx("img", {
+                  src: "/images/ui-ux-design.png",
+                  alt: "Professional Video Editing and Motion Design Timeline Mockup",
+                  className: "w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "absolute bottom-4 left-4 right-4 h-16 bg-black/60 backdrop-blur-md rounded-xl border border-white/5 p-3 flex flex-col justify-between overflow-hidden",
+                  children: [/* @__PURE__ */ jsxs("div", {
+                    className: "flex gap-1 h-3 items-center",
+                    children: [/* @__PURE__ */ jsx("div", {
+                      className: "w-16 h-2 bg-purple-500/60 rounded"
+                    }), /* @__PURE__ */ jsx("div", {
+                      className: "w-24 h-2 bg-pink-500/60 rounded"
+                    }), /* @__PURE__ */ jsx("div", {
+                      className: "w-8 h-2 bg-violet-500/60 rounded"
+                    })]
+                  }), /* @__PURE__ */ jsxs("div", {
+                    className: "flex gap-1 h-3 items-center",
+                    children: [/* @__PURE__ */ jsx("div", {
+                      className: "w-32 h-2 bg-teal-500/40 rounded"
+                    }), /* @__PURE__ */ jsx("div", {
+                      className: "w-12 h-2 bg-emerald-500/40 rounded"
+                    })]
+                  })]
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -top-6 -right-6 md:-right-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_4s_infinite_ease-in-out]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30",
+                children: /* @__PURE__ */ jsx("span", {
+                  className: "text-xs font-black text-purple-400",
+                  children: "4K"
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "Resolution"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "UHD 60FPS Lossless"
+                })]
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute -bottom-6 -left-6 md:-left-8 p-4 rounded-2xl border border-white/15 bg-[#0d0d0d]/90 backdrop-blur-md shadow-2xl flex items-center gap-4 animate-[bounce_5s_infinite_ease-in-out_1s]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center border border-pink-500/30 relative",
+                children: /* @__PURE__ */ jsx("span", {
+                  className: "text-xs font-black text-pink-400",
+                  children: "+85%"
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "block text-white font-extrabold text-xs tracking-wider uppercase",
+                  children: "User retention"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "block text-slate-400 text-[10px]",
+                  children: "Average organic lift"
+                })]
+              })]
+            })]
+          })]
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-8 bg-white/[0.02] border-y border-white/5 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center",
+          children: [{
+            value: "85%",
+            label: "Average retention lift"
+          }, {
+            value: "4K UHD",
+            label: "Lossless Export Resolution"
+          }, {
+            value: "10x",
+            label: "Organic views potential"
+          }, {
+            value: "Stereo/5.1",
+            label: "High-Fidelity Audio mix"
+          }].map((stat, i) => /* @__PURE__ */ jsxs("div", {
+            className: "text-center",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400",
+              children: stat.value
+            }), /* @__PURE__ */ jsx("span", {
+              className: "block text-slate-500 text-xs font-semibold tracking-wider uppercase mt-1",
+              children: stat.label
+            })]
+          }, i))
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24 relative z-10",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Tailored Visual Post-Production"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We don't do simple templates cut. We map custom timeline cuts, color settings, and motion graphics tailored completely to capture viewer attention instantly."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8",
+          children: [{
+            icon: "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z",
+            title: "Corporate & Explainer Videos",
+            desc: "Distilling complex services, software configurations, or physical systems operations into highly polished visual explainers engineered to drive B2B buyer actions.",
+            tag: "B2B explainers"
+          }, {
+            icon: "M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z",
+            title: "High-Retention Social Reels",
+            desc: "Optimizing video cuts for fast-paced mobile viewers (Instagram, YouTube Shorts, TikTok). Adding custom graphics and auto-captions designed to increase viewer retention index.",
+            tag: "Mobile Engagement"
+          }, {
+            icon: "M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z",
+            title: "Dynamic Motion & Title VFX",
+            desc: "Constructing striking visual effects, custom animated typography titles, clean transition maps, and 3D kinetic layouts to elevate overall production quality.",
+            tag: "Motion FX"
+          }, {
+            icon: "M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z",
+            title: "Audio Mastering & SFX Mixing",
+            desc: "Equalizing voiceovers, eliminating disruptive ambient room noise, layering custom licensed scores, and applying impact sound effects that match active visual cuts.",
+            tag: "Sound Engineering"
+          }].map((card, idx) => /* @__PURE__ */ jsx("div", {
+            className: "reveal-card",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative group rounded-3xl p-[1px] overflow-hidden transition-all duration-300 transform hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(168,85,247,0.12)] h-full bg-white/5 border border-white/5 hover:border-transparent",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#a855f7_40%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_2.5s_linear_infinite] transition-opacity duration-500"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "relative h-full bg-[#0a0a0a] rounded-[23px] p-6 md:p-8 z-10 flex flex-col justify-between overflow-hidden",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  className: "space-y-6",
+                  children: [/* @__PURE__ */ jsx("div", {
+                    className: "w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center border border-purple-500/20 group-hover:bg-purple-600 group-hover:border-purple-400 group-hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] transition-all duration-300",
+                    children: /* @__PURE__ */ jsx("svg", {
+                      className: "w-6 h-6 text-purple-400 group-hover:text-white transition-colors",
+                      fill: "none",
+                      stroke: "currentColor",
+                      viewBox: "0 0 24 24",
+                      children: /* @__PURE__ */ jsx("path", {
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        strokeWidth: "2",
+                        d: card.icon
+                      })
+                    })
+                  }), /* @__PURE__ */ jsx("h3", {
+                    className: "text-xl font-bold text-white group-hover:text-purple-300 transition-colors",
+                    children: card.title
+                  }), /* @__PURE__ */ jsx("p", {
+                    className: "text-slate-400 leading-relaxed text-sm",
+                    children: card.desc
+                  })]
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "pt-6 mt-6 border-t border-white/5 flex items-center justify-between",
+                  children: [/* @__PURE__ */ jsx("span", {
+                    className: "text-[10px] font-mono uppercase tracking-wider text-slate-500",
+                    children: "Service:"
+                  }), /* @__PURE__ */ jsx("span", {
+                    className: "text-[11px] font-semibold text-purple-400 bg-purple-500/5 border border-purple-500/10 px-2.5 py-0.5 rounded-md",
+                    children: card.tag
+                  })]
+                })]
+              })]
+            })
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      id: "tools",
+      className: "py-24 bg-[#050505] border-y border-white/5 relative z-10 tool-section-trigger",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Our Editing & Motion Stack"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "We use advanced, professional systems to sequence clips, grade color values, and compose motion titles."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6",
+          children: [{
+            name: "Premiere Pro",
+            type: "Timeline Assembly",
+            glow: "hover:shadow-[0_0_20px_rgba(153,102,255,0.2)] hover:border-purple-500/40",
+            icon: "Pr"
+          }, {
+            name: "After Effects",
+            type: "Motion Graphics",
+            glow: "hover:shadow-[0_0_20px_rgba(153,153,255,0.2)] hover:border-indigo-500/40",
+            icon: "Ae"
+          }, {
+            name: "DaVinci Resolve",
+            type: "Color Styling",
+            glow: "hover:shadow-[0_0_20px_rgba(255,102,0,0.2)] hover:border-amber-500/40",
+            icon: "Dr"
+          }, {
+            name: "Audition",
+            type: "Audio Mastering",
+            glow: "hover:shadow-[0_0_20px_rgba(0,255,204,0.2)] hover:border-teal-500/40",
+            icon: "Au"
+          }, {
+            name: "Figma",
+            type: "Vector Layouts",
+            glow: "hover:shadow-[0_0_20px_rgba(242,78,30,0.2)] hover:border-orange-500/40",
+            icon: "Fi"
+          }, {
+            name: "Photoshop",
+            type: "Graphic Assests",
+            glow: "hover:shadow-[0_0_20px_rgba(49,168,255,0.2)] hover:border-sky-500/40",
+            icon: "Ps"
+          }].map((tool, idx) => /* @__PURE__ */ jsx("div", {
+            className: "tool-card-animate",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: `group relative p-6 rounded-2xl border border-white/5 bg-[#0a0a0a] transition-all duration-300 transform hover:-translate-y-2 text-center cursor-default ${tool.glow}`,
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 font-black text-lg mx-auto mb-4 group-hover:bg-purple-600/10 group-hover:text-purple-300 group-hover:border-purple-500/30 transition-all",
+                children: tool.icon
+              }), /* @__PURE__ */ jsx("span", {
+                className: "block text-sm font-bold text-white group-hover:text-purple-200 transition-colors",
+                children: tool.name
+              }), /* @__PURE__ */ jsx("span", {
+                className: "block text-[10px] text-slate-500 mt-1",
+                children: tool.type
+              })]
+            })
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      id: "editing-process",
+      className: "py-24 relative z-10",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-20",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-black tracking-tight text-white mb-6",
+            children: "Structured Video Pipeline"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg leading-relaxed",
+            children: "A highly organized four-step creation pipeline ensuring your digital media hooks viewer attention instantly."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8",
+          children: [{
+            num: "01",
+            step: "Asset Scoping & Story",
+            desc: "Analyzing target timelines, organizing raw rushes, writing narration scripts, and planning background scores."
+          }, {
+            num: "02",
+            step: "A-Roll Assembly & Cuts",
+            desc: "Trimming dead space, arranging visual hooks in the initial 3 seconds, and sequencing A-Roll narrative maps."
+          }, {
+            num: "03",
+            step: "Color Grade & Motion VFX",
+            desc: "Injecting kinetic captions, adding custom shape transitions, grading footage logs, and layering audio SFX."
+          }, {
+            num: "04",
+            step: "Client Review & UHD Export",
+            desc: "Delivering review cuts via Frame.io, integrating feedback edits, and exporting in lossless 4K UHD profiles."
+          }].map((phase, idx) => /* @__PURE__ */ jsxs("div", {
+            className: "relative group p-6 rounded-2xl border border-white/5 bg-[#0a0a0a]/50 backdrop-blur-md",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "block text-4xl font-black text-purple-500/30 group-hover:text-purple-400/80 transition-colors",
+              children: phase.num
+            }), /* @__PURE__ */ jsx("h3", {
+              className: "text-lg font-bold text-white mt-4 mb-2 group-hover:text-purple-300 transition-colors",
+              children: phase.step
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-sm leading-relaxed",
+              children: phase.desc
+            })]
+          }, idx))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-12 relative z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "relative rounded-[2.5rem] overflow-hidden p-12 md:p-20 text-center border border-white/10 bg-gradient-to-br from-[#12051a] to-[#04010a] shadow-2xl",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "absolute top-[-30%] right-[-10%] w-[300px] h-[300px] bg-purple-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsx("div", {
+            className: "absolute bottom-[-30%] left-[-10%] w-[300px] h-[300px] bg-rose-500/20 blur-[80px] rounded-full pointer-events-none"
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "relative z-10 max-w-3xl mx-auto space-y-6",
+            children: [/* @__PURE__ */ jsxs("h2", {
+              className: "text-3xl md:text-5xl font-black text-white leading-tight",
+              children: ["Ready to Elevate Your ", /* @__PURE__ */ jsx("br", {
+                className: "hidden sm:inline"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400",
+                children: "Visual Production Quality?"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto",
+              children: "Let's build a custom premium video editing package to supercharge your YouTube channel, B2B explainers, or social media retention rates."
+            }), /* @__PURE__ */ jsx("div", {
+              className: "pt-6",
+              children: /* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "inline-block px-10 py-5 rounded-full bg-purple-600 text-white font-extrabold text-lg hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.7)]",
+                children: "Get a Free 15-Second Audition Video Cut"
+              })
+            })]
+          })]
+        })
+      })
+    })]
+  });
+});
+const route13 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: videoEditing,
+  meta: meta$8
+}, Symbol.toStringTag, { value: "Module" }));
+function meta$7({}) {
   return [{
     title: "Smart Analyzing - How We Work | Aarvitek Systems"
   }, {
@@ -7936,12 +11024,12 @@ const smartAnalyzing = UNSAFE_withComponentProps(function SmartAnalyzing() {
     })
   });
 });
-const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route14 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: smartAnalyzing,
-  meta: meta$3
+  meta: meta$7
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$2({}) {
+function meta$6({}) {
   return [{
     title: "Agile Development - How We Work | Aarvitek Systems"
   }, {
@@ -8009,12 +11097,12 @@ const agileDevelopment = UNSAFE_withComponentProps(function AgileDevelopment() {
     })
   });
 });
-const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route15 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: agileDevelopment,
-  meta: meta$2
+  meta: meta$6
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$1({}) {
+function meta$5({}) {
   return [{
     title: "Seamless Integration - How We Work | Aarvitek Systems"
   }, {
@@ -8082,12 +11170,12 @@ const seamlessIntegration = UNSAFE_withComponentProps(function SeamlessIntegrati
     })
   });
 });
-const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route16 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: seamlessIntegration,
-  meta: meta$1
+  meta: meta$5
 }, Symbol.toStringTag, { value: "Module" }));
-function meta({}) {
+function meta$4({}) {
   return [{
     title: "Continuous Optimization - How We Work | Aarvitek Systems"
   }, {
@@ -8155,12 +11243,304 @@ const continuousOptimization = UNSAFE_withComponentProps(function ContinuousOpti
     })
   });
 });
-const route13 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route17 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: continuousOptimization,
+  meta: meta$4
+}, Symbol.toStringTag, { value: "Module" }));
+function meta$3({}) {
+  return [{
+    title: "Enhanced Productivity | Aarvitek Systems"
+  }, {
+    name: "description",
+    content: "Automate repetitive tasks and focus on high-impact strategies."
+  }];
+}
+const enhancedProductivity = UNSAFE_withComponentProps(function EnhancedProductivity() {
+  return /* @__PURE__ */ jsx("div", {
+    className: "pt-16 min-h-screen bg-[#000000] text-slate-300",
+    children: /* @__PURE__ */ jsxs("section", {
+      className: "py-20 lg:py-32 relative overflow-hidden",
+      children: [/* @__PURE__ */ jsx("div", {
+        className: "absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple-600/20 blur-[120px] rounded-[100%] pointer-events-none"
+      }), /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "flex flex-col lg:flex-row items-center gap-16",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "w-full lg:w-1/2 space-y-8 relative z-10",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-md",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "flex h-2 w-2 rounded-full bg-purple-500"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-sm font-medium text-purple-200 tracking-wide",
+                children: "Business Benefit"
+              })]
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-5xl lg:text-7xl font-black text-white leading-tight",
+              children: ["Enhanced ", /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400",
+                children: "Productivity"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-xl text-slate-400 leading-relaxed",
+              children: "We help automate repetitive manual tasks so your team can focus on complex, high-impact strategies. By leveraging AI and modern web architecture, we reduce bottlenecks and empower your workforce to achieve more in less time."
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "pt-4 flex gap-4",
+              children: [/* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "px-8 py-4 rounded-full bg-purple-600 text-white font-semibold hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)]",
+                children: "Automate Now"
+              }), /* @__PURE__ */ jsx(Link, {
+                to: "/",
+                className: "px-8 py-4 rounded-full border border-white/20 text-white font-semibold hover:bg-white/5 transition-all",
+                children: "Back to Home"
+              })]
+            })]
+          }), /* @__PURE__ */ jsx("div", {
+            className: "w-full lg:w-1/2 relative z-10",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative rounded-3xl overflow-hidden border border-white/10 group",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-0 bg-purple-500/10 group-hover:bg-transparent transition-colors z-10"
+              }), /* @__PURE__ */ jsx("img", {
+                src: "/images/agile-development.png",
+                alt: "Enhanced Productivity and Automation",
+                className: "w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              })]
+            })
+          })]
+        })
+      })]
+    })
+  });
+});
+const route18 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: enhancedProductivity,
+  meta: meta$3
+}, Symbol.toStringTag, { value: "Module" }));
+function meta$2({}) {
+  return [{
+    title: "Scalability | Aarvitek Systems"
+  }, {
+    name: "description",
+    content: "Architecture built to handle massive traffic spikes."
+  }];
+}
+const scalability = UNSAFE_withComponentProps(function Scalability() {
+  return /* @__PURE__ */ jsx("div", {
+    className: "pt-16 min-h-screen bg-[#000000] text-slate-300",
+    children: /* @__PURE__ */ jsxs("section", {
+      className: "py-20 lg:py-32 relative overflow-hidden",
+      children: [/* @__PURE__ */ jsx("div", {
+        className: "absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-600/20 blur-[120px] rounded-[100%] pointer-events-none"
+      }), /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "flex flex-col lg:flex-row-reverse items-center gap-16",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "w-full lg:w-1/2 space-y-8 relative z-10",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-md",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "flex h-2 w-2 rounded-full bg-blue-500"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-sm font-medium text-blue-200 tracking-wide",
+                children: "Business Benefit"
+              })]
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-5xl lg:text-7xl font-black text-white leading-tight",
+              children: ["Infinite ", /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400",
+                children: "Scalability"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-xl text-slate-400 leading-relaxed",
+              children: "Don't let your technology hold you back. We build architectures designed to handle massive traffic spikes without breaking a sweat, ensuring your platform scales seamlessly as your user base grows globally."
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "pt-4 flex gap-4",
+              children: [/* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "px-8 py-4 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-500 transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)]",
+                children: "Scale With Us"
+              }), /* @__PURE__ */ jsx(Link, {
+                to: "/",
+                className: "px-8 py-4 rounded-full border border-white/20 text-white font-semibold hover:bg-white/5 transition-all",
+                children: "Back to Home"
+              })]
+            })]
+          }), /* @__PURE__ */ jsx("div", {
+            className: "w-full lg:w-1/2 relative z-10",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative rounded-3xl overflow-hidden border border-white/10 group",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-0 bg-blue-500/10 group-hover:bg-transparent transition-colors z-10"
+              }), /* @__PURE__ */ jsx("img", {
+                src: "/images/seamless-integration.png",
+                alt: "Server Scalability and Cloud Architecture",
+                className: "w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              })]
+            })
+          })]
+        })
+      })]
+    })
+  });
+});
+const route19 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: scalability,
+  meta: meta$2
+}, Symbol.toStringTag, { value: "Module" }));
+function meta$1({}) {
+  return [{
+    title: "Cost Efficient | Aarvitek Systems"
+  }, {
+    name: "description",
+    content: "Reduce manual labor and server costs through optimized tech stacks."
+  }];
+}
+const costEfficient = UNSAFE_withComponentProps(function CostEfficient() {
+  return /* @__PURE__ */ jsx("div", {
+    className: "pt-16 min-h-screen bg-[#000000] text-slate-300",
+    children: /* @__PURE__ */ jsxs("section", {
+      className: "py-20 lg:py-32 relative overflow-hidden",
+      children: [/* @__PURE__ */ jsx("div", {
+        className: "absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-600/20 blur-[120px] rounded-[100%] pointer-events-none"
+      }), /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "flex flex-col lg:flex-row items-center gap-16",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "w-full lg:w-1/2 space-y-8 relative z-10",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "flex h-2 w-2 rounded-full bg-emerald-500"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-sm font-medium text-emerald-200 tracking-wide",
+                children: "Business Benefit"
+              })]
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-5xl lg:text-7xl font-black text-white leading-tight",
+              children: ["Cost ", /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400",
+                children: "Efficient"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-xl text-slate-400 leading-relaxed",
+              children: "Reduce unnecessary expenses by modernizing your tech stack. Optimized databases, streamlined cloud operations, and automated workflows mean you spend less on server costs and manual labor, massively improving your bottom line."
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "pt-4 flex gap-4",
+              children: [/* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "px-8 py-4 rounded-full bg-emerald-600 text-white font-semibold hover:bg-emerald-500 transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]",
+                children: "Optimize Costs"
+              }), /* @__PURE__ */ jsx(Link, {
+                to: "/",
+                className: "px-8 py-4 rounded-full border border-white/20 text-white font-semibold hover:bg-white/5 transition-all",
+                children: "Back to Home"
+              })]
+            })]
+          }), /* @__PURE__ */ jsx("div", {
+            className: "w-full lg:w-1/2 relative z-10",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative rounded-3xl overflow-hidden border border-white/10 group",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-0 bg-emerald-500/10 group-hover:bg-transparent transition-colors z-10"
+              }), /* @__PURE__ */ jsx("img", {
+                src: "/images/continuous-optimization.png",
+                alt: "Cost Efficiency and Optimization",
+                className: "w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              })]
+            })
+          })]
+        })
+      })]
+    })
+  });
+});
+const route20 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: costEfficient,
+  meta: meta$1
+}, Symbol.toStringTag, { value: "Module" }));
+function meta({}) {
+  return [{
+    title: "24/7 Availability | Aarvitek Systems"
+  }, {
+    name: "description",
+    content: "Systems that run flawlessly around the clock."
+  }];
+}
+const availability = UNSAFE_withComponentProps(function Availability() {
+  return /* @__PURE__ */ jsx("div", {
+    className: "pt-16 min-h-screen bg-[#000000] text-slate-300",
+    children: /* @__PURE__ */ jsxs("section", {
+      className: "py-20 lg:py-32 relative overflow-hidden",
+      children: [/* @__PURE__ */ jsx("div", {
+        className: "absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-600/20 blur-[120px] rounded-[100%] pointer-events-none"
+      }), /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "flex flex-col lg:flex-row-reverse items-center gap-16",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "w-full lg:w-1/2 space-y-8 relative z-10",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "inline-flex items-center gap-2 px-4 py-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 backdrop-blur-md",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "flex h-2 w-2 rounded-full bg-indigo-500"
+              }), /* @__PURE__ */ jsx("span", {
+                className: "text-sm font-medium text-indigo-200 tracking-wide",
+                children: "Business Benefit"
+              })]
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-5xl lg:text-7xl font-black text-white leading-tight",
+              children: ["24/7 ", /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400",
+                children: "Availability"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-xl text-slate-400 leading-relaxed",
+              children: "Business doesn't sleep, and neither should your platform. We build resilient systems with robust failovers that run flawlessly around the clock, ensuring business continuity and peace of mind."
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "pt-4 flex gap-4",
+              children: [/* @__PURE__ */ jsx(Link, {
+                to: "/contact",
+                className: "px-8 py-4 rounded-full bg-indigo-600 text-white font-semibold hover:bg-indigo-500 transition-all shadow-[0_0_20px_rgba(99,102,241,0.4)]",
+                children: "Ensure Uptime"
+              }), /* @__PURE__ */ jsx(Link, {
+                to: "/",
+                className: "px-8 py-4 rounded-full border border-white/20 text-white font-semibold hover:bg-white/5 transition-all",
+                children: "Back to Home"
+              })]
+            })]
+          }), /* @__PURE__ */ jsx("div", {
+            className: "w-full lg:w-1/2 relative z-10",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "relative rounded-3xl overflow-hidden border border-white/10 group",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute inset-0 bg-indigo-500/10 group-hover:bg-transparent transition-colors z-10"
+              }), /* @__PURE__ */ jsx("img", {
+                src: "/images/smart-analyzing.png",
+                alt: "24/7 Availability and Resilience",
+                className: "w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              })]
+            })
+          })]
+        })
+      })]
+    })
+  });
+});
+const route21 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: availability,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-B2xPDlin.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-BdBK4_tU.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js", "/assets/index-B_NbWciC.js"], "css": ["/assets/root-yJEOlZ45.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-CW0I12Eh.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js", "/assets/index-B_NbWciC.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-bVyaMsuU.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-Dy49-0sG.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-DswuvKa9.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-B1S9PgDF.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-BHLevdAH.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-CJ87NZS3.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-C-_Cmigo.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-3eN_U28j.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-CGUpuagQ.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CtOXrZyh.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-DkszZFdL.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-KRui3YbS.js", "imports": ["/assets/chunk-WWGJGFF6-YiCRyqzI.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-965bb71e.js", "version": "965bb71e", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-BT4-KF5v.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-D0wva8Yh.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js"], "css": ["/assets/root-BYrHS7CN.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-NNpNAzqb.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-eqFalpT3.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-BBWyNN16.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-UcqBn6e4.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-DhzFPKqg.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/portfolio": { "id": "routes/portfolio", "parentId": "root", "path": "portfolio", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/portfolio-i3xT8-g1.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-UcgRahXG.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-DgD_1I4d.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-D0xpAlwX.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-ClbZJVF_.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/privacy-policy": { "id": "routes/privacy-policy", "parentId": "root", "path": "privacy-policy", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/privacy-policy-DXA4EeV3.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/terms": { "id": "routes/terms", "parentId": "root", "path": "terms", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/terms-C6JBb3q9.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/video-editing": { "id": "routes/video-editing", "parentId": "root", "path": "video-editing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/video-editing-BlmAqClu.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-ChQXWvTh.js", "/assets/ScrollTrigger-CSXxssdv.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-Be9zI-44.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CAWhtf4O.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-BL6zxfkT.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-BD5CvlyI.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/enhanced-productivity": { "id": "routes/enhanced-productivity", "parentId": "root", "path": "enhanced-productivity", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/enhanced-productivity-FuZSzuyS.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/scalability": { "id": "routes/scalability", "parentId": "root", "path": "scalability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/scalability-CAyktpaY.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/cost-efficient": { "id": "routes/cost-efficient", "parentId": "root", "path": "cost-efficient", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/cost-efficient-DWkkS3B1.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/availability": { "id": "routes/availability", "parentId": "root", "path": "availability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/availability-CF2HqRPm.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-f91cc304.js", "version": "f91cc304", "sri": void 0 };
 const assetsBuildDirectory = "build\\client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "unstable_subResourceIntegrity": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };
@@ -8219,13 +11599,21 @@ const routes = {
     caseSensitive: void 0,
     module: route5
   },
+  "routes/portfolio": {
+    id: "routes/portfolio",
+    parentId: "root",
+    path: "portfolio",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route6
+  },
   "routes/web-development": {
     id: "routes/web-development",
     parentId: "root",
     path: "web-development",
     index: void 0,
     caseSensitive: void 0,
-    module: route6
+    module: route7
   },
   "routes/website-design": {
     id: "routes/website-design",
@@ -8233,7 +11621,7 @@ const routes = {
     path: "website-design",
     index: void 0,
     caseSensitive: void 0,
-    module: route7
+    module: route8
   },
   "routes/graphic-design": {
     id: "routes/graphic-design",
@@ -8241,7 +11629,7 @@ const routes = {
     path: "graphic-design",
     index: void 0,
     caseSensitive: void 0,
-    module: route8
+    module: route9
   },
   "routes/ecommerce": {
     id: "routes/ecommerce",
@@ -8249,7 +11637,31 @@ const routes = {
     path: "ecommerce",
     index: void 0,
     caseSensitive: void 0,
-    module: route9
+    module: route10
+  },
+  "routes/privacy-policy": {
+    id: "routes/privacy-policy",
+    parentId: "root",
+    path: "privacy-policy",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route11
+  },
+  "routes/terms": {
+    id: "routes/terms",
+    parentId: "root",
+    path: "terms",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route12
+  },
+  "routes/video-editing": {
+    id: "routes/video-editing",
+    parentId: "root",
+    path: "video-editing",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route13
   },
   "routes/smart-analyzing": {
     id: "routes/smart-analyzing",
@@ -8257,7 +11669,7 @@ const routes = {
     path: "smart-analyzing",
     index: void 0,
     caseSensitive: void 0,
-    module: route10
+    module: route14
   },
   "routes/agile-development": {
     id: "routes/agile-development",
@@ -8265,7 +11677,7 @@ const routes = {
     path: "agile-development",
     index: void 0,
     caseSensitive: void 0,
-    module: route11
+    module: route15
   },
   "routes/seamless-integration": {
     id: "routes/seamless-integration",
@@ -8273,7 +11685,7 @@ const routes = {
     path: "seamless-integration",
     index: void 0,
     caseSensitive: void 0,
-    module: route12
+    module: route16
   },
   "routes/continuous-optimization": {
     id: "routes/continuous-optimization",
@@ -8281,7 +11693,39 @@ const routes = {
     path: "continuous-optimization",
     index: void 0,
     caseSensitive: void 0,
-    module: route13
+    module: route17
+  },
+  "routes/enhanced-productivity": {
+    id: "routes/enhanced-productivity",
+    parentId: "root",
+    path: "enhanced-productivity",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route18
+  },
+  "routes/scalability": {
+    id: "routes/scalability",
+    parentId: "root",
+    path: "scalability",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route19
+  },
+  "routes/cost-efficient": {
+    id: "routes/cost-efficient",
+    parentId: "root",
+    path: "cost-efficient",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route20
+  },
+  "routes/availability": {
+    id: "routes/availability",
+    parentId: "root",
+    path: "availability",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route21
   }
 };
 export {

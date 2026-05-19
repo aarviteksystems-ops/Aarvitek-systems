@@ -15,14 +15,22 @@
       "routes/contact": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/clients": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/career": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/portfolio": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/web-development": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/website-design": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/graphic-design": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/ecommerce": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/privacy-policy": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/terms": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/video-editing": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/smart-analyzing": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/agile-development": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/seamless-integration": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/continuous-optimization": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+      "routes/continuous-optimization": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/enhanced-productivity": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/scalability": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/cost-efficient": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/availability": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
       "root": {
@@ -76,6 +84,15 @@
           "runtime": "nodejs"
         }
       },
+      "routes/portfolio": {
+        "id": "routes/portfolio",
+        "parentId": "root",
+        "file": "app/routes/portfolio.tsx",
+        "path": "portfolio",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
       "routes/web-development": {
         "id": "routes/web-development",
         "parentId": "root",
@@ -112,6 +129,33 @@
           "runtime": "nodejs"
         }
       },
+      "routes/privacy-policy": {
+        "id": "routes/privacy-policy",
+        "parentId": "root",
+        "file": "app/routes/privacy-policy.tsx",
+        "path": "privacy-policy",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/terms": {
+        "id": "routes/terms",
+        "parentId": "root",
+        "file": "app/routes/terms.tsx",
+        "path": "terms",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/video-editing": {
+        "id": "routes/video-editing",
+        "parentId": "root",
+        "file": "app/routes/video-editing.tsx",
+        "path": "video-editing",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
       "routes/smart-analyzing": {
         "id": "routes/smart-analyzing",
         "parentId": "root",
@@ -144,6 +188,42 @@
         "parentId": "root",
         "file": "app/routes/continuous-optimization.tsx",
         "path": "continuous-optimization",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/enhanced-productivity": {
+        "id": "routes/enhanced-productivity",
+        "parentId": "root",
+        "file": "app/routes/enhanced-productivity.tsx",
+        "path": "enhanced-productivity",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/scalability": {
+        "id": "routes/scalability",
+        "parentId": "root",
+        "file": "app/routes/scalability.tsx",
+        "path": "scalability",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/cost-efficient": {
+        "id": "routes/cost-efficient",
+        "parentId": "root",
+        "file": "app/routes/cost-efficient.tsx",
+        "path": "cost-efficient",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/availability": {
+        "id": "routes/availability",
+        "parentId": "root",
+        "file": "app/routes/availability.tsx",
+        "path": "availability",
         "config": {
           "runtime": "nodejs"
         }
@@ -197,6 +277,12 @@
         "file": "routes/career.tsx",
         "path": "career"
       },
+      "routes/portfolio": {
+        "id": "routes/portfolio",
+        "parentId": "root",
+        "file": "routes/portfolio.tsx",
+        "path": "portfolio"
+      },
       "routes/web-development": {
         "id": "routes/web-development",
         "parentId": "root",
@@ -221,6 +307,24 @@
         "file": "routes/ecommerce.tsx",
         "path": "ecommerce"
       },
+      "routes/privacy-policy": {
+        "id": "routes/privacy-policy",
+        "parentId": "root",
+        "file": "routes/privacy-policy.tsx",
+        "path": "privacy-policy"
+      },
+      "routes/terms": {
+        "id": "routes/terms",
+        "parentId": "root",
+        "file": "routes/terms.tsx",
+        "path": "terms"
+      },
+      "routes/video-editing": {
+        "id": "routes/video-editing",
+        "parentId": "root",
+        "file": "routes/video-editing.tsx",
+        "path": "video-editing"
+      },
       "routes/smart-analyzing": {
         "id": "routes/smart-analyzing",
         "parentId": "root",
@@ -244,6 +348,30 @@
         "parentId": "root",
         "file": "routes/continuous-optimization.tsx",
         "path": "continuous-optimization"
+      },
+      "routes/enhanced-productivity": {
+        "id": "routes/enhanced-productivity",
+        "parentId": "root",
+        "file": "routes/enhanced-productivity.tsx",
+        "path": "enhanced-productivity"
+      },
+      "routes/scalability": {
+        "id": "routes/scalability",
+        "parentId": "root",
+        "file": "routes/scalability.tsx",
+        "path": "scalability"
+      },
+      "routes/cost-efficient": {
+        "id": "routes/cost-efficient",
+        "parentId": "root",
+        "file": "routes/cost-efficient.tsx",
+        "path": "cost-efficient"
+      },
+      "routes/availability": {
+        "id": "routes/availability",
+        "parentId": "root",
+        "file": "routes/availability.tsx",
+        "path": "availability"
       }
     },
     "routeDiscovery": {
@@ -280,6 +408,10 @@
             "path": "career"
           },
           {
+            "file": "routes/portfolio.tsx",
+            "path": "portfolio"
+          },
+          {
             "file": "routes/web-development.tsx",
             "path": "web-development"
           },
@@ -296,6 +428,18 @@
             "path": "ecommerce"
           },
           {
+            "file": "routes/privacy-policy.tsx",
+            "path": "privacy-policy"
+          },
+          {
+            "file": "routes/terms.tsx",
+            "path": "terms"
+          },
+          {
+            "file": "routes/video-editing.tsx",
+            "path": "video-editing"
+          },
+          {
             "file": "routes/smart-analyzing.tsx",
             "path": "smart-analyzing"
           },
@@ -310,6 +454,22 @@
           {
             "file": "routes/continuous-optimization.tsx",
             "path": "continuous-optimization"
+          },
+          {
+            "file": "routes/enhanced-productivity.tsx",
+            "path": "enhanced-productivity"
+          },
+          {
+            "file": "routes/scalability.tsx",
+            "path": "scalability"
+          },
+          {
+            "file": "routes/cost-efficient.tsx",
+            "path": "cost-efficient"
+          },
+          {
+            "file": "routes/availability.tsx",
+            "path": "availability"
           }
         ]
       }
