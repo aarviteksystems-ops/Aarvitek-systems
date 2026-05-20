@@ -26,8 +26,18 @@ export const links: Route.LinksFunction = () => [
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { Dock } from "./components/Dock";
+import { useLocation } from "react-router";
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  let location;
+  try {
+    location = useLocation();
+  } catch (e) {
+    // Falls back if called outside RouterProvider
+  }
+
+  const isPromo = location?.pathname === "/promo";
+
   return (
     <html lang="en" className="dark scroll-smooth">
       <head>
@@ -37,12 +47,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Navbar />
-        <main className="min-h-screen pt-16">
+        {!isPromo && <Navbar />}
+        <main className={`min-h-screen ${isPromo ? 'pt-0' : 'pt-16'}`}>
           {children}
         </main>
-        <Dock />
-        <Footer />
+        {!isPromo && <Dock />}
+        {!isPromo && <Footer />}
         <ScrollRestoration />
         <Scripts />
       </body>

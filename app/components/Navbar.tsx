@@ -94,6 +94,9 @@ export function Navbar() {
                         <NavLink to="/clients" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
                             Clients
                         </NavLink>
+                        <NavLink to="/locations" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                            Locations
+                        </NavLink>
                     </div>
 
                     <div className="hidden md:flex items-center nav-item">
@@ -133,6 +136,7 @@ export function Navbar() {
                             </div>
                             <Link to="/portfolio" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5">Portfolio</Link>
                             <Link to="/clients" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5">Clients</Link>
+                            <Link to="/locations" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5">Locations</Link>
                             <div className="mobile-nav-item mt-6">
                                 <Link to="/contact" onClick={() => setIsOpen(false)} className="block w-full text-center px-4 py-3 rounded-xl bg-purple-600 text-white font-medium hover:bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)]">Book a Call</Link>
                             </div>

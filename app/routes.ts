@@ -22,4 +22,7 @@ export default [
     route("scalability", "routes/scalability.tsx"),
     route("cost-efficient", "routes/cost-efficient.tsx"),
     route("availability", "routes/availability.tsx"),
+    route("locations", "routes/locations.tsx"),
+    route("locations/:city", "routes/location-detail.tsx"),
+    route("promo", "routes/promo.tsx"),
 ] satisfies RouteConfig;
