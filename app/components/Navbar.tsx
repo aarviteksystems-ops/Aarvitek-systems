@@ -68,9 +68,18 @@ export function Navbar() {
                         <NavLink to="/" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
                             Home
                         </NavLink>
-                        <NavLink to="/about" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
-                            About Us
-                        </NavLink>
+                        <div className="relative group nav-item">
+                            <button className="text-sm font-medium text-slate-400 group-hover:text-white flex items-center gap-1 cursor-pointer h-10">
+                                About Us
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div className="absolute left-0 top-full pt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                                <div className="bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl overflow-hidden py-2">
+                                    <Link to="/about" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Company Profile</Link>
+                                    <Link to="/director-message" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Director's Message</Link>
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="relative group nav-item">
                             <button className="text-sm font-medium text-slate-400 group-hover:text-white flex items-center gap-1 cursor-pointer h-10">
@@ -126,6 +135,7 @@ export function Navbar() {
                         <div className="px-4 pt-2 pb-6 space-y-1">
                             <Link to="/" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5">Home</Link>
                             <Link to="/about" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5">About Us</Link>
+                            <Link to="/director-message" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 pl-6 border-l border-white/10">Director's Message</Link>
                             <div className="py-2 pl-4">
                                 <p className="mobile-nav-item px-3 py-2 text-xs font-bold text-slate-500 uppercase tracking-widest">Services</p>
                                 <Link to="/web-development" onClick={() => setIsOpen(false)} className="mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5">Web Development</Link>
