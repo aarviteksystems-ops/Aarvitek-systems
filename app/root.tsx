@@ -26,6 +26,9 @@ export const links: Route.LinksFunction = () => [
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { Dock } from "./components/Dock";
+import { WhatsAppButton } from "./components/WhatsAppButton";
+import { CalendlyModal } from "./components/CalendlyModal";
+import { FloatingEnquiryForm } from "./components/FloatingEnquiryForm";
 import { useLocation } from "react-router";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -51,6 +54,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <main className={`min-h-screen ${isPromo ? 'pt-0' : 'pt-16'}`}>
           {children}
         </main>
+        {!isPromo && <WhatsAppButton />}
+        {!isPromo && <CalendlyModal />}
+        {!isPromo && <FloatingEnquiryForm />}
         {!isPromo && <Dock />}
         {!isPromo && <Footer />}
         <ScrollRestoration />
