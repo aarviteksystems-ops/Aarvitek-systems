@@ -1,10 +1,19 @@
 import type { Route } from "./+types/scalability";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Scalability | Aarvitek Systems" },
-        { name: "description", content: "Architecture built to handle massive traffic spikes." },
+        ...generateMeta({
+            title: "Infinite Scalability | Aarvitek Systems",
+            description: "Build architectures designed to handle massive traffic spikes and scale seamlessly as your business grows.",
+            url: "/scalability",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Scalability", item: "/scalability" }
+        ]))
     ];
 }
 

@@ -12,6 +12,7 @@
     "routeIdToServerBundleId": {
       "routes/home": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/about": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/director-message": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/contact": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/clients": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/career": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
@@ -30,7 +31,10 @@
       "routes/enhanced-productivity": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/scalability": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/cost-efficient": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/availability": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+      "routes/availability": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/locations": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/location-detail": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/promo": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
       "root": {
@@ -53,6 +57,15 @@
         "parentId": "root",
         "file": "app/routes/about.tsx",
         "path": "about",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/director-message": {
+        "id": "routes/director-message",
+        "parentId": "root",
+        "file": "app/routes/director-message.tsx",
+        "path": "director-message",
         "config": {
           "runtime": "nodejs"
         }
@@ -227,6 +240,33 @@
         "config": {
           "runtime": "nodejs"
         }
+      },
+      "routes/locations": {
+        "id": "routes/locations",
+        "parentId": "root",
+        "file": "app/routes/locations.tsx",
+        "path": "locations",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/location-detail": {
+        "id": "routes/location-detail",
+        "parentId": "root",
+        "file": "app/routes/location-detail.tsx",
+        "path": "locations/:city",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/promo": {
+        "id": "routes/promo",
+        "parentId": "root",
+        "file": "app/routes/promo.tsx",
+        "path": "promo",
+        "config": {
+          "runtime": "nodejs"
+        }
       }
     }
   },
@@ -258,6 +298,12 @@
         "parentId": "root",
         "file": "routes/about.tsx",
         "path": "about"
+      },
+      "routes/director-message": {
+        "id": "routes/director-message",
+        "parentId": "root",
+        "file": "routes/director-message.tsx",
+        "path": "director-message"
       },
       "routes/contact": {
         "id": "routes/contact",
@@ -372,6 +418,24 @@
         "parentId": "root",
         "file": "routes/availability.tsx",
         "path": "availability"
+      },
+      "routes/locations": {
+        "id": "routes/locations",
+        "parentId": "root",
+        "file": "routes/locations.tsx",
+        "path": "locations"
+      },
+      "routes/location-detail": {
+        "id": "routes/location-detail",
+        "parentId": "root",
+        "file": "routes/location-detail.tsx",
+        "path": "locations/:city"
+      },
+      "routes/promo": {
+        "id": "routes/promo",
+        "parentId": "root",
+        "file": "routes/promo.tsx",
+        "path": "promo"
       }
     },
     "routeDiscovery": {
@@ -394,6 +458,10 @@
           {
             "file": "routes/about.tsx",
             "path": "about"
+          },
+          {
+            "file": "routes/director-message.tsx",
+            "path": "director-message"
           },
           {
             "file": "routes/contact.tsx",
@@ -470,6 +538,18 @@
           {
             "file": "routes/availability.tsx",
             "path": "availability"
+          },
+          {
+            "file": "routes/locations.tsx",
+            "path": "locations"
+          },
+          {
+            "file": "routes/location-detail.tsx",
+            "path": "locations/:city"
+          },
+          {
+            "file": "routes/promo.tsx",
+            "path": "promo"
           }
         ]
       }

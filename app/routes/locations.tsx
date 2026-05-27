@@ -4,10 +4,19 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: "Our Office Locations & Localized IT Services - Aarvitek Systems" },
-        { name: "description", content: "Explore Aarvitek Systems' operations across major Indian tech and business hubs. Delivering custom web development, e-commerce, and creative solutions." },
+        ...generateMeta({
+            title: "Our Office Locations & Localized IT Services | Aarvitek Systems",
+            description: "Explore Aarvitek Systems' operations across major Indian tech and business hubs. Delivering custom web development, e-commerce, and creative solutions.",
+            url: "/locations",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Locations", item: "/locations" }
+        ]))
     ];
 }
 

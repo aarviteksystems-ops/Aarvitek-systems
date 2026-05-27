@@ -1,10 +1,19 @@
 import type { Route } from "./+types/availability";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "24/7 Availability | Aarvitek Systems" },
-        { name: "description", content: "Systems that run flawlessly around the clock." },
+        ...generateMeta({
+            title: "24/7 Availability & Resilient Systems | Aarvitek Systems",
+            description: "We build resilient systems with robust failovers that run flawlessly around the clock, ensuring business continuity.",
+            url: "/availability",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Availability", item: "/availability" }
+        ]))
     ];
 }
 

@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
     return [
         { title: "Bespoke Web Development & High-Converting Websites - Aarvitek Systems" },
         { name: "description", content: "Get a high-performance, custom website built by certified experts. Maximize your business conversions, speed, and design. Get a free proposal in 24 hours." },
@@ -27,16 +27,16 @@ export default function PromoLanding() {
     // Calculator State
     const [calcType, setCalcType] = useState<"standard" | "ecommerce" | "custom">("standard");
     const [pageCount, setPageCount] = useState<number>(5);
-    const [features, setFeatures] = useState<string[]>(["seo", "responsive"]);
+    const [features, setFeatures] = useState<string[]>(["seo", "responsive", "cms", "pixel"]);
 
     // Calculate Estimated Price
     const calculatePrice = () => {
         let base = 0;
-        if (calcType === "standard") base = 12000;
-        else if (calcType === "ecommerce") base = 25000;
-        else base = 40000;
+        if (calcType === "standard") base = 0;
+        else if (calcType === "ecommerce") base = 0;
+        else base = 0;
 
-        let pageCost = pageCount * 1200;
+        let pageCost = pageCount * 999;
         let featureCost = features.length * 2500;
 
         return base + pageCost + featureCost;
@@ -109,7 +109,7 @@ export default function PromoLanding() {
             <section className="relative pt-12 pb-20 lg:pt-20 lg:pb-32 z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                        
+
                         {/* Hero Text Info */}
                         <div className="lg:col-span-7 space-y-8 promo-animate">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm">
@@ -121,7 +121,7 @@ export default function PromoLanding() {
                             <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl">
                                 Forget slow page speeds and generic WordPress templates. We engineer bespoke, lightning-fast React, Shopify, and Node web applications built to capture attention, build trust, and maximize your sales revenue.
                             </p>
-                            
+
                             {/* Key Highlights */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                                 {[
@@ -266,7 +266,7 @@ export default function PromoLanding() {
 
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white/[0.01] border border-white/5 p-8 rounded-3xl backdrop-blur-sm">
                         <div className="md:col-span-7 space-y-6">
-                            
+
                             {/* Project Type */}
                             <div>
                                 <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-3">Project Class</label>
@@ -275,11 +275,10 @@ export default function PromoLanding() {
                                         <button
                                             key={type}
                                             onClick={() => setCalcType(type)}
-                                            className={`py-3.5 px-2 rounded-xl border text-center text-xs font-bold uppercase transition-all ${
-                                                calcType === type
-                                                    ? "bg-purple-600 border-purple-500 text-white"
-                                                    : "bg-white/5 border-white/10 text-slate-400 hover:text-white"
-                                            }`}
+                                            className={`py-3.5 px-2 rounded-xl border text-center text-xs font-bold uppercase transition-all ${calcType === type
+                                                ? "bg-purple-600 border-purple-500 text-white"
+                                                : "bg-white/5 border-white/10 text-slate-400 hover:text-white"
+                                                }`}
                                         >
                                             {type === "standard" ? "Corporate" : type === "ecommerce" ? "E-Com Store" : "Custom Web"}
                                         </button>
@@ -295,7 +294,7 @@ export default function PromoLanding() {
                                 </div>
                                 <input
                                     type="range"
-                                    min={1}
+                                    min={5}
                                     max={25}
                                     value={pageCount}
                                     onChange={(e) => setPageCount(parseInt(e.target.value))}
@@ -316,11 +315,10 @@ export default function PromoLanding() {
                                         <button
                                             key={feat.id}
                                             onClick={() => toggleFeature(feat.id)}
-                                            className={`p-3.5 rounded-xl border text-left text-xs transition-all flex items-center justify-between ${
-                                                features.includes(feat.id)
-                                                    ? "bg-purple-500/10 border-purple-500/40 text-purple-200"
-                                                    : "bg-white/5 border-white/10 text-slate-400 hover:border-white/20"
-                                            }`}
+                                            className={`p-3.5 rounded-xl border text-left text-xs transition-all flex items-center justify-between ${features.includes(feat.id)
+                                                ? "bg-purple-500/10 border-purple-500/40 text-purple-200"
+                                                : "bg-white/5 border-white/10 text-slate-400 hover:border-white/20"
+                                                }`}
                                         >
                                             <span>{feat.label}</span>
                                             {features.includes(feat.id) && (

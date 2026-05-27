@@ -7,11 +7,30 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Premium Video Editing & Visual Production | Aarvitek Systems" },
-        { name: "description", content: "Aarvitek Systems delivers high-impact custom video editing, dynamic motion graphics, corporate video production, and high-retention social media reels. 100% SEO-optimized." },
-        { name: "keywords", content: "video editing services, professional video editor, corporate video production, post production agency, social media reels editing, motion graphics expert, youtube editor" }
+        ...generateMeta({
+            title: "Premium Video Editing & Visual Production | Aarvitek Systems",
+            description: "Aarvitek Systems delivers high-impact custom video editing, dynamic motion graphics, corporate video production, and high-retention social media reels. 100% SEO-optimized.",
+            url: "/video-editing",
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Video Editing",
+            "provider": {
+                "@type": "Organization",
+                "name": "Aarvitek Systems"
+            },
+            "description": "High-impact custom video editing, dynamic motion graphics, corporate video production, and high-retention social media reels.",
+            "areaServed": "IN"
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Video Editing", item: "/video-editing" }
+        ]))
     ];
 }
 

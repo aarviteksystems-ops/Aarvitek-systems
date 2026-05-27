@@ -1,10 +1,19 @@
 import type { Route } from "./+types/agile-development";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Agile Development - How We Work | Aarvitek Systems" },
-        { name: "description", content: "Iterative building with continuous feedback loops for software development." },
+        ...generateMeta({
+            title: "Agile Development - How We Work | Aarvitek Systems",
+            description: "Phase 2 of our process: Iterative building with continuous feedback loops for efficient software development and faster time-to-market.",
+            url: "/agile-development",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Agile Development", item: "/agile-development" }
+        ]))
     ];
 }
 

@@ -7,11 +7,19 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Privacy Policy & Data Protection | Aarvitek Systems" },
-        { name: "description", content: "Learn how Aarvitek Systems safeguards your personal details, cookies, and business intellectual property on our high-performance IT and custom web development systems." },
-        { name: "keywords", content: "privacy policy aarvitek systems, data protection policy, gdpr compliance, secure web development, cloud data storage safety, cookies agreement" }
+        ...generateMeta({
+            title: "Privacy Policy & Data Protection | Aarvitek Systems",
+            description: "Learn how Aarvitek Systems safeguards your personal details, cookies, and business intellectual property on our high-performance IT and custom web development systems.",
+            url: "/privacy-policy",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Privacy Policy", item: "/privacy-policy" }
+        ]))
     ];
 }
 

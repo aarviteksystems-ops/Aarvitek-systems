@@ -9,6 +9,16 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { getOrganizationSchema, generateJsonLd } from "./utils/seo-config";
+
+export const meta: Route.MetaFunction = () => {
+  return [
+    { name: "theme-color", content: "#000000" },
+    { name: "format-detection", content: "telephone=no" },
+    generateJsonLd(getOrganizationSchema()),
+  ];
+};
+
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

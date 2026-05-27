@@ -1,9 +1,24 @@
 import type { Route } from "./+types/contact";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Book a call - Aarvitek Systems" },
-        { name: "description", content: "Get in touch with us for your web development and design needs." },
+        ...generateMeta({
+            title: "Contact Us - Book a Call | Aarvitek Systems",
+            description: "Get in touch with Aarvitek Systems for custom web development, e-commerce, and design needs. Book a discovery call today.",
+            url: "/contact",
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact Aarvitek Systems",
+            "description": "Get in touch with Aarvitek Systems for custom web development, e-commerce, and design needs. Book a discovery call today."
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Contact", item: "/contact" }
+        ]))
     ];
 }
 

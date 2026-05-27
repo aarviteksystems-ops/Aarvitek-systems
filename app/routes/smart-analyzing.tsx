@@ -1,10 +1,19 @@
 import type { Route } from "./+types/smart-analyzing";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Smart Analyzing - How We Work | Aarvitek Systems" },
-        { name: "description", content: "Understanding your current architecture and future goals through smart analyzing." },
+        ...generateMeta({
+            title: "Smart Analyzing - How We Work | Aarvitek Systems",
+            description: "Phase 1 of our process: Understanding your current architecture and future goals through smart analyzing and strategic discovery.",
+            url: "/smart-analyzing",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Smart Analyzing", item: "/smart-analyzing" }
+        ]))
     ];
 }
 

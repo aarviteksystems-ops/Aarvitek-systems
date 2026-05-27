@@ -7,11 +7,30 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Scalable E-Commerce Web Development & Shopify Expert | Aarvitek Systems" },
-        { name: "description", content: "Aarvitek Systems delivers high-converting custom e-commerce web development, professional Shopify expert setups, and headless WooCommerce platforms. Speed, security, and checkout optimized." },
-        { name: "keywords", content: "ecommerce web development, Shopify developer, custom online store builder, WooCommerce website development, custom shopping cart system, high converting checkouts, payment integrations, stripe razorpay delhi" }
+        ...generateMeta({
+            title: "Scalable E-Commerce Web Development & Shopify Expert | Aarvitek Systems",
+            description: "Aarvitek Systems delivers high-converting custom e-commerce web development, professional Shopify expert setups, and headless WooCommerce platforms. Speed, security, and checkout optimized.",
+            url: "/ecommerce",
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "E-Commerce Web Development",
+            "provider": {
+                "@type": "Organization",
+                "name": "Aarvitek Systems"
+            },
+            "description": "High-converting custom e-commerce web development, Shopify setups, and headless WooCommerce platforms.",
+            "areaServed": "IN"
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "E-Commerce", item: "/ecommerce" }
+        ]))
     ];
 }
 

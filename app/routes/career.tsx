@@ -1,10 +1,19 @@
 import type { Route } from "./+types/career";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Careers - Aarvitek Systems" },
-        { name: "description", content: "Join our team of innovators and creators." },
+        ...generateMeta({
+            title: "Careers - Join Aarvitek Systems | Tech Jobs in India",
+            description: "Join our team of innovators and creators. Build the future of technology with us at Aarvitek Systems. See our open roles in development and design.",
+            url: "/career",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Careers", item: "/career" }
+        ]))
     ];
 }
 

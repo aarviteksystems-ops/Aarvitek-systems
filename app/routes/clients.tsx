@@ -1,10 +1,19 @@
 import type { Route } from "./+types/clients";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Our Clients - Aarvitek Systems" },
-        { name: "description", content: "Trusted by leading businesses across industries." },
+        ...generateMeta({
+            title: "Our Valued Clients & Partners | Aarvitek Systems",
+            description: "Trusted by leading businesses across industries. Discover the enterprises and startups that partner with Aarvitek Systems for digital excellence.",
+            url: "/clients",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Clients", item: "/clients" }
+        ]))
     ];
 }
 

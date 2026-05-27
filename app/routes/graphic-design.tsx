@@ -7,11 +7,30 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Premium Graphic Design Services & Branding | Aarvitek Systems" },
-        { name: "description", content: "Aarvitek Systems delivers professional custom graphic design, memorable logo creation, corporate brand identity guides, and print-ready digital marketing assets. 100% SEO-optimized." },
-        { name: "keywords", content: "graphic design services, custom logo designer, brand identity package, corporate style guide, vector illustration services, print marketing collateral, social media design pack, delhi branding agency" }
+        ...generateMeta({
+            title: "Premium Graphic Design Services & Branding | Aarvitek Systems",
+            description: "Aarvitek Systems delivers professional custom graphic design, memorable logo creation, corporate brand identity guides, and print-ready digital marketing assets. 100% SEO-optimized.",
+            url: "/graphic-design",
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Graphic Design",
+            "provider": {
+                "@type": "Organization",
+                "name": "Aarvitek Systems"
+            },
+            "description": "Professional custom graphic design, memorable logo creation, corporate brand identity guides, and print-ready digital marketing assets.",
+            "areaServed": "IN"
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Graphic Design", item: "/graphic-design" }
+        ]))
     ];
 }
 

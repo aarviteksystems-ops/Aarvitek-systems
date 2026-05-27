@@ -1,10 +1,19 @@
 import type { Route } from "./+types/continuous-optimization";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Continuous Optimization - How We Work | Aarvitek Systems" },
-        { name: "description", content: "Monitoring, maintenance, and future-proofing your tech infrastructure." },
+        ...generateMeta({
+            title: "Continuous Optimization - How We Work | Aarvitek Systems",
+            description: "Phase 4 of our process: Proactive monitoring, performance maintenance, and future-proofing your IT infrastructure.",
+            url: "/continuous-optimization",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Continuous Optimization", item: "/continuous-optimization" }
+        ]))
     ];
 }
 

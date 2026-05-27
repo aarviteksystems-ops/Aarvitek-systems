@@ -1,9 +1,24 @@
 import type { Route } from "./+types/about";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "About Us - Aarvitek Systems" },
-        { name: "description", content: "Learn more about our mission, vision, and the team behind Aarvitek Systems." },
+        ...generateMeta({
+            title: "About Us - Aarvitek Systems | High-Performance IT & Automation",
+            description: "Learn more about Aarvitek Systems, our mission, vision, and the team driving digital transformation through custom web development and AI automation.",
+            url: "/about",
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "name": "About Aarvitek Systems",
+            "description": "Learn more about Aarvitek Systems, our mission, vision, and the team driving digital transformation through custom web development and AI automation."
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "About Us", item: "/about" }
+        ]))
     ];
 }
 

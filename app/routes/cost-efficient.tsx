@@ -1,10 +1,19 @@
 import type { Route } from "./+types/cost-efficient";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Cost Efficient | Aarvitek Systems" },
-        { name: "description", content: "Reduce manual labor and server costs through optimized tech stacks." },
+        ...generateMeta({
+            title: "Cost Efficient IT Solutions | Aarvitek Systems",
+            description: "Reduce manual labor and server costs through optimized tech stacks and automated workflows. Improve your bottom line.",
+            url: "/cost-efficient",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Cost Efficient", item: "/cost-efficient" }
+        ]))
     ];
 }
 

@@ -7,11 +7,30 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Premium UI/UX Website Design & Branding | Aarvitek Systems" },
-        { name: "description", content: "Aarvitek Systems crafts modern, responsive, and high-converting custom website designs. Specializing in high-fidelity Figma prototyping, brand UI/UX overhauls, and legacy site makeovers. 100% SEO-friendly." },
-        { name: "keywords", content: "website design services, custom UI/UX design, Figma website designer, digital branding agency, responsive web layouts, website redesign company, legacy site modernization, conversion rate optimization, Delhi design studio" }
+        ...generateMeta({
+            title: "Premium UI/UX Website Design & Branding | Aarvitek Systems",
+            description: "Aarvitek Systems crafts modern, responsive, and high-converting custom website designs. Specializing in high-fidelity Figma prototyping, brand UI/UX overhauls, and legacy site makeovers. 100% SEO-friendly.",
+            url: "/website-design",
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Website Design",
+            "provider": {
+                "@type": "Organization",
+                "name": "Aarvitek Systems"
+            },
+            "description": "Modern, responsive, and high-converting custom website designs, UI/UX prototyping, and legacy site makeovers.",
+            "areaServed": "IN"
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Website Design", item: "/website-design" }
+        ]))
     ];
 }
 

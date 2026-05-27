@@ -61,6 +61,90 @@ const entryServer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineP
   default: handleRequest,
   streamTimeout
 }, Symbol.toStringTag, { value: "Module" }));
+const SITE_NAME = "Aarvitek Systems";
+const SITE_URL = "https://aarviteksystems.com";
+const DEFAULT_OG_IMAGE = `${SITE_URL}/images/og-image.png`;
+const COMPANY_PHONE = "+91 787 090 1336";
+const COMPANY_EMAIL = "aarvitexsystems@gmail.com";
+const SOCIAL_LINKS = [
+  // Use placeholders or actual links when available
+  "https://facebook.com/aarviteksystems",
+  "https://twitter.com/aarviteksystems",
+  "https://linkedin.com/company/aarviteksystems"
+];
+function generateMeta({
+  title,
+  description,
+  url,
+  image = DEFAULT_OG_IMAGE,
+  type = "website",
+  canonical,
+  robots = "index, follow"
+}) {
+  const fullUrl = url.startsWith("http") ? url : `${SITE_URL}${url}`;
+  const canonicalUrl = canonical || fullUrl;
+  return [
+    { title },
+    { name: "description", content: description },
+    { name: "robots", content: robots },
+    // Open Graph
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { property: "og:url", content: fullUrl },
+    { property: "og:image", content: image },
+    { property: "og:type", content: type },
+    { property: "og:site_name", content: SITE_NAME },
+    { property: "og:locale", content: "en_IN" },
+    // Twitter
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: title },
+    { name: "twitter:description", content: description },
+    { name: "twitter:image", content: image },
+    // Canonical
+    { tagName: "link", rel: "canonical", href: canonicalUrl }
+  ];
+}
+function generateJsonLd(schema) {
+  return {
+    tagName: "script",
+    type: "application/ld+json",
+    dangerouslySetInnerHTML: {
+      __html: JSON.stringify(schema)
+    }
+  };
+}
+function getOrganizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": SITE_NAME,
+    "url": SITE_URL,
+    "logo": `${SITE_URL}/images/logo.png`,
+    // Assuming a logo exists or will exist
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": COMPANY_PHONE,
+      "contactType": "customer service",
+      "email": COMPANY_EMAIL,
+      "areaServed": "IN",
+      // India
+      "availableLanguage": ["English", "Hindi"]
+    },
+    "sameAs": SOCIAL_LINKS
+  };
+}
+function getBreadcrumbSchema(items) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": items.map((crumb, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": crumb.name,
+      "item": crumb.item.startsWith("http") ? crumb.item : `${SITE_URL}${crumb.item}`
+    }))
+  };
+}
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -4158,7 +4242,16 @@ function Navbar() {
       /* @__PURE__ */ jsx("div", { className: "flex-shrink-0 flex items-center nav-item", children: /* @__PURE__ */ jsx(Link, { to: "/", className: "text-2xl font-black tracking-tighter text-white", children: "AARVITEK" }) }),
       /* @__PURE__ */ jsxs("div", { className: "hidden md:flex space-x-8 items-center bg-white/5 px-6 py-2 rounded-full border border-white/10", children: [
         /* @__PURE__ */ jsx(NavLink, { to: "/", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Home" }),
-        /* @__PURE__ */ jsx(NavLink, { to: "/about", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "About Us" }),
+        /* @__PURE__ */ jsxs("div", { className: "relative group nav-item", children: [
+          /* @__PURE__ */ jsxs("button", { className: "text-sm font-medium text-slate-400 group-hover:text-white flex items-center gap-1 cursor-pointer h-10", children: [
+            "About Us",
+            /* @__PURE__ */ jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M19 9l-7 7-7-7" }) })
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "absolute left-0 top-full pt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50", children: /* @__PURE__ */ jsxs("div", { className: "bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl overflow-hidden py-2", children: [
+            /* @__PURE__ */ jsx(Link, { to: "/about", className: "block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors", children: "Company Profile" }),
+            /* @__PURE__ */ jsx(Link, { to: "/director-message", className: "block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors", children: "Director's Message" })
+          ] }) })
+        ] }),
         /* @__PURE__ */ jsxs("div", { className: "relative group nav-item", children: [
           /* @__PURE__ */ jsxs("button", { className: "text-sm font-medium text-slate-400 group-hover:text-white flex items-center gap-1 cursor-pointer h-10", children: [
             "Services",
@@ -4173,7 +4266,8 @@ function Navbar() {
           ] }) })
         ] }),
         /* @__PURE__ */ jsx(NavLink, { to: "/portfolio", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Portfolio" }),
-        /* @__PURE__ */ jsx(NavLink, { to: "/clients", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Clients" })
+        /* @__PURE__ */ jsx(NavLink, { to: "/clients", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Clients" }),
+        /* @__PURE__ */ jsx(NavLink, { to: "/locations", className: ({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? "text-white" : "text-slate-400"}`, children: "Locations" })
       ] }),
       /* @__PURE__ */ jsx("div", { className: "hidden md:flex items-center nav-item", children: /* @__PURE__ */ jsx(Link, { to: "/contact", className: "px-6 py-2.5 rounded-full bg-purple-600 text-white text-sm font-medium hover:bg-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]", children: "Book a Call" }) }),
       /* @__PURE__ */ jsx("div", { className: "flex md:hidden nav-item", children: /* @__PURE__ */ jsx("button", { onClick: () => setIsOpen(!isOpen), className: "text-slate-300 hover:text-white focus:outline-none", children: /* @__PURE__ */ jsx("svg", { className: "h-6 w-6", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", children: isOpen ? /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M6 18L18 6M6 6l12 12" }) : /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M4 6h16M4 12h16M4 18h16" }) }) }) })
@@ -4181,6 +4275,7 @@ function Navbar() {
     /* @__PURE__ */ jsx("div", { ref: mobileMenuRef, className: "md:hidden", children: isOpen && /* @__PURE__ */ jsx("div", { className: "bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-2xl", children: /* @__PURE__ */ jsxs("div", { className: "px-4 pt-2 pb-6 space-y-1", children: [
       /* @__PURE__ */ jsx(Link, { to: "/", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Home" }),
       /* @__PURE__ */ jsx(Link, { to: "/about", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "About Us" }),
+      /* @__PURE__ */ jsx(Link, { to: "/director-message", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 pl-6 border-l border-white/10", children: "Director's Message" }),
       /* @__PURE__ */ jsxs("div", { className: "py-2 pl-4", children: [
         /* @__PURE__ */ jsx("p", { className: "mobile-nav-item px-3 py-2 text-xs font-bold text-slate-500 uppercase tracking-widest", children: "Services" }),
         /* @__PURE__ */ jsx(Link, { to: "/web-development", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-2 rounded-xl text-base font-medium text-slate-400 hover:text-white hover:bg-white/5", children: "Web Development" }),
@@ -4191,6 +4286,7 @@ function Navbar() {
       ] }),
       /* @__PURE__ */ jsx(Link, { to: "/portfolio", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Portfolio" }),
       /* @__PURE__ */ jsx(Link, { to: "/clients", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Clients" }),
+      /* @__PURE__ */ jsx(Link, { to: "/locations", onClick: () => setIsOpen(false), className: "mobile-nav-item block px-3 py-3 rounded-xl text-base font-medium text-slate-300 hover:text-white hover:bg-white/5", children: "Locations" }),
       /* @__PURE__ */ jsx("div", { className: "mobile-nav-item mt-6", children: /* @__PURE__ */ jsx(Link, { to: "/contact", onClick: () => setIsOpen(false), className: "block w-full text-center px-4 py-3 rounded-xl bg-purple-600 text-white font-medium hover:bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)]", children: "Book a Call" }) })
     ] }) }) })
   ] });
@@ -4239,7 +4335,9 @@ function Footer() {
         /* @__PURE__ */ jsx("h3", { className: "font-bold text-white mb-6", children: "Company" }),
         /* @__PURE__ */ jsxs("ul", { className: "space-y-2", children: [
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/about", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "About Us" }) }),
+          /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/director-message", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Director's Message" }) }),
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/portfolio", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Portfolio" }) }),
+          /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/locations", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Our Locations" }) }),
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/privacy-policy", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Privacy Policy" }) }),
           /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, { to: "/terms", className: "text-slate-400 hover:text-white text-sm transition-colors", children: "Terms of Service" }) })
         ] })
@@ -4299,16 +4397,16 @@ function Dock() {
       navigate(`/#${id}`);
     }
   };
-  return /* @__PURE__ */ jsx("div", { className: `fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${showDock ? "translate-y-0 opacity-100 scale-100" : "translate-y-24 opacity-0 scale-90 pointer-events-none"}`, children: /* @__PURE__ */ jsxs("div", { className: "flex items-end gap-2 px-4 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.4)] h-[72px]", children: [
-    /* @__PURE__ */ jsxs(Link, { to: "/", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
-      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-purple-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" }) }),
+  return /* @__PURE__ */ jsx("div", { className: `fixed bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${showDock ? "translate-y-0 opacity-100 scale-100" : "translate-y-24 opacity-0 scale-90 pointer-events-none"}`, children: /* @__PURE__ */ jsxs("div", { className: "flex items-end gap-1.5 md:gap-2 px-2 md:px-4 py-2 md:py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.4)] h-16 md:h-[72px]", children: [
+    /* @__PURE__ */ jsxs(Link, { to: "/", className: "group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-12 md:hover:w-16 hover:h-12 md:hover:h-16 hover:-translate-y-1.5 md:hover:-translate-y-2 mx-0.5 md:mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-5 h-5 md:w-6 md:h-6 group-hover:w-6 md:group-hover:w-8 group-hover:h-6 md:group-hover:h-8 text-slate-300 group-hover:text-purple-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" }) }),
       /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Home" })
     ] }),
-    /* @__PURE__ */ jsxs(Link, { to: "/about", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
-      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-pink-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" }) }),
+    /* @__PURE__ */ jsxs(Link, { to: "/about", className: "group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-12 md:hover:w-16 hover:h-12 md:hover:h-16 hover:-translate-y-1.5 md:hover:-translate-y-2 mx-0.5 md:mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-5 h-5 md:w-6 md:h-6 group-hover:w-6 md:group-hover:w-8 group-hover:h-6 md:group-hover:h-8 text-slate-300 group-hover:text-pink-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" }) }),
       /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "About Us" })
     ] }),
-    /* @__PURE__ */ jsxs("div", { className: "group relative mx-1 flex flex-col justify-end", children: [
+    /* @__PURE__ */ jsxs("div", { className: "group relative mx-0.5 md:mx-1 flex flex-col justify-end", children: [
       /* @__PURE__ */ jsxs("div", { className: "absolute bottom-full left-1/2 -translate-x-1/2 pb-4 flex flex-col gap-2 items-center opacity-0 translate-y-4 scale-95 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 z-50 origin-bottom", children: [
         /* @__PURE__ */ jsx(Link, { to: "/video-editing", className: "w-40 px-4 py-2.5 bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-center transition-all", children: "Video Editing" }),
         /* @__PURE__ */ jsx(Link, { to: "/ecommerce", className: "w-40 px-4 py-2.5 bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-center transition-all", children: "eCommerce" }),
@@ -4316,27 +4414,433 @@ function Dock() {
         /* @__PURE__ */ jsx(Link, { to: "/website-design", className: "w-40 px-4 py-2.5 bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-center transition-all", children: "Website Design" }),
         /* @__PURE__ */ jsx(Link, { to: "/web-development", className: "w-40 px-4 py-2.5 bg-[#1a1a1a]/90 backdrop-blur-xl border border-white/10 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] text-center transition-all", children: "Web Dev" })
       ] }),
-      /* @__PURE__ */ jsx("button", { onClick: () => handleNav("services"), className: "relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 group-hover:bg-white/10 transition-all duration-300 group-hover:w-16 group-hover:h-16 group-hover:-translate-y-2 border border-white/5 group-hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-blue-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" }) }) })
+      /* @__PURE__ */ jsx("button", { onClick: () => handleNav("services"), className: "relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 group-hover:bg-white/10 transition-all duration-300 group-hover:w-12 md:group-hover:w-16 group-hover:h-12 md:group-hover:h-16 group-hover:-translate-y-1.5 md:group-hover:-translate-y-2 border border-white/5 group-hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: /* @__PURE__ */ jsx("svg", { className: "w-5 h-5 md:w-6 md:h-6 group-hover:w-6 md:group-hover:w-8 group-hover:h-6 md:group-hover:h-8 text-slate-300 group-hover:text-blue-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" }) }) })
     ] }),
-    /* @__PURE__ */ jsxs(Link, { to: "/portfolio", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
-      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-amber-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" }) }),
+    /* @__PURE__ */ jsxs(Link, { to: "/portfolio", className: "group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-12 md:hover:w-16 hover:h-12 md:hover:h-16 hover:-translate-y-1.5 md:hover:-translate-y-2 mx-0.5 md:mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-5 h-5 md:w-6 md:h-6 group-hover:w-6 md:group-hover:w-8 group-hover:h-6 md:group-hover:h-8 text-slate-300 group-hover:text-amber-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" }) }),
       /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Portfolio" })
     ] }),
-    /* @__PURE__ */ jsxs(Link, { to: "/clients", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
-      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-yellow-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" }) }),
+    /* @__PURE__ */ jsxs(Link, { to: "/clients", className: "group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-12 md:hover:w-16 hover:h-12 md:hover:h-16 hover:-translate-y-1.5 md:hover:-translate-y-2 mx-0.5 md:mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-5 h-5 md:w-6 md:h-6 group-hover:w-6 md:group-hover:w-8 group-hover:h-6 md:group-hover:h-8 text-slate-300 group-hover:text-yellow-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" }) }),
       /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Clients" })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "w-px h-8 bg-white/20 mx-2 self-center" }),
-    /* @__PURE__ */ jsxs(Link, { to: "/contact", className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
-      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-indigo-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" }) }),
+    /* @__PURE__ */ jsx("div", { className: "w-px h-6 md:h-8 bg-white/20 mx-1.5 md:mx-2 self-center" }),
+    /* @__PURE__ */ jsxs(Link, { to: "/contact", className: "group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-12 md:hover:w-16 hover:h-12 md:hover:h-16 hover:-translate-y-1.5 md:hover:-translate-y-2 mx-0.5 md:mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-5 h-5 md:w-6 md:h-6 group-hover:w-6 md:group-hover:w-8 group-hover:h-6 md:group-hover:h-8 text-slate-300 group-hover:text-indigo-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" }) }),
       /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Book a call" })
     ] }),
-    /* @__PURE__ */ jsxs("button", { onClick: () => window.scrollTo({ top: 0, behavior: "smooth" }), className: "group relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-16 hover:h-16 hover:-translate-y-2 mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
-      /* @__PURE__ */ jsx("svg", { className: "w-6 h-6 group-hover:w-8 group-hover:h-8 text-slate-300 group-hover:text-emerald-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M5 15l7-7 7 7" }) }),
+    /* @__PURE__ */ jsxs("button", { onClick: () => window.scrollTo({ top: 0, behavior: "smooth" }), className: "group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:w-12 md:hover:w-16 hover:h-12 md:hover:h-16 hover:-translate-y-1.5 md:hover:-translate-y-2 mx-0.5 md:mx-1 border border-white/5 hover:border-white/20 shadow-lg cursor-pointer origin-bottom", children: [
+      /* @__PURE__ */ jsx("svg", { className: "w-5 h-5 md:w-6 md:h-6 group-hover:w-6 md:group-hover:w-8 group-hover:h-6 md:group-hover:h-8 text-slate-300 group-hover:text-emerald-400 transition-all duration-300", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M5 15l7-7 7 7" }) }),
       /* @__PURE__ */ jsx("span", { className: "absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-xs py-1 px-3 rounded-md font-medium whitespace-nowrap pointer-events-none shadow-lg", children: "Top" })
     ] })
   ] }) });
 }
+function WhatsAppButton() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+  const phoneNumber = "917870901336";
+  const defaultMessage = encodeURIComponent(
+    "Hello Aarvitek Systems! I would like to book a free consultation and learn more about your digital transformation services."
+  );
+  const waUrl = `https://wa.me/${phoneNumber}?text=${defaultMessage}`;
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: `fixed bottom-24 right-6 md:right-8 z-40 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${visible ? "opacity-100 translate-y-0 scale-100 pointer-events-auto" : "opacity-0 translate-y-12 scale-75 pointer-events-none"}`,
+      children: [
+        /* @__PURE__ */ jsx("span", { className: "absolute inset-0 rounded-full bg-[#25D366]/40 blur-md animate-ping duration-1000" }),
+        /* @__PURE__ */ jsx("span", { className: "absolute inset-[-4px] rounded-full bg-gradient-to-r from-[#25D366] to-emerald-400 opacity-20 blur-sm animate-[pulse_2s_infinite]" }),
+        /* @__PURE__ */ jsxs(
+          "a",
+          {
+            href: waUrl,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            "aria-label": "Chat on WhatsApp",
+            className: "group relative flex items-center justify-center w-14 h-14 rounded-full bg-black/80 backdrop-blur-xl border border-white/10 hover:border-[#25D366]/50 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-300 hover:scale-110 hover:-translate-y-1 active:scale-95",
+            children: [
+              /* @__PURE__ */ jsx("div", { className: "absolute inset-1 rounded-full bg-gradient-to-tr from-[#128C7E] to-[#25D366] opacity-10 group-hover:opacity-20 transition-opacity" }),
+              /* @__PURE__ */ jsx(
+                "svg",
+                {
+                  className: "w-7 h-7 text-[#25D366] group-hover:text-white transition-colors duration-300",
+                  fill: "currentColor",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx("path", { d: "M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.963C16.59 2.019 14.113.992 11.5.992c-5.448 0-9.88 4.373-9.884 9.802-.001 1.637.5 3.23 1.45 4.81l-1.027 3.75 3.864-1.008zm11.366-7.467c-.29-.145-1.716-.847-1.978-.942-.262-.096-.453-.145-.644.145-.191.29-.739.942-.906 1.134-.167.19-.334.213-.624.069-.29-.145-1.224-.451-2.33-1.439-.86-.767-1.44-1.716-1.608-2.008-.168-.29-.018-.447.127-.591.13-.13.29-.339.435-.508.145-.17.193-.29.29-.483.097-.19.048-.362-.024-.508-.073-.145-.644-1.55-.882-2.122-.232-.559-.467-.483-.644-.492-.166-.008-.358-.01-.55-.01s-.502.072-.765.358c-.263.286-1.004.981-1.004 2.392 0 1.41 1.027 2.775 1.17 2.969.145.193 2.022 3.087 4.899 4.329.684.296 1.218.473 1.634.605.688.219 1.314.188 1.81.114.551-.082 1.716-.701 1.957-1.378.24-.677.24-1.258.17-1.378-.073-.12-.263-.193-.553-.339z" })
+                }
+              ),
+              /* @__PURE__ */ jsx("span", { className: "absolute right-16 scale-0 origin-right translate-x-2 opacity-0 group-hover:scale-100 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 bg-black/90 backdrop-blur-md text-white text-xs font-semibold py-1.5 px-3 rounded-lg border border-white/10 whitespace-nowrap shadow-xl pointer-events-none", children: "Chat with an Expert" })
+            ]
+          }
+        )
+      ]
+    }
+  );
+}
+function CalendlyModal() {
+  const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    const handleClose = () => setIsOpen(false);
+    window.addEventListener("open-calendly", handleOpen);
+    window.addEventListener("close-calendly", handleClose);
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("open-calendly", handleOpen);
+      window.removeEventListener("close-calendly", handleClose);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+  if (!isOpen) return null;
+  return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[1000] flex items-center justify-center p-4", children: [
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "absolute inset-0 bg-black/80 backdrop-blur-xl transition-opacity duration-300",
+        onClick: () => setIsOpen(false)
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { className: "relative w-full max-w-4xl h-[85vh] bg-[#0c051a]/90 backdrop-blur-2xl border border-purple-500/20 rounded-[2.5rem] shadow-[0_0_60px_rgba(168,85,247,0.25)] overflow-hidden flex flex-col z-10 animate-[zoomIn_0.3s_cubic-bezier(0.34,1.56,0.64,1)]", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute top-[-20%] left-[-10%] w-[300px] h-[300px] bg-purple-500/20 blur-[80px] rounded-full pointer-events-none" }),
+      /* @__PURE__ */ jsx("div", { className: "absolute bottom-[-20%] right-[-10%] w-[300px] h-[300px] bg-indigo-500/20 blur-[80px] rounded-full pointer-events-none" }),
+      /* @__PURE__ */ jsxs("div", { className: "relative flex items-center justify-between px-8 py-6 border-b border-white/5 bg-white/[0.02] z-20", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+          /* @__PURE__ */ jsx("div", { className: "w-8 h-8 bg-gradient-to-tr from-purple-600 to-indigo-500 rounded-lg flex items-center justify-center", children: /* @__PURE__ */ jsx("span", { className: "text-white font-black text-sm", children: "A" }) }),
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("h3", { className: "text-white font-extrabold text-lg", children: "Book Free Consultation" }),
+            /* @__PURE__ */ jsx("p", { className: "text-slate-400 text-xs mt-0.5", children: "Select a convenient time slot for your discovery call" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: () => setIsOpen(false),
+            className: "w-10 h-10 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:scale-105 active:scale-95 cursor-pointer",
+            "aria-label": "Close modal",
+            children: /* @__PURE__ */ jsx("svg", { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M6 18L18 6M6 6l12 12" }) })
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "relative flex-1 w-full h-full bg-[#030105] z-10", children: [
+        /* @__PURE__ */ jsx("div", { className: "absolute inset-0 flex items-center justify-center bg-black/60 pointer-events-none z-0", children: /* @__PURE__ */ jsx("div", { className: "w-8 h-8 rounded-full border-2 border-purple-500 border-t-transparent animate-spin" }) }),
+        /* @__PURE__ */ jsx(
+          "iframe",
+          {
+            src: "https://calendly.com/d/c4s-3p8-x6h?background_color=030105&text_color=ffffff&primary_color=a855f7&hide_landing_page=1&hide_gdpr_banner=1",
+            width: "100%",
+            height: "100%",
+            frameBorder: "0",
+            className: "relative z-10 w-full h-full border-none",
+            title: "Book a Consultation Meeting"
+          }
+        )
+      ] })
+    ] })
+  ] });
+}
+function FloatingEnquiryForm() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "Web Development",
+    message: ""
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const drawerRef = useRef(null);
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    const handleClose = () => setIsOpen(false);
+    window.addEventListener("open-enquiry", handleOpen);
+    window.addEventListener("close-enquiry", handleClose);
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    const handleClickOutside = (e) => {
+      if (isOpen && drawerRef.current && !drawerRef.current.contains(e.target) && !e.target.closest(".enquiry-trigger")) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("open-enquiry", handleOpen);
+      window.removeEventListener("close-enquiry", handleClose);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => {
+        const copy = { ...prev };
+        delete copy[name];
+        return copy;
+      });
+    }
+  };
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone/WhatsApp is required";
+    } else if (!/^\+?[0-9\s-]{8,15}$/.test(formData.phone.trim())) {
+      newErrors.phone = "Please enter a valid phone number";
+    }
+    if (!formData.message.trim()) newErrors.message = "Message is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const WEB3FORMS_ACCESS_KEY = "2bf3198d-6793-47b6-bffa-cb44d5716c25";
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `New Enquiry from ${formData.name} — ${formData.service}`,
+          from_name: "Aarvitek Systems Website",
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          service: formData.service,
+          message: formData.message,
+          botcheck: ""
+          // honeypot spam protection
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setIsSubmitting(false);
+        setSubmitSuccess(true);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "Web Development",
+          message: ""
+        });
+        setTimeout(() => {
+          setSubmitSuccess(false);
+          setIsOpen(false);
+        }, 4e3);
+      } else {
+        setIsSubmitting(false);
+        setErrors({ message: "Submission failed. Please try again or contact us via WhatsApp." });
+      }
+    } catch {
+      setIsSubmitting(false);
+      setErrors({ message: "Network error. Please check your connection and try again." });
+    }
+  };
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsxs(
+      "button",
+      {
+        onClick: () => setIsOpen(true),
+        className: "enquiry-trigger hidden md:flex fixed right-0 top-[40%] -translate-y-1/2 z-40 items-center justify-center gap-2 bg-gradient-to-l from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm tracking-wider uppercase py-4 px-3 rounded-l-2xl border-l border-y border-white/20 shadow-[0_10px_30px_rgba(168,85,247,0.3)] transition-all duration-300 hover:scale-105 hover:-translate-x-1 cursor-pointer [writing-mode:vertical-lr] rotate-0",
+        style: { textOrientation: "mixed" },
+        children: [
+          /* @__PURE__ */ jsx("span", { className: "mb-2 text-base select-none", children: "📩" }),
+          " Enquire Now"
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      "button",
+      {
+        onClick: () => setIsOpen(true),
+        className: "enquiry-trigger md:hidden fixed bottom-44 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-500 hover:from-purple-500 hover:to-indigo-400 text-white flex items-center justify-center shadow-[0_10px_25px_rgba(168,85,247,0.4)] border border-white/10 transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer",
+        "aria-label": "Open Inquiry Form",
+        children: /* @__PURE__ */ jsx("svg", { className: "w-6 h-6", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx(
+          "path",
+          {
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+            strokeWidth: "2",
+            d: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          }
+        ) })
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: `fixed inset-0 bg-black/50 backdrop-blur-sm z-[900] transition-opacity duration-500 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`,
+        onClick: () => setIsOpen(false)
+      }
+    ),
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        ref: drawerRef,
+        className: `fixed top-0 right-0 h-screen w-full sm:w-[460px] bg-[#090312]/95 backdrop-blur-2xl border-l border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)] z-[950] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? "translate-x-0" : "translate-x-full"} flex flex-col`,
+        children: [
+          /* @__PURE__ */ jsx("div", { className: "absolute top-[-10%] right-[-10%] w-[250px] h-[250px] bg-purple-600/10 blur-[60px] rounded-full pointer-events-none" }),
+          /* @__PURE__ */ jsx("div", { className: "absolute bottom-[-10%] left-[-10%] w-[250px] h-[250px] bg-indigo-600/10 blur-[60px] rounded-full pointer-events-none" }),
+          /* @__PURE__ */ jsxs("div", { className: "relative flex items-center justify-between px-8 py-6 border-b border-white/5 bg-white/[0.02] z-10 shrink-0", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-xl", children: "📊" }),
+              /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("h3", { className: "text-white font-extrabold text-lg", children: "Send an Enquiry" }),
+                /* @__PURE__ */ jsx("p", { className: "text-slate-400 text-xs mt-0.5", children: "We respond in less than 2 hours" })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => setIsOpen(false),
+                className: "w-9 h-9 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:rotate-90 cursor-pointer",
+                children: /* @__PURE__ */ jsx("svg", { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M6 18L18 6M6 6l12 12" }) })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto px-8 py-6 relative z-10", children: submitSuccess ? (
+            /* High-fidelity Success Animation Screen */
+            /* @__PURE__ */ jsxs("div", { className: "h-full flex flex-col items-center justify-center text-center space-y-6 animate-[fadeIn_0.5s_ease-out]", children: [
+              /* @__PURE__ */ jsx("div", { className: "relative w-24 h-24 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.4)] animate-[scaleUp_0.4s_cubic-bezier(0.34,1.56,0.64,1)]", children: /* @__PURE__ */ jsx("svg", { className: "w-12 h-12 text-white animate-[drawCheck_0.5s_ease-in-out_0.2s_both]", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "3", d: "M5 13l4 4L19 7" }) }) }),
+              /* @__PURE__ */ jsx("h3", { className: "text-white font-black text-2xl", children: "Enquiry Received!" }),
+              /* @__PURE__ */ jsx("p", { className: "text-slate-400 text-sm max-w-xs mx-auto leading-relaxed", children: "Thank you for reaching out to Aarvitek Systems. Our digital consultants have been notified and will contact you within the next **2 hours**." }),
+              /* @__PURE__ */ jsx("div", { className: "w-full h-1 bg-white/5 rounded-full overflow-hidden", children: /* @__PURE__ */ jsx("div", { className: "h-full bg-emerald-500 animate-[loadingBar_4s_linear_both]" }) })
+            ] })
+          ) : (
+            /* Enquiry Form */
+            /* @__PURE__ */ jsxs("form", { onSubmit: handleSubmit, className: "space-y-6", children: [
+              /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsx("label", { className: "block text-slate-300 font-bold text-xs uppercase tracking-wider", children: "Your Name" }),
+                /* @__PURE__ */ jsx(
+                  "input",
+                  {
+                    type: "text",
+                    name: "name",
+                    value: formData.name,
+                    onChange: handleChange,
+                    placeholder: "e.g. John Doe",
+                    className: `w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-slate-500 focus:outline-none focus:bg-white/10 transition-all ${errors.name ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" : "border-white/10 focus:border-purple-500/50"}`
+                  }
+                ),
+                errors.name && /* @__PURE__ */ jsx("p", { className: "text-red-500 text-xs mt-1 font-medium", children: errors.name })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsx("label", { className: "block text-slate-300 font-bold text-xs uppercase tracking-wider", children: "Email Address" }),
+                /* @__PURE__ */ jsx(
+                  "input",
+                  {
+                    type: "email",
+                    name: "email",
+                    value: formData.email,
+                    onChange: handleChange,
+                    placeholder: "e.g. john@company.com",
+                    className: `w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-slate-500 focus:outline-none focus:bg-white/10 transition-all ${errors.email ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" : "border-white/10 focus:border-purple-500/50"}`
+                  }
+                ),
+                errors.email && /* @__PURE__ */ jsx("p", { className: "text-red-500 text-xs mt-1 font-medium", children: errors.email })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsx("label", { className: "block text-slate-300 font-bold text-xs uppercase tracking-wider", children: "Phone / WhatsApp Number" }),
+                /* @__PURE__ */ jsx(
+                  "input",
+                  {
+                    type: "tel",
+                    name: "phone",
+                    value: formData.phone,
+                    onChange: handleChange,
+                    placeholder: "e.g. +91 99999 99999",
+                    className: `w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-slate-500 focus:outline-none focus:bg-white/10 transition-all ${errors.phone ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" : "border-white/10 focus:border-purple-500/50"}`
+                  }
+                ),
+                errors.phone && /* @__PURE__ */ jsx("p", { className: "text-red-500 text-xs mt-1 font-medium", children: errors.phone })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsx("label", { className: "block text-slate-300 font-bold text-xs uppercase tracking-wider", children: "Service Needed" }),
+                /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+                  /* @__PURE__ */ jsxs(
+                    "select",
+                    {
+                      name: "service",
+                      value: formData.service,
+                      onChange: handleChange,
+                      className: "w-full px-4 py-3 rounded-xl bg-[#110924] border border-white/10 text-white focus:outline-none focus:border-purple-500/50 appearance-none cursor-pointer",
+                      children: [
+                        /* @__PURE__ */ jsx("option", { value: "Web Development", children: "Web Development" }),
+                        /* @__PURE__ */ jsx("option", { value: "eCommerce Platforms", children: "eCommerce Platforms" }),
+                        /* @__PURE__ */ jsx("option", { value: "Website UI/UX Design", children: "Website UI/UX Design" }),
+                        /* @__PURE__ */ jsx("option", { value: "Graphic Design & Branding", children: "Graphic Design & Branding" }),
+                        /* @__PURE__ */ jsx("option", { value: "Video Editing & Motion UX", children: "Video Editing & Motion UX" }),
+                        /* @__PURE__ */ jsx("option", { value: "AI Automation Integrations", children: "AI Automation Integrations" }),
+                        /* @__PURE__ */ jsx("option", { value: "Other / Full Suite", children: "Other / Full Suite" })
+                      ]
+                    }
+                  ),
+                  /* @__PURE__ */ jsx("div", { className: "absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400", children: /* @__PURE__ */ jsx("svg", { className: "w-4 h-4", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M19 9l-7 7-7-7" }) }) })
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsx("label", { className: "block text-slate-300 font-bold text-xs uppercase tracking-wider", children: "Project Scope / Details" }),
+                /* @__PURE__ */ jsx(
+                  "textarea",
+                  {
+                    name: "message",
+                    value: formData.message,
+                    onChange: handleChange,
+                    rows: 4,
+                    placeholder: "Briefly describe your objectives, timelines, and budget constraints...",
+                    className: `w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-slate-500 focus:outline-none focus:bg-white/10 transition-all resize-none ${errors.message ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500" : "border-white/10 focus:border-purple-500/50"}`
+                  }
+                ),
+                errors.message && /* @__PURE__ */ jsx("p", { className: "text-red-500 text-xs mt-1 font-medium", children: errors.message })
+              ] }),
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "submit",
+                  disabled: isSubmitting,
+                  className: "w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold text-sm tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(168,85,247,0.35)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2",
+                  children: isSubmitting ? /* @__PURE__ */ jsxs(Fragment, { children: [
+                    /* @__PURE__ */ jsx("div", { className: "w-5 h-5 rounded-full border-2 border-white border-t-transparent animate-spin" }),
+                    "Sending Enquiry..."
+                  ] }) : "Submit Proposal Request"
+                }
+              )
+            ] })
+          ) })
+        ]
+      }
+    )
+  ] });
+}
+const meta$p = () => {
+  return [{
+    name: "theme-color",
+    content: "#000000"
+  }, {
+    name: "format-detection",
+    content: "telephone=no"
+  }, generateJsonLd(getOrganizationSchema())];
+};
 const links = () => [{
   rel: "preconnect",
   href: "https://fonts.googleapis.com"
@@ -4351,6 +4855,12 @@ const links = () => [{
 function Layout({
   children
 }) {
+  let location;
+  try {
+    location = useLocation();
+  } catch (e) {
+  }
+  const isPromo = location?.pathname === "/promo";
   return /* @__PURE__ */ jsxs("html", {
     lang: "en",
     className: "dark scroll-smooth",
@@ -4362,10 +4872,10 @@ function Layout({
         content: "width=device-width, initial-scale=1"
       }), /* @__PURE__ */ jsx(Meta, {}), /* @__PURE__ */ jsx(Links, {})]
     }), /* @__PURE__ */ jsxs("body", {
-      children: [/* @__PURE__ */ jsx(Navbar, {}), /* @__PURE__ */ jsx("main", {
-        className: "min-h-screen pt-16",
+      children: [!isPromo && /* @__PURE__ */ jsx(Navbar, {}), /* @__PURE__ */ jsx("main", {
+        className: `min-h-screen ${isPromo ? "pt-0" : "pt-16"}`,
         children
-      }), /* @__PURE__ */ jsx(Dock, {}), /* @__PURE__ */ jsx(Footer, {}), /* @__PURE__ */ jsx(ScrollRestoration, {}), /* @__PURE__ */ jsx(Scripts, {})]
+      }), !isPromo && /* @__PURE__ */ jsx(WhatsAppButton, {}), !isPromo && /* @__PURE__ */ jsx(CalendlyModal, {}), !isPromo && /* @__PURE__ */ jsx(FloatingEnquiryForm, {}), !isPromo && /* @__PURE__ */ jsx(Dock, {}), !isPromo && /* @__PURE__ */ jsx(Footer, {}), /* @__PURE__ */ jsx(ScrollRestoration, {}), /* @__PURE__ */ jsx(Scripts, {})]
     })]
   });
 }
@@ -4396,7 +4906,8 @@ const route0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   ErrorBoundary,
   Layout,
   default: root,
-  links
+  links,
+  meta: meta$p
 }, Symbol.toStringTag, { value: "Module" }));
 function _defineProperties(target, props) {
   for (var i = 0; i < props.length; i++) {
@@ -6596,13 +7107,37 @@ ScrollTrigger.core = {
 };
 _getGSAP2() && gsap.registerPlugin(ScrollTrigger);
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$k({}) {
-  return [{
-    title: "Aarvitek Systems - Intelligent IT & Automation"
-  }, {
-    name: "description",
-    content: "Empowering businesses with top-tier Web Development, AI Automation, and Design."
-  }];
+function meta$o({}) {
+  return [...generateMeta({
+    title: "Aarvitek Systems | High-Performance IT Solutions & Web Development",
+    description: "Empowering startups and enterprises with scalable web apps, custom software, and digital branding solutions in India.",
+    url: "/"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Aarvitek Systems",
+    "url": "https://aarviteksystems.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://aarviteksystems.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Aarvitek Systems",
+    "image": "https://aarviteksystems.com/images/og-image.png",
+    "@id": "https://aarviteksystems.com",
+    "url": "https://aarviteksystems.com",
+    "telephone": "+91 787 090 1336",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "New Delhi",
+      "addressLocality": "New Delhi",
+      "addressRegion": "DL",
+      "addressCountry": "IN"
+    }
+  })];
 }
 const home = UNSAFE_withComponentProps(function Home() {
   const container = useRef(null);
@@ -7215,15 +7750,25 @@ const home = UNSAFE_withComponentProps(function Home() {
 const route1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: home,
-  meta: meta$k
+  meta: meta$o
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$j({}) {
-  return [{
-    title: "About Us - Aarvitek Systems"
+function meta$n({}) {
+  return [...generateMeta({
+    title: "About Us - Aarvitek Systems | High-Performance IT & Automation",
+    description: "Learn more about Aarvitek Systems, our mission, vision, and the team driving digital transformation through custom web development and AI automation.",
+    url: "/about"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About Aarvitek Systems",
+    "description": "Learn more about Aarvitek Systems, our mission, vision, and the team driving digital transformation through custom web development and AI automation."
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Learn more about our mission, vision, and the team behind Aarvitek Systems."
-  }];
+    name: "About Us",
+    item: "/about"
+  }]))];
 }
 const about = UNSAFE_withComponentProps(function About() {
   return /* @__PURE__ */ jsxs("div", {
@@ -7299,15 +7844,259 @@ const about = UNSAFE_withComponentProps(function About() {
 const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: about,
-  meta: meta$j
+  meta: meta$n
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$i({}) {
-  return [{
-    title: "Book a call - Aarvitek Systems"
+gsapWithCSS.registerPlugin(useGSAP);
+function meta$m({}) {
+  return [...generateMeta({
+    title: "Message from the Director | Aarvitek Systems",
+    description: "Read a personal message from Aarvind Kumaar Sinha, Managing Director, about Aarvitek Systems' commitment to technology, innovation, and digital transformation.",
+    url: "/director-message"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Aarvind Kumaar Sinha",
+    "jobTitle": "Managing Director",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Aarvitek Systems"
+    }
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Get in touch with us for your web development and design needs."
-  }];
+    name: "Director's Message",
+    item: "/director-message"
+  }]))];
+}
+const directorMessage = UNSAFE_withComponentProps(function DirectorMessage() {
+  const containerRef = useRef(null);
+  useGSAP(() => {
+    gsapWithCSS.from(".director-animate", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out"
+    });
+  }, {
+    scope: containerRef
+  });
+  return /* @__PURE__ */ jsxs("div", {
+    ref: containerRef,
+    className: "min-h-screen bg-[#020202] text-slate-300 overflow-hidden pt-28 pb-20 relative",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[10%] w-[500px] h-[500px] bg-purple-600/10 blur-[160px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] right-[10%] w-[600px] h-[600px] bg-indigo-600/10 blur-[180px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff03_1px,_transparent_1px)] bg-[size:40px_40px] opacity-60 pointer-events-none"
+    }), /* @__PURE__ */ jsxs("div", {
+      className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10",
+      children: [/* @__PURE__ */ jsxs("div", {
+        className: "text-center max-w-3xl mx-auto mb-16 director-animate",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-md mb-6",
+          children: [/* @__PURE__ */ jsx("span", {
+            className: "flex h-2 w-2 rounded-full bg-purple-500 animate-pulse"
+          }), /* @__PURE__ */ jsx("span", {
+            className: "text-xs font-semibold text-purple-200 tracking-wider uppercase",
+            children: "Leadership Vision"
+          })]
+        }), /* @__PURE__ */ jsxs("h1", {
+          className: "text-4xl sm:text-5xl font-black text-white mb-6 leading-tight",
+          children: ["Message From Our ", /* @__PURE__ */ jsx("span", {
+            className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400",
+            children: "Director"
+          })]
+        }), /* @__PURE__ */ jsx("p", {
+          className: "text-base sm:text-lg text-slate-400 leading-relaxed",
+          children: "A personal note on our core values, technological commitment, and our shared journey toward digital excellence."
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-20 director-animate",
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "lg:col-span-4 sticky top-28",
+          children: /* @__PURE__ */ jsxs("div", {
+            className: "relative group rounded-3xl p-[1px] overflow-hidden bg-white/5 border border-white/5 hover:border-purple-500/30 transition-all duration-500 shadow-xl",
+            children: [/* @__PURE__ */ jsx("div", {
+              className: "absolute inset-[-150%] bg-[conic-gradient(from_90deg_at_50%_50%,#00000000_0%,#a855f7_30%,#00000000_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[spin_4s_linear_infinite] transition-opacity duration-700"
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "relative bg-[#070707] rounded-[23px] p-6 z-10 flex flex-col items-center text-center",
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "w-48 h-48 rounded-full overflow-hidden border-2 border-purple-500/30 shadow-2xl mb-6 relative group/photo",
+                children: [/* @__PURE__ */ jsx("img", {
+                  src: "/images/aarvind-kumaar-sinha.jpg",
+                  alt: "Aarvind Kumaar Sinha - Managing Director",
+                  className: "w-full h-full object-cover grayscale group-hover/photo:grayscale-0 transition-all duration-500 transform group-hover/photo:scale-110"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "absolute inset-0 bg-gradient-to-t from-purple-950/20 to-transparent mix-blend-overlay"
+                })]
+              }), /* @__PURE__ */ jsx("h2", {
+                className: "text-2xl font-bold text-white mb-1",
+                children: "Aarvind Kumaar Sinha"
+              }), /* @__PURE__ */ jsx("p", {
+                className: "text-sm font-semibold text-purple-400 mb-4",
+                children: "Founder & Managing Director"
+              }), /* @__PURE__ */ jsx("div", {
+                className: "w-full border-t border-white/5 pt-4 mb-6",
+                children: /* @__PURE__ */ jsx("p", {
+                  className: "text-xs text-slate-500 italic",
+                  children: `"Technology is not just about solving today's problems; it is about building the foundation for tomorrow's possibilities."`
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "flex space-x-3",
+                children: [/* @__PURE__ */ jsx("a", {
+                  href: "https://linkedin.com",
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  className: "w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-purple-600/20 hover:border-purple-500/50 transition-all",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-4 h-4",
+                    fill: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      d: "M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                    })
+                  })
+                }), /* @__PURE__ */ jsx("a", {
+                  href: "mailto:aarvind@aarvitek.com",
+                  className: "w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-purple-600/20 hover:border-purple-500/50 transition-all",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-4 h-4",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "2",
+                      d: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    })
+                  })
+                })]
+              })]
+            })]
+          })
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "lg:col-span-8 space-y-8 bg-white/[0.01] border border-white/5 rounded-3xl p-8 md:p-12 backdrop-blur-xl",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "space-y-6 text-slate-300 leading-relaxed text-base sm:text-lg",
+            children: [/* @__PURE__ */ jsx("p", {
+              className: "font-semibold text-white text-xl md:text-2xl border-b border-purple-500/20 pb-4",
+              children: "Welcome to Aarvitek Systems,"
+            }), /* @__PURE__ */ jsxs("p", {
+              children: ["At Aarvitek Systems, our core philosophy is simple yet powerful: ", /* @__PURE__ */ jsx("strong", {
+                className: "text-white",
+                children: "innovation should be purposeful and accessible"
+              }), ". When we founded Aarvitek Systems, we saw a gap in the tech ecosystem—many growing businesses and startups struggled to access high-performance, custom-tailored enterprise-grade technology without prohibitive costs. We set out to change that dynamic."]
+            }), /* @__PURE__ */ jsx("p", {
+              children: "In today's hyper-connected world, a website, an e-commerce storefront, or an internal automation system is no longer just a digital placeholder. It is the primary engine of growth, customer trust, and operational speed. That is why our team of engineers, designers, and strategists are committed to producing nothing short of digital excellence. We design modern UI/UX workflows, build performant full-stack apps using bleeding-edge tools like Next.js, and deploy robust APIs designed to scale flawlessly under pressure."
+            }), /* @__PURE__ */ jsx("blockquote", {
+              className: "border-l-4 border-purple-500 pl-6 my-8 italic text-slate-400 bg-white/[0.02] py-4 pr-4 rounded-r-xl",
+              children: '"Our mission is to stand by our clients as strategic tech partners, turning complex engineering hurdles into clean, scalable, and highly profitable digital opportunities."'
+            }), /* @__PURE__ */ jsx("p", {
+              children: "What makes Aarvitek unique is not just the code we write, but the partnerships we cultivate. We dive deep into understanding our clients' business workflows, target demographics, and pain points before we lay down the first line of code. We believe in absolute transparency, absolute performance, and robust security."
+            }), /* @__PURE__ */ jsx("p", {
+              children: "Thank you for trusting us with your vision. Whether you are launching a new startup, modernizing an established brand, or streamlining operations, Aarvitek Systems is here to guide and accelerate your digital journey."
+            }), /* @__PURE__ */ jsx("p", {
+              className: "pt-4",
+              children: "Sincerely,"
+            })]
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "pt-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6",
+            children: [/* @__PURE__ */ jsxs("div", {
+              children: [/* @__PURE__ */ jsx("p", {
+                className: "font-serif text-2xl text-purple-400 tracking-wide font-bold italic select-none",
+                children: "Aarvind Kumaar Sinha"
+              }), /* @__PURE__ */ jsx("p", {
+                className: "text-sm font-semibold text-white mt-2",
+                children: "Aarvind Kumaar Sinha"
+              }), /* @__PURE__ */ jsx("p", {
+                className: "text-xs text-slate-500",
+                children: "Managing Director, Aarvitek Systems"
+              })]
+            }), /* @__PURE__ */ jsx("div", {
+              children: /* @__PURE__ */ jsxs(Link, {
+                to: "/contact",
+                className: "inline-flex items-center px-6 py-3 rounded-full bg-purple-600 text-white font-medium hover:bg-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]",
+                children: [/* @__PURE__ */ jsx("span", {
+                  children: "Connect with us"
+                }), /* @__PURE__ */ jsx("svg", {
+                  className: "w-4 h-4 ml-2",
+                  fill: "none",
+                  stroke: "currentColor",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx("path", {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "2",
+                    d: "M14 5l7 7m0 0l-7 7m7-7H3"
+                  })
+                })]
+              })
+            })]
+          })]
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "director-animate",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-2xl mx-auto mb-12",
+          children: [/* @__PURE__ */ jsx("h3", {
+            className: "text-2xl md:text-3xl font-bold text-white mb-4",
+            children: "Our Leadership Principles"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-sm text-slate-400",
+            children: "The guiding values our director installs across all operations and development teams."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 md:grid-cols-3 gap-8",
+          children: [{
+            title: "1. Relentless Innovation",
+            desc: "Constantly pushing tech stacks, performance boundaries, and UI/UX ideas to keep our clients ahead of their competition."
+          }, {
+            title: "2. Absolute Integrity",
+            desc: "No opaque pricing, no vendor lock-ins, and complete clarity of codebase ownership. We build trust by delivering clean, maintainable code."
+          }, {
+            title: "3. Scalable Execution",
+            desc: "Building architectures that grow with your user base. We engineering with high availability, low latency, and robust security in mind."
+          }].map((principle, i) => /* @__PURE__ */ jsxs("div", {
+            className: "p-8 rounded-2xl bg-white/[0.01] border border-white/5 hover:border-purple-500/20 hover:bg-white/[0.02] transition-all duration-300",
+            children: [/* @__PURE__ */ jsx("h4", {
+              className: "text-lg font-bold text-white mb-3 group-hover:text-purple-300 transition-colors",
+              children: principle.title
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-sm text-slate-400 leading-relaxed",
+              children: principle.desc
+            })]
+          }, i))
+        })]
+      })]
+    })]
+  });
+});
+const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: directorMessage,
+  meta: meta$m
+}, Symbol.toStringTag, { value: "Module" }));
+function meta$l({}) {
+  return [...generateMeta({
+    title: "Contact Us - Book a Call | Aarvitek Systems",
+    description: "Get in touch with Aarvitek Systems for custom web development, e-commerce, and design needs. Book a discovery call today.",
+    url: "/contact"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Aarvitek Systems",
+    "description": "Get in touch with Aarvitek Systems for custom web development, e-commerce, and design needs. Book a discovery call today."
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
+  }, {
+    name: "Contact",
+    item: "/contact"
+  }]))];
 }
 const contact = UNSAFE_withComponentProps(function Contact() {
   return /* @__PURE__ */ jsxs("div", {
@@ -7500,18 +8289,23 @@ const contact = UNSAFE_withComponentProps(function Contact() {
     })]
   });
 });
-const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: contact,
-  meta: meta$i
+  meta: meta$l
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$h({}) {
-  return [{
-    title: "Our Clients - Aarvitek Systems"
+function meta$k({}) {
+  return [...generateMeta({
+    title: "Our Valued Clients & Partners | Aarvitek Systems",
+    description: "Trusted by leading businesses across industries. Discover the enterprises and startups that partner with Aarvitek Systems for digital excellence.",
+    url: "/clients"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Trusted by leading businesses across industries."
-  }];
+    name: "Clients",
+    item: "/clients"
+  }]))];
 }
 const clients = UNSAFE_withComponentProps(function Clients() {
   return /* @__PURE__ */ jsxs("div", {
@@ -7565,18 +8359,23 @@ const clients = UNSAFE_withComponentProps(function Clients() {
     })]
   });
 });
-const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: clients,
-  meta: meta$h
+  meta: meta$k
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$g({}) {
-  return [{
-    title: "Careers - Aarvitek Systems"
+function meta$j({}) {
+  return [...generateMeta({
+    title: "Careers - Join Aarvitek Systems | Tech Jobs in India",
+    description: "Join our team of innovators and creators. Build the future of technology with us at Aarvitek Systems. See our open roles in development and design.",
+    url: "/career"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Join our team of innovators and creators."
-  }];
+    name: "Careers",
+    item: "/career"
+  }]))];
 }
 const career = UNSAFE_withComponentProps(function Career() {
   return /* @__PURE__ */ jsxs("div", {
@@ -7678,22 +8477,29 @@ const career = UNSAFE_withComponentProps(function Career() {
     })]
   });
 });
-const route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: career,
-  meta: meta$g
+  meta: meta$j
 }, Symbol.toStringTag, { value: "Module" }));
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$f({}) {
-  return [{
-    title: "Our Custom Web & Graphic Design Portfolio | Aarvitek Systems"
+function meta$i({}) {
+  return [...generateMeta({
+    title: "Our Custom Web & Graphic Design Portfolio | Aarvitek Systems",
+    description: "Explore custom web applications, responsive Figma mockups, high-converting e-commerce storefronts, and professional motion graphic videos engineered by Aarvitek Systems.",
+    url: "/portfolio"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Aarvitek Systems Portfolio",
+    "description": "Explore custom web applications, responsive Figma mockups, high-converting e-commerce storefronts, and professional motion graphic videos engineered by Aarvitek Systems."
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Explore custom web applications, responsive Figma mockups, high-converting e-commerce storefronts, and professional motion graphic videos engineered by Aarvitek Systems."
-  }, {
-    name: "keywords",
-    content: "web development portfolio, custom UI/UX showcase, branding design case studies, shopify developer work, digital agency portfolio delhi"
-  }];
+    name: "Portfolio",
+    item: "/portfolio"
+  }]))];
 }
 const portfolio = UNSAFE_withComponentProps(function Portfolio() {
   const container = useRef(null);
@@ -7915,22 +8721,34 @@ const portfolio = UNSAFE_withComponentProps(function Portfolio() {
     })]
   });
 });
-const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: portfolio,
-  meta: meta$f
+  meta: meta$i
 }, Symbol.toStringTag, { value: "Module" }));
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$e({}) {
-  return [{
-    title: "Custom Web Development Services & Scalable SaaS Apps | Aarvitek Systems"
+function meta$h({}) {
+  return [...generateMeta({
+    title: "Custom Web Development Services & Scalable SaaS Apps | Aarvitek Systems",
+    description: "Aarvitek Systems delivers high-performance custom web development services, scalable headless CMS, and secure enterprise software architectures using React, Next.js, and Node.js. Speed and SEO optimized.",
+    url: "/web-development"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Custom Web Development",
+    "provider": {
+      "@type": "Organization",
+      "name": "Aarvitek Systems"
+    },
+    "description": "High-performance custom web development services, scalable headless CMS, and secure enterprise software architectures.",
+    "areaServed": "IN"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Aarvitek Systems delivers high-performance custom web development services, scalable headless CMS, and secure enterprise software architectures using React, Next.js, and Node.js. Speed and SEO optimized."
-  }, {
-    name: "keywords",
-    content: "custom web development, enterprise web application, nextjs web development, react developer, scalable ecommerce website, headless CMS development, full-stack software engineering, page speed optimization, delhi it company"
-  }];
+    name: "Web Development",
+    item: "/web-development"
+  }]))];
 }
 const webDevelopment = UNSAFE_withComponentProps(function WebDevelopment() {
   const container = useRef(null);
@@ -8432,22 +9250,34 @@ const webDevelopment = UNSAFE_withComponentProps(function WebDevelopment() {
     })]
   });
 });
-const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: webDevelopment,
-  meta: meta$e
+  meta: meta$h
 }, Symbol.toStringTag, { value: "Module" }));
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$d({}) {
-  return [{
-    title: "Premium UI/UX Website Design & Branding | Aarvitek Systems"
+function meta$g({}) {
+  return [...generateMeta({
+    title: "Premium UI/UX Website Design & Branding | Aarvitek Systems",
+    description: "Aarvitek Systems crafts modern, responsive, and high-converting custom website designs. Specializing in high-fidelity Figma prototyping, brand UI/UX overhauls, and legacy site makeovers. 100% SEO-friendly.",
+    url: "/website-design"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Website Design",
+    "provider": {
+      "@type": "Organization",
+      "name": "Aarvitek Systems"
+    },
+    "description": "Modern, responsive, and high-converting custom website designs, UI/UX prototyping, and legacy site makeovers.",
+    "areaServed": "IN"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Aarvitek Systems crafts modern, responsive, and high-converting custom website designs. Specializing in high-fidelity Figma prototyping, brand UI/UX overhauls, and legacy site makeovers. 100% SEO-friendly."
-  }, {
-    name: "keywords",
-    content: "website design services, custom UI/UX design, Figma website designer, digital branding agency, responsive web layouts, website redesign company, legacy site modernization, conversion rate optimization, Delhi design studio"
-  }];
+    name: "Website Design",
+    item: "/website-design"
+  }]))];
 }
 const websiteDesign = UNSAFE_withComponentProps(function WebsiteDesign() {
   const container = useRef(null);
@@ -8912,22 +9742,34 @@ const websiteDesign = UNSAFE_withComponentProps(function WebsiteDesign() {
     })]
   });
 });
-const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: websiteDesign,
-  meta: meta$d
+  meta: meta$g
 }, Symbol.toStringTag, { value: "Module" }));
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$c({}) {
-  return [{
-    title: "Premium Graphic Design Services & Branding | Aarvitek Systems"
+function meta$f({}) {
+  return [...generateMeta({
+    title: "Premium Graphic Design Services & Branding | Aarvitek Systems",
+    description: "Aarvitek Systems delivers professional custom graphic design, memorable logo creation, corporate brand identity guides, and print-ready digital marketing assets. 100% SEO-optimized.",
+    url: "/graphic-design"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Graphic Design",
+    "provider": {
+      "@type": "Organization",
+      "name": "Aarvitek Systems"
+    },
+    "description": "Professional custom graphic design, memorable logo creation, corporate brand identity guides, and print-ready digital marketing assets.",
+    "areaServed": "IN"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Aarvitek Systems delivers professional custom graphic design, memorable logo creation, corporate brand identity guides, and print-ready digital marketing assets. 100% SEO-optimized."
-  }, {
-    name: "keywords",
-    content: "graphic design services, custom logo designer, brand identity package, corporate style guide, vector illustration services, print marketing collateral, social media design pack, delhi branding agency"
-  }];
+    name: "Graphic Design",
+    item: "/graphic-design"
+  }]))];
 }
 const graphicDesign = UNSAFE_withComponentProps(function GraphicDesign() {
   const container = useRef(null);
@@ -9411,22 +10253,34 @@ const graphicDesign = UNSAFE_withComponentProps(function GraphicDesign() {
     })]
   });
 });
-const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: graphicDesign,
-  meta: meta$c
+  meta: meta$f
 }, Symbol.toStringTag, { value: "Module" }));
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$b({}) {
-  return [{
-    title: "Scalable E-Commerce Web Development & Shopify Expert | Aarvitek Systems"
+function meta$e({}) {
+  return [...generateMeta({
+    title: "Scalable E-Commerce Web Development & Shopify Expert | Aarvitek Systems",
+    description: "Aarvitek Systems delivers high-converting custom e-commerce web development, professional Shopify expert setups, and headless WooCommerce platforms. Speed, security, and checkout optimized.",
+    url: "/ecommerce"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "E-Commerce Web Development",
+    "provider": {
+      "@type": "Organization",
+      "name": "Aarvitek Systems"
+    },
+    "description": "High-converting custom e-commerce web development, Shopify setups, and headless WooCommerce platforms.",
+    "areaServed": "IN"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Aarvitek Systems delivers high-converting custom e-commerce web development, professional Shopify expert setups, and headless WooCommerce platforms. Speed, security, and checkout optimized."
-  }, {
-    name: "keywords",
-    content: "ecommerce web development, Shopify developer, custom online store builder, WooCommerce website development, custom shopping cart system, high converting checkouts, payment integrations, stripe razorpay delhi"
-  }];
+    name: "E-Commerce",
+    item: "/ecommerce"
+  }]))];
 }
 const ecommerce = UNSAFE_withComponentProps(function Ecommerce() {
   const container = useRef(null);
@@ -9899,22 +10753,24 @@ const ecommerce = UNSAFE_withComponentProps(function Ecommerce() {
     })]
   });
 });
-const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: ecommerce,
-  meta: meta$b
+  meta: meta$e
 }, Symbol.toStringTag, { value: "Module" }));
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$a({}) {
-  return [{
-    title: "Privacy Policy & Data Protection | Aarvitek Systems"
+function meta$d({}) {
+  return [...generateMeta({
+    title: "Privacy Policy & Data Protection | Aarvitek Systems",
+    description: "Learn how Aarvitek Systems safeguards your personal details, cookies, and business intellectual property on our high-performance IT and custom web development systems.",
+    url: "/privacy-policy"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Learn how Aarvitek Systems safeguards your personal details, cookies, and business intellectual property on our high-performance IT and custom web development systems."
-  }, {
-    name: "keywords",
-    content: "privacy policy aarvitek systems, data protection policy, gdpr compliance, secure web development, cloud data storage safety, cookies agreement"
-  }];
+    name: "Privacy Policy",
+    item: "/privacy-policy"
+  }]))];
 }
 const privacyPolicy = UNSAFE_withComponentProps(function PrivacyPolicy() {
   const container = useRef(null);
@@ -10154,22 +11010,24 @@ const privacyPolicy = UNSAFE_withComponentProps(function PrivacyPolicy() {
     })]
   });
 });
-const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: privacyPolicy,
-  meta: meta$a
+  meta: meta$d
 }, Symbol.toStringTag, { value: "Module" }));
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$9({}) {
-  return [{
-    title: "Terms of Service & Agreements | Aarvitek Systems"
+function meta$c({}) {
+  return [...generateMeta({
+    title: "Terms of Service & Agreements | Aarvitek Systems",
+    description: "Read the Terms of Service governing code delivery, Figma layouts ownership, secure payment processing, and agile development contracts at Aarvitek Systems.",
+    url: "/terms"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Read the Terms of Service governing code delivery, Figma layouts ownership, secure payment processing, and agile development contracts at Aarvitek Systems."
-  }, {
-    name: "keywords",
-    content: "terms of service aarvitek systems, digital development contract, custom code ownership, figma design rights, payment terms"
-  }];
+    name: "Terms of Service",
+    item: "/terms"
+  }]))];
 }
 const terms = UNSAFE_withComponentProps(function Terms() {
   const container = useRef(null);
@@ -10425,22 +11283,34 @@ const terms = UNSAFE_withComponentProps(function Terms() {
     })]
   });
 });
-const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route13 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: terms,
-  meta: meta$9
+  meta: meta$c
 }, Symbol.toStringTag, { value: "Module" }));
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
-function meta$8({}) {
-  return [{
-    title: "Premium Video Editing & Visual Production | Aarvitek Systems"
+function meta$b({}) {
+  return [...generateMeta({
+    title: "Premium Video Editing & Visual Production | Aarvitek Systems",
+    description: "Aarvitek Systems delivers high-impact custom video editing, dynamic motion graphics, corporate video production, and high-retention social media reels. 100% SEO-optimized.",
+    url: "/video-editing"
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Video Editing",
+    "provider": {
+      "@type": "Organization",
+      "name": "Aarvitek Systems"
+    },
+    "description": "High-impact custom video editing, dynamic motion graphics, corporate video production, and high-retention social media reels.",
+    "areaServed": "IN"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Aarvitek Systems delivers high-impact custom video editing, dynamic motion graphics, corporate video production, and high-retention social media reels. 100% SEO-optimized."
-  }, {
-    name: "keywords",
-    content: "video editing services, professional video editor, corporate video production, post production agency, social media reels editing, motion graphics expert, youtube editor"
-  }];
+    name: "Video Editing",
+    item: "/video-editing"
+  }]))];
 }
 const videoEditing = UNSAFE_withComponentProps(function VideoEditing() {
   const container = useRef(null);
@@ -10924,18 +11794,23 @@ const videoEditing = UNSAFE_withComponentProps(function VideoEditing() {
     })]
   });
 });
-const route13 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route14 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: videoEditing,
-  meta: meta$8
+  meta: meta$b
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$7({}) {
-  return [{
-    title: "Smart Analyzing - How We Work | Aarvitek Systems"
+function meta$a({}) {
+  return [...generateMeta({
+    title: "Smart Analyzing - How We Work | Aarvitek Systems",
+    description: "Phase 1 of our process: Understanding your current architecture and future goals through smart analyzing and strategic discovery.",
+    url: "/smart-analyzing"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Understanding your current architecture and future goals through smart analyzing."
-  }];
+    name: "Smart Analyzing",
+    item: "/smart-analyzing"
+  }]))];
 }
 const smartAnalyzing = UNSAFE_withComponentProps(function SmartAnalyzing() {
   return /* @__PURE__ */ jsx("div", {
@@ -10997,18 +11872,23 @@ const smartAnalyzing = UNSAFE_withComponentProps(function SmartAnalyzing() {
     })
   });
 });
-const route14 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route15 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: smartAnalyzing,
-  meta: meta$7
+  meta: meta$a
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$6({}) {
-  return [{
-    title: "Agile Development - How We Work | Aarvitek Systems"
+function meta$9({}) {
+  return [...generateMeta({
+    title: "Agile Development - How We Work | Aarvitek Systems",
+    description: "Phase 2 of our process: Iterative building with continuous feedback loops for efficient software development and faster time-to-market.",
+    url: "/agile-development"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Iterative building with continuous feedback loops for software development."
-  }];
+    name: "Agile Development",
+    item: "/agile-development"
+  }]))];
 }
 const agileDevelopment = UNSAFE_withComponentProps(function AgileDevelopment() {
   return /* @__PURE__ */ jsx("div", {
@@ -11070,18 +11950,23 @@ const agileDevelopment = UNSAFE_withComponentProps(function AgileDevelopment() {
     })
   });
 });
-const route15 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route16 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: agileDevelopment,
-  meta: meta$6
+  meta: meta$9
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$5({}) {
-  return [{
-    title: "Seamless Integration - How We Work | Aarvitek Systems"
+function meta$8({}) {
+  return [...generateMeta({
+    title: "Seamless Integration - How We Work | Aarvitek Systems",
+    description: "Phase 3 of our process: Zero downtime deployment and seamless systems syncing for enterprise businesses and startups.",
+    url: "/seamless-integration"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Zero downtime deployment and systems syncing for enterprise businesses."
-  }];
+    name: "Seamless Integration",
+    item: "/seamless-integration"
+  }]))];
 }
 const seamlessIntegration = UNSAFE_withComponentProps(function SeamlessIntegration() {
   return /* @__PURE__ */ jsx("div", {
@@ -11143,18 +12028,23 @@ const seamlessIntegration = UNSAFE_withComponentProps(function SeamlessIntegrati
     })
   });
 });
-const route16 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route17 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: seamlessIntegration,
-  meta: meta$5
+  meta: meta$8
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$4({}) {
-  return [{
-    title: "Continuous Optimization - How We Work | Aarvitek Systems"
+function meta$7({}) {
+  return [...generateMeta({
+    title: "Continuous Optimization - How We Work | Aarvitek Systems",
+    description: "Phase 4 of our process: Proactive monitoring, performance maintenance, and future-proofing your IT infrastructure.",
+    url: "/continuous-optimization"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Monitoring, maintenance, and future-proofing your tech infrastructure."
-  }];
+    name: "Continuous Optimization",
+    item: "/continuous-optimization"
+  }]))];
 }
 const continuousOptimization = UNSAFE_withComponentProps(function ContinuousOptimization() {
   return /* @__PURE__ */ jsx("div", {
@@ -11216,18 +12106,23 @@ const continuousOptimization = UNSAFE_withComponentProps(function ContinuousOpti
     })
   });
 });
-const route17 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route18 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: continuousOptimization,
-  meta: meta$4
+  meta: meta$7
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$3({}) {
-  return [{
-    title: "Enhanced Productivity | Aarvitek Systems"
+function meta$6({}) {
+  return [...generateMeta({
+    title: "Enhanced Productivity | Aarvitek Systems",
+    description: "Automate repetitive tasks and focus on high-impact strategies with our custom IT and automation solutions.",
+    url: "/enhanced-productivity"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Automate repetitive tasks and focus on high-impact strategies."
-  }];
+    name: "Enhanced Productivity",
+    item: "/enhanced-productivity"
+  }]))];
 }
 const enhancedProductivity = UNSAFE_withComponentProps(function EnhancedProductivity() {
   return /* @__PURE__ */ jsx("div", {
@@ -11289,18 +12184,23 @@ const enhancedProductivity = UNSAFE_withComponentProps(function EnhancedProducti
     })
   });
 });
-const route18 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route19 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: enhancedProductivity,
-  meta: meta$3
+  meta: meta$6
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$2({}) {
-  return [{
-    title: "Scalability | Aarvitek Systems"
+function meta$5({}) {
+  return [...generateMeta({
+    title: "Infinite Scalability | Aarvitek Systems",
+    description: "Build architectures designed to handle massive traffic spikes and scale seamlessly as your business grows.",
+    url: "/scalability"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Architecture built to handle massive traffic spikes."
-  }];
+    name: "Scalability",
+    item: "/scalability"
+  }]))];
 }
 const scalability = UNSAFE_withComponentProps(function Scalability() {
   return /* @__PURE__ */ jsx("div", {
@@ -11362,18 +12262,23 @@ const scalability = UNSAFE_withComponentProps(function Scalability() {
     })
   });
 });
-const route19 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route20 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: scalability,
-  meta: meta$2
+  meta: meta$5
 }, Symbol.toStringTag, { value: "Module" }));
-function meta$1({}) {
-  return [{
-    title: "Cost Efficient | Aarvitek Systems"
+function meta$4({}) {
+  return [...generateMeta({
+    title: "Cost Efficient IT Solutions | Aarvitek Systems",
+    description: "Reduce manual labor and server costs through optimized tech stacks and automated workflows. Improve your bottom line.",
+    url: "/cost-efficient"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Reduce manual labor and server costs through optimized tech stacks."
-  }];
+    name: "Cost Efficient",
+    item: "/cost-efficient"
+  }]))];
 }
 const costEfficient = UNSAFE_withComponentProps(function CostEfficient() {
   return /* @__PURE__ */ jsx("div", {
@@ -11435,18 +12340,23 @@ const costEfficient = UNSAFE_withComponentProps(function CostEfficient() {
     })
   });
 });
-const route20 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route21 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: costEfficient,
-  meta: meta$1
+  meta: meta$4
 }, Symbol.toStringTag, { value: "Module" }));
-function meta({}) {
-  return [{
-    title: "24/7 Availability | Aarvitek Systems"
+function meta$3({}) {
+  return [...generateMeta({
+    title: "24/7 Availability & Resilient Systems | Aarvitek Systems",
+    description: "We build resilient systems with robust failovers that run flawlessly around the clock, ensuring business continuity.",
+    url: "/availability"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
   }, {
-    name: "description",
-    content: "Systems that run flawlessly around the clock."
-  }];
+    name: "Availability",
+    item: "/availability"
+  }]))];
 }
 const availability = UNSAFE_withComponentProps(function Availability() {
   return /* @__PURE__ */ jsx("div", {
@@ -11508,12 +12418,1161 @@ const availability = UNSAFE_withComponentProps(function Availability() {
     })
   });
 });
-const route21 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route22 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: availability,
+  meta: meta$3
+}, Symbol.toStringTag, { value: "Module" }));
+function meta$2({}) {
+  return [...generateMeta({
+    title: "Our Office Locations & Localized IT Services | Aarvitek Systems",
+    description: "Explore Aarvitek Systems' operations across major Indian tech and business hubs. Delivering custom web development, e-commerce, and creative solutions.",
+    url: "/locations"
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
+  }, {
+    name: "Locations",
+    item: "/locations"
+  }]))];
+}
+const CITIES = [{
+  slug: "bangalore",
+  name: "Bangalore (Bengaluru)",
+  highlight: "India's Silicon Valley",
+  tagline: "High-performance tech & startup software.",
+  description: "Powering startups and scale-ups with robust React/Node platforms, scalable e-commerce systems, and advanced cloud integrations.",
+  services: ["Web Development", "E-Commerce", "UI/UX Design"]
+}, {
+  slug: "mumbai",
+  name: "Mumbai",
+  highlight: "Financial Capital",
+  tagline: "Enterprise-grade web & security architectures.",
+  description: "Delivering secure transactional banking systems, fintech solutions, corporate portals, and enterprise branding.",
+  services: ["Enterprise Web", "Cyber Security", "Corporate Branding"]
+}, {
+  slug: "delhi",
+  name: "Delhi NCR",
+  highlight: "Corporate & Brand Hub",
+  tagline: "High-conversion web design & SEO systems.",
+  description: "Helping brands, retail enterprises, and services capture market share with lead-generation designs and search authority.",
+  services: ["Website Design", "Graphic Design", "Local SEO"]
+}, {
+  slug: "hyderabad",
+  name: "Hyderabad",
+  highlight: "SaaS & Biotech Center",
+  tagline: "Multi-tenant cloud applications & API setups.",
+  description: "Engineering multi-tenant dashboards, complex database systems, and custom API layers for modern tech companies.",
+  services: ["SaaS Architecture", "API Integration", "Web Portals"]
+}, {
+  slug: "pune",
+  name: "Pune",
+  highlight: "Engineering & Tech Hub",
+  tagline: "Precision design & industrial product catalogs.",
+  description: "Supporting manufacturing leaders, automotive partners, and tech firms with corporate portals and UX excellence.",
+  services: ["UI/UX Prototyping", "Corporate Portals", "Product Catalogs"]
+}, {
+  slug: "chennai",
+  name: "Chennai",
+  highlight: "SaaS Export Powerhouse",
+  tagline: "Developer-friendly software & video production.",
+  description: "Designing modern product interfaces, custom databases, and high-impact marketing videos for SaaS products.",
+  services: ["SaaS Development", "Video Editing", "Creative Assets"]
+}];
+const locations = UNSAFE_withComponentProps(function Locations() {
+  const containerRef = useRef(null);
+  useGSAP(() => {
+    gsapWithCSS.from(".locations-animate", {
+      y: 40,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out"
+    });
+  }, {
+    scope: containerRef
+  });
+  return /* @__PURE__ */ jsxs("div", {
+    ref: containerRef,
+    className: "min-h-screen bg-[#020202] text-slate-300 overflow-hidden pt-28 pb-20 relative",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[10%] w-[500px] h-[500px] bg-purple-600/10 blur-[160px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[10%] right-[10%] w-[600px] h-[600px] bg-indigo-600/10 blur-[180px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff03_1px,_transparent_1px)] bg-[size:40px_40px] opacity-60 pointer-events-none"
+    }), /* @__PURE__ */ jsxs("div", {
+      className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10",
+      children: [/* @__PURE__ */ jsxs("div", {
+        className: "text-center max-w-3xl mx-auto mb-16 locations-animate",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-md mb-6",
+          children: [/* @__PURE__ */ jsx("span", {
+            className: "flex h-2 w-2 rounded-full bg-purple-500 animate-pulse"
+          }), /* @__PURE__ */ jsx("span", {
+            className: "text-xs font-semibold text-purple-200 tracking-wider uppercase",
+            children: "Strategic Regional Footprint"
+          })]
+        }), /* @__PURE__ */ jsxs("h1", {
+          className: "text-4xl sm:text-5xl font-black text-white mb-6 leading-tight",
+          children: ["Our Regional ", /* @__PURE__ */ jsx("span", {
+            className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400",
+            children: "Business Hubs"
+          })]
+        }), /* @__PURE__ */ jsx("p", {
+          className: "text-base sm:text-lg text-slate-400 leading-relaxed",
+          children: "We deliver customized, high-performance IT solutions tailored to the local market needs of India's leading startup, commercial, and financial ecosystems."
+        })]
+      }), /* @__PURE__ */ jsx("div", {
+        className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 locations-animate",
+        children: CITIES.map((city) => /* @__PURE__ */ jsxs(Link, {
+          to: `/locations/${city.slug}`,
+          className: "group relative rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.02] hover:border-purple-500/20 p-8 transition-all duration-300 flex flex-col justify-between hover:shadow-[0_0_30px_rgba(168,85,247,0.05)]",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "absolute inset-0 bg-gradient-to-br from-purple-600/0 to-indigo-600/0 group-hover:from-purple-600/5 group-hover:to-indigo-600/5 rounded-2xl transition-all duration-300 pointer-events-none"
+          }), /* @__PURE__ */ jsxs("div", {
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "text-[10px] font-bold uppercase tracking-widest text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-md border border-purple-500/20",
+              children: city.highlight
+            }), /* @__PURE__ */ jsx("h2", {
+              className: "text-2xl font-bold text-white mt-6 group-hover:text-purple-300 transition-colors",
+              children: city.name
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-sm font-semibold text-slate-300 mt-2",
+              children: city.tagline
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-xs text-slate-400 mt-4 leading-relaxed line-clamp-3",
+              children: city.description
+            })]
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "mt-8 pt-6 border-t border-white/5",
+            children: [/* @__PURE__ */ jsx("div", {
+              className: "flex flex-wrap gap-1.5 mb-6",
+              children: city.services.map((svc) => /* @__PURE__ */ jsx("span", {
+                className: "text-[9px] font-mono bg-white/5 border border-white/5 px-2 py-0.5 rounded text-slate-400",
+                children: svc
+              }, svc))
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "flex items-center text-xs font-bold text-purple-400 group-hover:text-purple-300 transition-colors",
+              children: [/* @__PURE__ */ jsx("span", {
+                children: "Explore localized services"
+              }), /* @__PURE__ */ jsx("svg", {
+                className: "w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform",
+                fill: "none",
+                stroke: "currentColor",
+                viewBox: "0 0 24 24",
+                children: /* @__PURE__ */ jsx("path", {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: "2.5",
+                  d: "M9 5l7 7-7 7"
+                })
+              })]
+            })]
+          })]
+        }, city.slug))
+      })]
+    })]
+  });
+});
+const route23 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: locations,
+  meta: meta$2
+}, Symbol.toStringTag, { value: "Module" }));
+const CITIES_DATA = {
+  bangalore: {
+    slug: "bangalore",
+    name: "Bangalore",
+    metaTitle: "Web Development & IT Solutions in Bangalore - Aarvitek Systems",
+    metaDescription: "Scale your startup or enterprise with expert web development, mobile-responsive design, and cloud systems in Bangalore. India's Silicon Valley.",
+    headline: "Scale Your Technology in India's Silicon Valley",
+    subtitle: "From Koramangala and Indiranagar startups to Whitefield and Electronic City enterprises, we build world-class web applications, robust e-commerce setups, and custom digital experiences.",
+    highlight: "Tech & Startups Hub",
+    stats: [{
+      label: "Tech Partners",
+      value: "25+"
+    }, {
+      label: "Local Engineers",
+      value: "15+"
+    }, {
+      label: "Average Launch Time",
+      value: "4 Weeks"
+    }],
+    serviceFocus: "Bangalore's fast-paced tech ecosystem demands high-performance, scalable web systems. We specialize in custom React/Node.js stacks, high-performance e-commerce portals, and modern UI/UX design that stands out in the competitive startup market. We optimize codebases for speed, cloud architecture, and smooth user journeys.",
+    faqs: [{
+      q: "Do you offer on-site meetings for Bangalore businesses?",
+      a: "Yes! We can arrange face-to-face consultations and scoping sessions at your offices in locations like Whitefield, Indiranagar, or HSR Layout to kick off your project."
+    }, {
+      q: "What technologies do you specialize in for Bangalore startups?",
+      a: "We work with modern, scalable stacks including Next.js, React, Node.js, PostgreSQL, and AWS, ensuring your platform is ready to scale alongside your user base."
+    }]
+  },
+  mumbai: {
+    slug: "mumbai",
+    name: "Mumbai",
+    metaTitle: "Enterprise Web Systems & E-Commerce in Mumbai - Aarvitek Systems",
+    metaDescription: "Deploy secure, enterprise-grade web applications, corporate branding, and scalable e-commerce systems tailored for businesses in Mumbai, India's financial capital.",
+    headline: "Enterprise-Grade Digital Solutions for India's Financial Capital",
+    subtitle: "Powering corporate brands, financial services, and retail giants in Bandra-Kurla Complex (BKC), Nariman Point, and Andheri with secure, high-traffic web architectures.",
+    highlight: "Enterprise & Commerce Hub",
+    stats: [{
+      label: "Corporate Clients",
+      value: "18+"
+    }, {
+      label: "Uptime SLA Guarantee",
+      value: "99.99%"
+    }, {
+      label: "Security Audited",
+      value: "100%"
+    }],
+    serviceFocus: "In Mumbai, security, reliability, and transaction volume are paramount. We deliver secure payment gateway integrations, compliance-ready financial portals, and robust enterprise applications designed to handle millions of requests without dropping a frame.",
+    faqs: [{
+      q: "Can you design enterprise portals compliant with security standards?",
+      a: "Absolutely. We build all enterprise solutions with secure-by-design principles, implementing robust encryption, session management, and strict access controls."
+    }, {
+      q: "What is your support lifecycle for Mumbai corporates?",
+      a: "We provide comprehensive service-level agreements (SLAs) including 24/7 server monitoring, regular dependency updates, and rapid bug resolution."
+    }]
+  },
+  delhi: {
+    slug: "delhi",
+    name: "Delhi NCR",
+    metaTitle: "Custom Web Solutions & Branding in Delhi NCR - Aarvitek Systems",
+    metaDescription: "Maximize search presence and client conversions with premium web design, SEO, and corporate graphics in Delhi, Gurgaon, and Noida.",
+    headline: "Grow Your Brand Presence in the Capital Region",
+    subtitle: "Helping premium brands, retail businesses, and fast-growing services in Connaught Place, Gurgaon Cyber City, and Noida Sector 62 capture regional markets with high-conversion web designs.",
+    highlight: "Corporate & Brand Hub",
+    stats: [{
+      label: "Local Brands Scaled",
+      value: "30+"
+    }, {
+      label: "SEO Traffic Growth",
+      value: "150%+"
+    }, {
+      label: "Design Awards",
+      value: "3"
+    }],
+    serviceFocus: "Delhi NCR's competitive landscape requires highly optimized search presence and conversion-focused designs. We craft bespoke graphics, search-optimized web architectures, and lead-generation funnels that turn searchers into local customers.",
+    faqs: [{
+      q: "Do you specialize in local SEO for Delhi NCR?",
+      a: "Yes, we integrate Schema markups, local listings, and geo-targeted keywords into your web architecture so your business ranks high for local search intents."
+    }, {
+      q: "What is your average timeline for corporate site design?",
+      a: "Corporate website design and development typically ranges between 3 to 6 weeks, depending on content structure and customized graphics requirements."
+    }]
+  },
+  hyderabad: {
+    slug: "hyderabad",
+    name: "Hyderabad",
+    metaTitle: "SaaS Web Development & IT Services in Hyderabad - Aarvitek Systems",
+    metaDescription: "Accelerate your SaaS growth and corporate systems with high-performance web engineering and interactive design in Hyderabad, Cyberabad.",
+    headline: "Accelerating Innovation in Cyberabad",
+    subtitle: "Custom SaaS dashboards, API integrations, and robust cloud applications built for tech companies and healthcare leaders in HITEC City and Gachibowli.",
+    highlight: "SaaS & Biotech Hub",
+    stats: [{
+      label: "SaaS Platforms",
+      value: "12"
+    }, {
+      label: "API Integrations",
+      value: "200+"
+    }, {
+      label: "Agile Sprints Done",
+      value: "500+"
+    }],
+    serviceFocus: "Hyderabad is a major SaaS and technology hub. We build secure multi-tenant dashboard architectures, automate workflows with custom APIs, and implement real-time analytics panels that power modern cloud services.",
+    faqs: [{
+      q: "Do you build multi-tenant SaaS dashboards?",
+      a: "Yes, we have deep experience designing secure multi-tenant database layouts and user authentication models (RBAC) to ensure client data isolation."
+    }, {
+      q: "How do you handle API documentation and handoff?",
+      a: "We write clean, OpenAPI-compliant documentation (Swagger) for all custom APIs we build, making front-end and third-party integrations simple."
+    }]
+  },
+  pune: {
+    slug: "pune",
+    name: "Pune",
+    metaTitle: "Creative UI/UX Design & Web Systems in Pune - Aarvitek Systems",
+    metaDescription: "Modern web portals, industrial product sites, and digital marketing systems engineered for Pune's manufacturing and tech sectors.",
+    headline: "Engineering Excellence in India's Motor & Tech Hub",
+    subtitle: "From Hinjewadi IT parks to Hadapsar industrial zones, we design conversion-driven websites, custom product catalogs, and creative branding.",
+    highlight: "Industrial & Education Hub",
+    stats: [{
+      label: "Industrial Partners",
+      value: "14+"
+    }, {
+      label: "UI/UX Prototypes",
+      value: "80+"
+    }, {
+      label: "Support Resolution",
+      value: "99.2%"
+    }],
+    serviceFocus: "Pune blends academic depth with industrial strength. We construct high-end corporate websites, complex catalog portals, and specialized product showcases that communicate quality and engineering precision.",
+    faqs: [{
+      q: "Can you rebuild our legacy industrial catalog site?",
+      a: "Yes, we modernize slow, legacy websites into fast, responsive web systems that allow visitors to filter and search catalogs instantly."
+    }, {
+      q: "Do you design complete brand identity kits?",
+      a: "We offer complete graphic design packages including logos, brand books, collateral, and marketing presentation decks."
+    }]
+  },
+  chennai: {
+    slug: "chennai",
+    name: "Chennai",
+    metaTitle: "SaaS Platform Engineering & Web Portals in Chennai - Aarvitek Systems",
+    metaDescription: "Premium web platforms, enterprise software UI, and creative video marketing solutions for Chennai's tech and automotive leaders.",
+    headline: "Robust Digital Architecture for India's SaaS Capital",
+    subtitle: "Designing high-performance web systems and engaging video production for SaaS startups and enterprise leaders in OMR and T-Nagar.",
+    highlight: "SaaS & Automotive Hub",
+    stats: [{
+      label: "OMR Tech Clients",
+      value: "15+"
+    }, {
+      label: "Video Projects Done",
+      value: "40+"
+    }, {
+      label: "Code Quality Rating",
+      value: "98.7%"
+    }],
+    serviceFocus: "Chennai is a global SaaS export powerhouse. We design elegant, developer-friendly interface structures, construct robust backend integrations, and offer high-end video editing and digital marketing assets for SaaS product launches.",
+    faqs: [{
+      q: "What kind of video editing services do you provide for SaaS?",
+      a: "We produce product feature walkthroughs, social media ads, case study highlight reels, and clean corporate explainer videos."
+    }, {
+      q: "Do you optimize platforms for global traffic?",
+      a: "Yes, we implement edge caching, content delivery networks (CDNs), and asset compression so your web app loads fast from any global location."
+    }]
+  }
+};
+function loader({
+  params
+}) {
+  const citySlug = params.city?.toLowerCase() || "";
+  const city = CITIES_DATA[citySlug];
+  if (!city) {
+    throw new Response("City Not Found", {
+      status: 404
+    });
+  }
+  return {
+    city
+  };
+}
+function meta$1({
+  data
+}) {
+  if (!data || !data.city) {
+    return [{
+      title: "City Not Found - Aarvitek Systems"
+    }];
+  }
+  const urlPath = `/locations/${data.city.slug}`;
+  const faqs = data.city.faqs.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.a
+    }
+  }));
+  return [...generateMeta({
+    title: data.city.metaTitle,
+    description: data.city.metaDescription,
+    url: urlPath
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": `Aarvitek Systems ${data.city.name}`,
+    "image": "https://aarviteksystems.com/images/og-image.png",
+    "url": `https://aarviteksystems.com${urlPath}`,
+    "telephone": "+91 787 090 1336",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": data.city.name,
+      "addressCountry": "IN"
+    }
+  }), generateJsonLd({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs
+  }), generateJsonLd(getBreadcrumbSchema([{
+    name: "Home",
+    item: "/"
+  }, {
+    name: "Locations",
+    item: "/locations"
+  }, {
+    name: data.city.name,
+    item: urlPath
+  }]))];
+}
+const locationDetail = UNSAFE_withComponentProps(function LocationDetail({
+  loaderData
+}) {
+  const {
+    city
+  } = loaderData;
+  const containerRef = useRef(null);
+  useGSAP(() => {
+    gsapWithCSS.from(".detail-fade-in", {
+      opacity: 0,
+      y: 30,
+      duration: 1,
+      stagger: 0.15,
+      ease: "power3.out"
+    });
+  }, {
+    scope: containerRef
+  });
+  return /* @__PURE__ */ jsxs("div", {
+    ref: containerRef,
+    className: "min-h-screen bg-[#020202] text-slate-300 overflow-hidden pt-28 pb-20 relative",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-10%] left-[5%] w-[600px] h-[600px] bg-purple-600/5 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[20%] right-[-10%] w-[500px] h-[500px] bg-indigo-600/5 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsxs("div", {
+      className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10",
+      children: [/* @__PURE__ */ jsx("div", {
+        className: "mb-8 detail-fade-in",
+        children: /* @__PURE__ */ jsxs(Link, {
+          to: "/locations",
+          className: "inline-flex items-center text-xs font-bold uppercase tracking-wider text-purple-400 hover:text-purple-300 transition-colors",
+          children: [/* @__PURE__ */ jsx("svg", {
+            className: "w-4 h-4 mr-2",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24",
+            children: /* @__PURE__ */ jsx("path", {
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              strokeWidth: "2.5",
+              d: "M15 19l-7-7 7-7"
+            })
+          }), "Back to Locations"]
+        })
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "lg:col-span-7 space-y-6 detail-fade-in",
+          children: [/* @__PURE__ */ jsx("span", {
+            className: "text-[10px] font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-3 py-1.5 rounded-lg border border-purple-500/20",
+            children: city.highlight
+          }), /* @__PURE__ */ jsx("h1", {
+            className: "text-4xl sm:text-5xl font-black text-white leading-tight",
+            children: city.headline
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-sm sm:text-base text-slate-400 leading-relaxed",
+            children: city.subtitle
+          }), /* @__PURE__ */ jsx("div", {
+            className: "grid grid-cols-3 gap-6 pt-6 border-t border-white/5",
+            children: city.stats.map((stat) => /* @__PURE__ */ jsxs("div", {
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "text-2xl sm:text-3xl font-black text-white",
+                children: stat.value
+              }), /* @__PURE__ */ jsx("div", {
+                className: "text-[10px] font-mono text-slate-500 mt-1 uppercase tracking-wider",
+                children: stat.label
+              })]
+            }, stat.label))
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "lg:col-span-5 detail-fade-in",
+          children: /* @__PURE__ */ jsxs("div", {
+            className: "relative rounded-2xl border border-white/10 overflow-hidden bg-[#070707] p-1.5 shadow-[0_0_50px_rgba(0,0,0,0.8)]",
+            children: [/* @__PURE__ */ jsx("img", {
+              src: "/images/location_hero_bg.png",
+              alt: `${city.name} business digital hub`,
+              className: "rounded-xl w-full object-cover aspect-[4/3] opacity-90 group-hover:scale-105 transition-transform duration-500"
+            }), /* @__PURE__ */ jsx("div", {
+              className: "absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "absolute bottom-6 left-6 right-6",
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "text-[9px] font-bold uppercase tracking-widest text-slate-400",
+                children: "Regional Technology Center"
+              }), /* @__PURE__ */ jsxs("h3", {
+                className: "text-lg font-bold text-white mt-1",
+                children: [city.name, " Office"]
+              })]
+            })]
+          })
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "grid grid-cols-1 lg:grid-cols-3 gap-12 py-16 border-t border-b border-white/5 mb-24 detail-fade-in",
+        children: [/* @__PURE__ */ jsxs("div", {
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-2xl font-bold text-white",
+            children: "Localized Service Focus"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-xs text-slate-500 mt-2",
+            children: "Tailoring software, architecture, and marketing assets for specific hub demands."
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "lg:col-span-2",
+          children: /* @__PURE__ */ jsx("p", {
+            className: "text-sm text-slate-400 leading-relaxed",
+            children: city.serviceFocus
+          })
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "max-w-3xl mx-auto mb-24 detail-fade-in",
+        children: [/* @__PURE__ */ jsx("h2", {
+          className: "text-3xl font-bold text-white text-center mb-12",
+          children: "Frequently Asked Questions"
+        }), /* @__PURE__ */ jsx("div", {
+          className: "space-y-6",
+          children: city.faqs.map((faq, idx) => /* @__PURE__ */ jsxs("div", {
+            className: "p-6 rounded-xl border border-white/5 bg-white/[0.01]",
+            children: [/* @__PURE__ */ jsx("h3", {
+              className: "text-base font-bold text-white mb-2",
+              children: faq.q
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-xs text-slate-400 leading-relaxed",
+              children: faq.a
+            })]
+          }, idx))
+        })]
+      }), /* @__PURE__ */ jsxs("div", {
+        className: "max-w-4xl mx-auto text-center p-12 rounded-3xl border border-purple-500/20 bg-gradient-to-br from-[#0c051a]/80 to-[#04010a]/80 backdrop-blur-md detail-fade-in shadow-2xl relative overflow-hidden",
+        children: [/* @__PURE__ */ jsx("div", {
+          className: "absolute top-[-30%] right-[-10%] w-[300px] h-[300px] bg-purple-500/20 blur-[80px] rounded-full pointer-events-none"
+        }), /* @__PURE__ */ jsx("div", {
+          className: "absolute bottom-[-30%] left-[-10%] w-[300px] h-[300px] bg-indigo-500/20 blur-[80px] rounded-full pointer-events-none"
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "relative z-10 space-y-6",
+          children: [/* @__PURE__ */ jsxs("h2", {
+            className: "text-3xl font-black text-white",
+            children: ["Let's Discuss Your ", city.name, " Project"]
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-sm max-w-xl mx-auto leading-relaxed",
+            children: "Arrange an online strategy call or meet with our engineers. We provide optimized solutions matching regional client demands."
+          }), /* @__PURE__ */ jsx("div", {
+            className: "pt-4",
+            children: /* @__PURE__ */ jsx(Link, {
+              to: "/contact",
+              className: "inline-block px-8 py-3.5 rounded-full bg-purple-600 text-white font-bold text-xs hover:bg-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.4)]",
+              children: "Get in touch"
+            })
+          })]
+        })]
+      })]
+    })]
+  });
+});
+const route24 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: locationDetail,
+  loader,
+  meta: meta$1
+}, Symbol.toStringTag, { value: "Module" }));
+function meta({}) {
+  return [
+    {
+      title: "Bespoke Web Development & High-Converting Websites - Aarvitek Systems"
+    },
+    {
+      name: "description",
+      content: "Get a high-performance, custom website built by certified experts. Maximize your business conversions, speed, and design. Get a free proposal in 24 hours."
+    },
+    {
+      name: "robots",
+      content: "noindex, nofollow"
+    }
+    // Keeps search engines from indexing promo pages as main site content
+  ];
+}
+const promo = UNSAFE_withComponentProps(function PromoLanding() {
+  const containerRef = useRef(null);
+  const formSectionRef = useRef(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [service, setService] = useState("web-dev");
+  const [details, setDetails] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [calcType, setCalcType] = useState("standard");
+  const [pageCount, setPageCount] = useState(5);
+  const [features, setFeatures] = useState(["seo", "responsive"]);
+  const calculatePrice = () => {
+    let base = 0;
+    if (calcType === "standard") base = 12e3;
+    else if (calcType === "ecommerce") base = 25e3;
+    else base = 4e4;
+    let pageCost = pageCount * 1200;
+    let featureCost = features.length * 2500;
+    return base + pageCost + featureCost;
+  };
+  const toggleFeature = (feat) => {
+    if (features.includes(feat)) {
+      setFeatures(features.filter((f) => f !== feat));
+    } else {
+      setFeatures([...features, feat]);
+    }
+  };
+  const scrollToForm = () => {
+    formSectionRef.current?.scrollIntoView({
+      behavior: "smooth"
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+  };
+  useGSAP(() => {
+    gsapWithCSS.from(".promo-animate", {
+      opacity: 0,
+      y: 30,
+      duration: 0.8,
+      stagger: 0.12,
+      ease: "power3.out"
+    });
+  }, {
+    scope: containerRef
+  });
+  return /* @__PURE__ */ jsxs("div", {
+    ref: containerRef,
+    className: "min-h-screen bg-[#020202] text-slate-300 font-sans antialiased relative",
+    children: [/* @__PURE__ */ jsx("div", {
+      className: "absolute top-[-5%] left-[5%] w-[500px] h-[500px] bg-purple-600/10 blur-[130px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute top-[40%] right-[-10%] w-[600px] h-[600px] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute bottom-[5%] left-[10%] w-[450px] h-[450px] bg-pink-600/5 blur-[120px] rounded-full pointer-events-none"
+    }), /* @__PURE__ */ jsx("div", {
+      className: "absolute inset-0 bg-[radial-gradient(circle_at_center,_#ffffff02_1px,_transparent_1px)] bg-[size:30px_30px] pointer-events-none"
+    }), /* @__PURE__ */ jsx("header", {
+      className: "relative z-50 border-b border-white/5 bg-black/40 backdrop-blur-md",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between",
+        children: [/* @__PURE__ */ jsx(Link, {
+          to: "/",
+          className: "flex items-center gap-2.5",
+          children: /* @__PURE__ */ jsxs("span", {
+            className: "text-xl font-black text-white tracking-wider flex items-center",
+            children: ["AARVITEK", /* @__PURE__ */ jsx("span", {
+              className: "h-2 w-2 rounded-full bg-purple-500 ml-1.5 animate-pulse"
+            })]
+          })
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "flex items-center gap-6",
+          children: [/* @__PURE__ */ jsxs("a", {
+            href: "tel:+917870901336",
+            className: "hidden sm:flex items-center gap-2 text-xs font-bold text-slate-300 hover:text-white transition-colors",
+            children: [/* @__PURE__ */ jsx("svg", {
+              className: "w-4 h-4 text-purple-400",
+              fill: "none",
+              stroke: "currentColor",
+              viewBox: "0 0 24 24",
+              children: /* @__PURE__ */ jsx("path", {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: "2.5",
+                d: "M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+              })
+            }), /* @__PURE__ */ jsx("span", {
+              children: "+91 787 090 1336"
+            })]
+          }), /* @__PURE__ */ jsx("button", {
+            onClick: scrollToForm,
+            className: "px-5 py-2.5 rounded-full bg-purple-600 text-white font-bold text-xs hover:bg-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.4)]",
+            children: "Claim Free Proposal"
+          })]
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "relative pt-12 pb-20 lg:pt-20 lg:pb-32 z-10",
+      children: /* @__PURE__ */ jsx("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: /* @__PURE__ */ jsxs("div", {
+          className: "grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-7 space-y-8 promo-animate",
+            children: [/* @__PURE__ */ jsx("div", {
+              className: "inline-flex items-center gap-2 px-3 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm",
+              children: /* @__PURE__ */ jsx("span", {
+                className: "text-[10px] font-bold text-purple-300 uppercase tracking-widest",
+                children: "🔥 Limited Time Offer"
+              })
+            }), /* @__PURE__ */ jsxs("h1", {
+              className: "text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight",
+              children: ["We Build Websites That ", /* @__PURE__ */ jsx("span", {
+                className: "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400",
+                children: "Convert Visitors"
+              }), " Into Buyers"]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl",
+              children: "Forget slow page speeds and generic WordPress templates. We engineer bespoke, lightning-fast React, Shopify, and Node web applications built to capture attention, build trust, and maximize your sales revenue."
+            }), /* @__PURE__ */ jsx("div", {
+              className: "grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4",
+              children: ["Custom UI/UX (Zero generic templates)", "90+ Google PageSpeed Score guaranteed", "SEO & Conversion Rate Optimized", "Integrated Analytics & Meta Pixels Setup"].map((tick, i) => /* @__PURE__ */ jsxs("div", {
+                className: "flex items-center gap-3",
+                children: [/* @__PURE__ */ jsx("svg", {
+                  className: "w-5 h-5 text-purple-400 shrink-0",
+                  fill: "none",
+                  stroke: "currentColor",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx("path", {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "3",
+                    d: "M5 13l4 4L19 7"
+                  })
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "text-xs font-semibold text-slate-200",
+                  children: tick
+                })]
+              }, i))
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "pt-8 border-t border-white/5",
+              children: [/* @__PURE__ */ jsx("p", {
+                className: "text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-4",
+                children: "Trusted Technology Standards"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "flex flex-wrap gap-6 items-center opacity-40",
+                children: [/* @__PURE__ */ jsx("span", {
+                  className: "text-sm font-bold text-white tracking-widest",
+                  children: "REACT"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "text-sm font-bold text-white tracking-widest",
+                  children: "SHOPIFY"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "text-sm font-bold text-white tracking-widest",
+                  children: "AWS"
+                }), /* @__PURE__ */ jsx("span", {
+                  className: "text-sm font-bold text-white tracking-widest",
+                  children: "NEXTJS"
+                })]
+              })]
+            })]
+          }), /* @__PURE__ */ jsx("div", {
+            ref: formSectionRef,
+            className: "lg:col-span-5 promo-animate",
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "rounded-3xl border border-white/10 bg-white/[0.02] p-8 backdrop-blur-xl shadow-2xl relative",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "absolute top-0 right-8 -translate-y-1/2 bg-gradient-to-r from-purple-500 to-indigo-500 px-3.5 py-1 rounded-full text-[9px] font-bold text-white uppercase tracking-wider shadow-md",
+                children: "Free wireframe included"
+              }), !isSubmitted ? /* @__PURE__ */ jsxs("form", {
+                onSubmit: handleSubmit,
+                className: "space-y-5",
+                children: [/* @__PURE__ */ jsxs("div", {
+                  children: [/* @__PURE__ */ jsx("h3", {
+                    className: "text-lg font-bold text-white",
+                    children: "Get a Custom Proposal"
+                  }), /* @__PURE__ */ jsx("p", {
+                    className: "text-xs text-slate-400 mt-1",
+                    children: "Submit your details and get an estimate and wireframe concept in 24 hours."
+                  })]
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "space-y-4",
+                  children: [/* @__PURE__ */ jsxs("div", {
+                    children: [/* @__PURE__ */ jsx("label", {
+                      className: "block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5",
+                      children: "Your Name"
+                    }), /* @__PURE__ */ jsx("input", {
+                      type: "text",
+                      required: true,
+                      value: name,
+                      onChange: (e) => setName(e.target.value),
+                      placeholder: "John Doe",
+                      className: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                    })]
+                  }), /* @__PURE__ */ jsxs("div", {
+                    className: "grid grid-cols-1 sm:grid-cols-2 gap-4",
+                    children: [/* @__PURE__ */ jsxs("div", {
+                      children: [/* @__PURE__ */ jsx("label", {
+                        className: "block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5",
+                        children: "Email Address"
+                      }), /* @__PURE__ */ jsx("input", {
+                        type: "email",
+                        required: true,
+                        value: email,
+                        onChange: (e) => setEmail(e.target.value),
+                        placeholder: "john@company.com",
+                        className: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                      })]
+                    }), /* @__PURE__ */ jsxs("div", {
+                      children: [/* @__PURE__ */ jsx("label", {
+                        className: "block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5",
+                        children: "Phone Number"
+                      }), /* @__PURE__ */ jsx("input", {
+                        type: "tel",
+                        required: true,
+                        value: phone,
+                        onChange: (e) => setPhone(e.target.value),
+                        placeholder: "+91 99999 99999",
+                        className: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                      })]
+                    })]
+                  }), /* @__PURE__ */ jsxs("div", {
+                    children: [/* @__PURE__ */ jsx("label", {
+                      className: "block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5",
+                      children: "What do you need built?"
+                    }), /* @__PURE__ */ jsxs("select", {
+                      value: service,
+                      onChange: (e) => setService(e.target.value),
+                      className: "w-full bg-[#0d0d0d] border border-white/10 rounded-xl px-4 py-3 text-xs text-slate-300 focus:outline-none focus:border-purple-500/50 transition-all",
+                      children: [/* @__PURE__ */ jsx("option", {
+                        value: "web-dev",
+                        children: "Bespoke Website Development"
+                      }), /* @__PURE__ */ jsx("option", {
+                        value: "ecommerce",
+                        children: "Shopify / E-Commerce Store"
+                      }), /* @__PURE__ */ jsx("option", {
+                        value: "custom-app",
+                        children: "Custom Web Application"
+                      }), /* @__PURE__ */ jsx("option", {
+                        value: "ui-ux",
+                        children: "UI/UX Redesign & Graphic Pack"
+                      })]
+                    })]
+                  }), /* @__PURE__ */ jsxs("div", {
+                    children: [/* @__PURE__ */ jsx("label", {
+                      className: "block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5",
+                      children: "Brief details (optional)"
+                    }), /* @__PURE__ */ jsx("textarea", {
+                      value: details,
+                      onChange: (e) => setDetails(e.target.value),
+                      placeholder: "Tell us about your brand goals...",
+                      rows: 3,
+                      className: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all resize-none"
+                    })]
+                  })]
+                }), /* @__PURE__ */ jsx("button", {
+                  type: "submit",
+                  className: "w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs hover:opacity-90 transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)]",
+                  children: "Claim My Free Proposal →"
+                }), /* @__PURE__ */ jsx("p", {
+                  className: "text-[9px] text-center text-slate-500",
+                  children: "🔒 We respect your privacy. Zero spam guaranteed."
+                })]
+              }) : /* @__PURE__ */ jsxs("div", {
+                className: "text-center py-12 space-y-6",
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "w-16 h-16 bg-purple-500/10 border border-purple-500/30 rounded-full flex items-center justify-center mx-auto",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    className: "w-8 h-8 text-purple-400",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "3",
+                      d: "M5 13l4 4L19 7"
+                    })
+                  })
+                }), /* @__PURE__ */ jsxs("div", {
+                  className: "space-y-2",
+                  children: [/* @__PURE__ */ jsx("h3", {
+                    className: "text-xl font-bold text-white",
+                    children: "Proposal Claimed!"
+                  }), /* @__PURE__ */ jsxs("p", {
+                    className: "text-xs text-slate-400 max-w-sm mx-auto leading-relaxed",
+                    children: ["Thank you, ", name, ". Our solutions engineers are reviewing your request. We will reach out to you within 24 hours at ", /* @__PURE__ */ jsx("strong", {
+                      children: email
+                    }), "."]
+                  })]
+                })]
+              })]
+            })
+          })]
+        })
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24 border-t border-white/5 bg-[#040404]",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-16",
+          children: [/* @__PURE__ */ jsx("span", {
+            className: "text-[10px] font-bold text-purple-400 uppercase tracking-widest",
+            children: "Interactive Calculator"
+          }), /* @__PURE__ */ jsx("h2", {
+            className: "text-3xl font-black text-white mt-4",
+            children: "Estimate Your Web Project"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-xs text-slate-500 mt-2",
+            children: "Adjust details dynamically to estimate project value instantly."
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white/[0.01] border border-white/5 p-8 rounded-3xl backdrop-blur-sm",
+          children: [/* @__PURE__ */ jsxs("div", {
+            className: "md:col-span-7 space-y-6",
+            children: [/* @__PURE__ */ jsxs("div", {
+              children: [/* @__PURE__ */ jsx("label", {
+                className: "block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-3",
+                children: "Project Class"
+              }), /* @__PURE__ */ jsx("div", {
+                className: "grid grid-cols-3 gap-3",
+                children: ["standard", "ecommerce", "custom"].map((type) => /* @__PURE__ */ jsx("button", {
+                  onClick: () => setCalcType(type),
+                  className: `py-3.5 px-2 rounded-xl border text-center text-xs font-bold uppercase transition-all ${calcType === type ? "bg-purple-600 border-purple-500 text-white" : "bg-white/5 border-white/10 text-slate-400 hover:text-white"}`,
+                  children: type === "standard" ? "Corporate" : type === "ecommerce" ? "E-Com Store" : "Custom Web"
+                }, type))
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              children: [/* @__PURE__ */ jsxs("div", {
+                className: "flex justify-between items-center mb-3",
+                children: [/* @__PURE__ */ jsx("label", {
+                  className: "text-[10px] font-mono uppercase tracking-wider text-slate-400",
+                  children: "Total Page Templates"
+                }), /* @__PURE__ */ jsxs("span", {
+                  className: "text-sm font-bold text-white",
+                  children: [pageCount, " Pages"]
+                })]
+              }), /* @__PURE__ */ jsx("input", {
+                type: "range",
+                min: 1,
+                max: 25,
+                value: pageCount,
+                onChange: (e) => setPageCount(parseInt(e.target.value)),
+                className: "w-full accent-purple-500 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer"
+              })]
+            }), /* @__PURE__ */ jsxs("div", {
+              children: [/* @__PURE__ */ jsx("label", {
+                className: "block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-3",
+                children: "Include Integration Add-ons"
+              }), /* @__PURE__ */ jsx("div", {
+                className: "grid grid-cols-1 sm:grid-cols-2 gap-3",
+                children: [{
+                  id: "seo",
+                  label: "Structured Schema & Meta SEO"
+                }, {
+                  id: "responsive",
+                  label: "Advanced Responsive Testing"
+                }, {
+                  id: "cms",
+                  label: "Custom Content Manager (CMS)"
+                }, {
+                  id: "pixel",
+                  label: "Tracking Pixels & Analytics"
+                }].map((feat) => /* @__PURE__ */ jsxs("button", {
+                  onClick: () => toggleFeature(feat.id),
+                  className: `p-3.5 rounded-xl border text-left text-xs transition-all flex items-center justify-between ${features.includes(feat.id) ? "bg-purple-500/10 border-purple-500/40 text-purple-200" : "bg-white/5 border-white/10 text-slate-400 hover:border-white/20"}`,
+                  children: [/* @__PURE__ */ jsx("span", {
+                    children: feat.label
+                  }), features.includes(feat.id) && /* @__PURE__ */ jsx("svg", {
+                    className: "w-4 h-4 text-purple-400",
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "3",
+                      d: "M5 13l4 4L19 7"
+                    })
+                  })]
+                }, feat.id))
+              })]
+            })]
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "md:col-span-5 border-t md:border-t-0 md:border-l border-white/5 pt-8 md:pt-0 md:pl-8 flex flex-col justify-center items-center text-center space-y-6",
+            children: [/* @__PURE__ */ jsxs("div", {
+              children: [/* @__PURE__ */ jsx("span", {
+                className: "text-[10px] font-mono uppercase tracking-widest text-slate-500",
+                children: "Estimated Value Setup"
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "text-4xl sm:text-5xl font-black text-white mt-2",
+                children: ["₹", calculatePrice().toLocaleString("en-IN")]
+              }), /* @__PURE__ */ jsx("p", {
+                className: "text-[10px] text-slate-500 mt-2",
+                children: "Includes design, markup code, and initial setup handoff."
+              })]
+            }), /* @__PURE__ */ jsx("button", {
+              onClick: scrollToForm,
+              className: "px-6 py-3.5 w-full rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-lg",
+              children: "Lock in this estimate →"
+            })]
+          })]
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24 relative",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-16",
+          children: [/* @__PURE__ */ jsx("span", {
+            className: "text-[10px] font-bold text-purple-400 uppercase tracking-widest",
+            children: "Work Portfolio"
+          }), /* @__PURE__ */ jsx("h2", {
+            className: "text-3xl font-black text-white mt-4",
+            children: "Built For Speed & Performance"
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "grid grid-cols-1 lg:grid-cols-12 gap-12 items-center",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "lg:col-span-7",
+            children: /* @__PURE__ */ jsx("div", {
+              className: "relative rounded-2xl overflow-hidden border border-white/10 bg-[#0c0c0c] p-2",
+              children: /* @__PURE__ */ jsx("img", {
+                src: "/images/landing_promo_hero.png",
+                alt: "Analytics dashboard platform",
+                className: "rounded-xl w-full object-cover opacity-95 aspect-[16/10]"
+              })
+            })
+          }), /* @__PURE__ */ jsxs("div", {
+            className: "lg:col-span-5 space-y-6",
+            children: [/* @__PURE__ */ jsx("span", {
+              className: "text-[10px] font-bold text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded",
+              children: "E-COMMERCE METRIC SUCCESS"
+            }), /* @__PURE__ */ jsx("h3", {
+              className: "text-2xl font-bold text-white",
+              children: "Modern Enterprise Redesign"
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-xs text-slate-400 leading-relaxed",
+              children: "We redesigned a leading retail platform into a fast, headless Next.js architecture. The result was a 1.2s page load speed improvement and a 42% increase in sales conversion within the first 30 days."
+            }), /* @__PURE__ */ jsxs("div", {
+              className: "grid grid-cols-2 gap-4 pt-4 border-t border-white/5",
+              children: [/* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "text-xl font-bold text-white",
+                  children: "1.2s"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "text-[9px] font-mono text-slate-500 uppercase",
+                  children: "Load Time Saved"
+                })]
+              }), /* @__PURE__ */ jsxs("div", {
+                children: [/* @__PURE__ */ jsx("div", {
+                  className: "text-xl font-bold text-white",
+                  children: "+42%"
+                }), /* @__PURE__ */ jsx("div", {
+                  className: "text-[9px] font-mono text-slate-500 uppercase",
+                  children: "Conversion Growth"
+                })]
+              })]
+            }), /* @__PURE__ */ jsx("div", {
+              className: "pt-4",
+              children: /* @__PURE__ */ jsxs("button", {
+                onClick: scrollToForm,
+                className: "text-xs font-bold text-purple-400 hover:text-purple-300 transition-colors inline-flex items-center",
+                children: ["Build a platform like this", /* @__PURE__ */ jsx("svg", {
+                  className: "w-4 h-4 ml-1.5",
+                  fill: "none",
+                  stroke: "currentColor",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx("path", {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "2.5",
+                    d: "M9 5l7 7-7 7"
+                  })
+                })]
+              })
+            })]
+          })]
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24 border-t border-white/5 bg-[#030303]",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center max-w-3xl mx-auto mb-16",
+          children: [/* @__PURE__ */ jsx("span", {
+            className: "text-[10px] font-bold text-purple-400 uppercase tracking-widest",
+            children: "Execution Path"
+          }), /* @__PURE__ */ jsx("h2", {
+            className: "text-3xl font-black text-white mt-4",
+            children: "Our 4-Step Development Map"
+          })]
+        }), /* @__PURE__ */ jsx("div", {
+          className: "grid grid-cols-1 md:grid-cols-4 gap-8",
+          children: [{
+            step: "01",
+            name: "Strategic Plan",
+            desc: "Define user objectives, design mapping, content architecture, and tech selection."
+          }, {
+            step: "02",
+            name: "Bespoke Design",
+            desc: "Construct fully custom layout mockups that align with corporate conversion goals."
+          }, {
+            step: "03",
+            name: "Clean Coding",
+            desc: "Write responsive code using high-end frameworks to ensure fast browser load times."
+          }, {
+            step: "04",
+            name: "Launch & QC",
+            desc: "Comprehensive testing, meta tags configuration, analytics setup, and production release."
+          }].map((proc, i) => /* @__PURE__ */ jsxs("div", {
+            className: "p-6 rounded-2xl border border-white/5 bg-white/[0.01] hover:border-purple-500/20 transition-all flex flex-col justify-between",
+            children: [/* @__PURE__ */ jsxs("div", {
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "text-2xl font-black text-purple-500/60 font-mono",
+                children: proc.step
+              }), /* @__PURE__ */ jsx("h3", {
+                className: "text-base font-bold text-white mt-4",
+                children: proc.name
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-xs text-slate-400 mt-4 leading-relaxed",
+              children: proc.desc
+            })]
+          }, i))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
+      className: "py-24",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-3xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsx("h2", {
+          className: "text-3xl font-black text-white text-center mb-12",
+          children: "Frequently Asked Questions"
+        }), /* @__PURE__ */ jsx("div", {
+          className: "space-y-6",
+          children: [{
+            q: "How long does it take to launch a custom web project?",
+            a: "Most custom business landing pages and corporate sites are completed in 3 to 4 weeks. High-end e-commerce setups and large-scale applications usually range between 4 to 8 weeks."
+          }, {
+            q: "Do I own the complete code and design files?",
+            a: "Yes. Upon project handoff and final payment settlement, you retain 100% intellectual property ownership of the source code, design assets, and database schemas."
+          }, {
+            q: "What support SLA packages do you offer post-launch?",
+            a: "We provide comprehensive security patch support, uptime monitoring, and content maintenance agreements (monthly or custom retainer model)."
+          }].map((faq, i) => /* @__PURE__ */ jsxs("div", {
+            className: "p-6 rounded-xl border border-white/5 bg-white/[0.01]",
+            children: [/* @__PURE__ */ jsx("h4", {
+              className: "text-sm font-bold text-white mb-2",
+              children: faq.q
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-xs text-slate-400 leading-relaxed",
+              children: faq.a
+            })]
+          }, i))
+        })]
+      })
+    }), /* @__PURE__ */ jsx("footer", {
+      className: "py-12 border-t border-white/5 bg-[#010101]",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6",
+        children: [/* @__PURE__ */ jsxs("p", {
+          className: "text-xs text-slate-500",
+          children: ["© ", (/* @__PURE__ */ new Date()).getFullYear(), " Aarvitek Systems. All rights reserved."]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "flex gap-6",
+          children: [/* @__PURE__ */ jsx(Link, {
+            to: "/privacy-policy",
+            className: "text-xs text-slate-500 hover:text-slate-300 transition-colors",
+            children: "Privacy Policy"
+          }), /* @__PURE__ */ jsx(Link, {
+            to: "/terms",
+            className: "text-xs text-slate-500 hover:text-slate-300 transition-colors",
+            children: "Terms of Service"
+          })]
+        })]
+      })
+    })]
+  });
+});
+const route25 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: promo,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-BT4-KF5v.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-CeukzCS2.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js"], "css": ["/assets/root-BYrHS7CN.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-4Kfgt5Jk.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-eqFalpT3.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-BBWyNN16.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-UcqBn6e4.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-DhzFPKqg.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/portfolio": { "id": "routes/portfolio", "parentId": "root", "path": "portfolio", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/portfolio-mQ6xGfCv.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-B293kKtM.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-DsiTskWA.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-B1T_Tpwo.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-DGk55x14.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/privacy-policy": { "id": "routes/privacy-policy", "parentId": "root", "path": "privacy-policy", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/privacy-policy-BNsl1vXD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/terms": { "id": "routes/terms", "parentId": "root", "path": "terms", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/terms-DXGHJjbY.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/video-editing": { "id": "routes/video-editing", "parentId": "root", "path": "video-editing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/video-editing-DGCV3Qda.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-Be9zI-44.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CAWhtf4O.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-BL6zxfkT.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-BD5CvlyI.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/enhanced-productivity": { "id": "routes/enhanced-productivity", "parentId": "root", "path": "enhanced-productivity", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/enhanced-productivity-FuZSzuyS.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/scalability": { "id": "routes/scalability", "parentId": "root", "path": "scalability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/scalability-CAyktpaY.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/cost-efficient": { "id": "routes/cost-efficient", "parentId": "root", "path": "cost-efficient", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/cost-efficient-DWkkS3B1.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/availability": { "id": "routes/availability", "parentId": "root", "path": "availability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/availability-CF2HqRPm.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-d1d3baec.js", "version": "d1d3baec", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-BT4-KF5v.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-WxvP3-3J.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js", "/assets/index-BJLytLig.js"], "css": ["/assets/root-CxlUYPP7.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-mx3Ox1Eq.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-C5AsEZGJ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/director-message": { "id": "routes/director-message", "parentId": "root", "path": "director-message", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/director-message-erttXYmd.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-D3pxqUAX.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-DwcXcmea.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-_F_SyL5q.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/portfolio": { "id": "routes/portfolio", "parentId": "root", "path": "portfolio", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/portfolio-9Rfl1B-f.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-BqGuaI14.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-CX1EF4Uc.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-B8fLJstQ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-Ci5YlDbw.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/privacy-policy": { "id": "routes/privacy-policy", "parentId": "root", "path": "privacy-policy", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/privacy-policy-z-Xo6Bws.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/terms": { "id": "routes/terms", "parentId": "root", "path": "terms", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/terms-u8INQ0KV.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/video-editing": { "id": "routes/video-editing", "parentId": "root", "path": "video-editing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/video-editing-BJyLqtrH.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-C6jRtx9I.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CE_kUQUN.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-Dq1ys1zo.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-CyfwCbcD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/enhanced-productivity": { "id": "routes/enhanced-productivity", "parentId": "root", "path": "enhanced-productivity", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/enhanced-productivity-BNQwPHVy.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/scalability": { "id": "routes/scalability", "parentId": "root", "path": "scalability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/scalability-2Zc26eEB.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/cost-efficient": { "id": "routes/cost-efficient", "parentId": "root", "path": "cost-efficient", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/cost-efficient-CNWZ4fFf.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/availability": { "id": "routes/availability", "parentId": "root", "path": "availability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/availability-BENY6d6T.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/locations": { "id": "routes/locations", "parentId": "root", "path": "locations", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/locations-C5zlrOEl.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/location-detail": { "id": "routes/location-detail", "parentId": "root", "path": "locations/:city", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/location-detail-D07sx8iD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/promo": { "id": "routes/promo", "parentId": "root", "path": "promo", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/promo-CyqtfYAB.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-046d0d8b.js", "version": "046d0d8b", "sri": void 0 };
 const assetsBuildDirectory = "build\\client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "unstable_subResourceIntegrity": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };
@@ -11548,13 +13607,21 @@ const routes = {
     caseSensitive: void 0,
     module: route2
   },
+  "routes/director-message": {
+    id: "routes/director-message",
+    parentId: "root",
+    path: "director-message",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route3
+  },
   "routes/contact": {
     id: "routes/contact",
     parentId: "root",
     path: "contact",
     index: void 0,
     caseSensitive: void 0,
-    module: route3
+    module: route4
   },
   "routes/clients": {
     id: "routes/clients",
@@ -11562,7 +13629,7 @@ const routes = {
     path: "clients",
     index: void 0,
     caseSensitive: void 0,
-    module: route4
+    module: route5
   },
   "routes/career": {
     id: "routes/career",
@@ -11570,7 +13637,7 @@ const routes = {
     path: "career",
     index: void 0,
     caseSensitive: void 0,
-    module: route5
+    module: route6
   },
   "routes/portfolio": {
     id: "routes/portfolio",
@@ -11578,7 +13645,7 @@ const routes = {
     path: "portfolio",
     index: void 0,
     caseSensitive: void 0,
-    module: route6
+    module: route7
   },
   "routes/web-development": {
     id: "routes/web-development",
@@ -11586,7 +13653,7 @@ const routes = {
     path: "web-development",
     index: void 0,
     caseSensitive: void 0,
-    module: route7
+    module: route8
   },
   "routes/website-design": {
     id: "routes/website-design",
@@ -11594,7 +13661,7 @@ const routes = {
     path: "website-design",
     index: void 0,
     caseSensitive: void 0,
-    module: route8
+    module: route9
   },
   "routes/graphic-design": {
     id: "routes/graphic-design",
@@ -11602,7 +13669,7 @@ const routes = {
     path: "graphic-design",
     index: void 0,
     caseSensitive: void 0,
-    module: route9
+    module: route10
   },
   "routes/ecommerce": {
     id: "routes/ecommerce",
@@ -11610,7 +13677,7 @@ const routes = {
     path: "ecommerce",
     index: void 0,
     caseSensitive: void 0,
-    module: route10
+    module: route11
   },
   "routes/privacy-policy": {
     id: "routes/privacy-policy",
@@ -11618,7 +13685,7 @@ const routes = {
     path: "privacy-policy",
     index: void 0,
     caseSensitive: void 0,
-    module: route11
+    module: route12
   },
   "routes/terms": {
     id: "routes/terms",
@@ -11626,7 +13693,7 @@ const routes = {
     path: "terms",
     index: void 0,
     caseSensitive: void 0,
-    module: route12
+    module: route13
   },
   "routes/video-editing": {
     id: "routes/video-editing",
@@ -11634,7 +13701,7 @@ const routes = {
     path: "video-editing",
     index: void 0,
     caseSensitive: void 0,
-    module: route13
+    module: route14
   },
   "routes/smart-analyzing": {
     id: "routes/smart-analyzing",
@@ -11642,7 +13709,7 @@ const routes = {
     path: "smart-analyzing",
     index: void 0,
     caseSensitive: void 0,
-    module: route14
+    module: route15
   },
   "routes/agile-development": {
     id: "routes/agile-development",
@@ -11650,7 +13717,7 @@ const routes = {
     path: "agile-development",
     index: void 0,
     caseSensitive: void 0,
-    module: route15
+    module: route16
   },
   "routes/seamless-integration": {
     id: "routes/seamless-integration",
@@ -11658,7 +13725,7 @@ const routes = {
     path: "seamless-integration",
     index: void 0,
     caseSensitive: void 0,
-    module: route16
+    module: route17
   },
   "routes/continuous-optimization": {
     id: "routes/continuous-optimization",
@@ -11666,7 +13733,7 @@ const routes = {
     path: "continuous-optimization",
     index: void 0,
     caseSensitive: void 0,
-    module: route17
+    module: route18
   },
   "routes/enhanced-productivity": {
     id: "routes/enhanced-productivity",
@@ -11674,7 +13741,7 @@ const routes = {
     path: "enhanced-productivity",
     index: void 0,
     caseSensitive: void 0,
-    module: route18
+    module: route19
   },
   "routes/scalability": {
     id: "routes/scalability",
@@ -11682,7 +13749,7 @@ const routes = {
     path: "scalability",
     index: void 0,
     caseSensitive: void 0,
-    module: route19
+    module: route20
   },
   "routes/cost-efficient": {
     id: "routes/cost-efficient",
@@ -11690,7 +13757,7 @@ const routes = {
     path: "cost-efficient",
     index: void 0,
     caseSensitive: void 0,
-    module: route20
+    module: route21
   },
   "routes/availability": {
     id: "routes/availability",
@@ -11698,7 +13765,31 @@ const routes = {
     path: "availability",
     index: void 0,
     caseSensitive: void 0,
-    module: route21
+    module: route22
+  },
+  "routes/locations": {
+    id: "routes/locations",
+    parentId: "root",
+    path: "locations",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route23
+  },
+  "routes/location-detail": {
+    id: "routes/location-detail",
+    parentId: "root",
+    path: "locations/:city",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route24
+  },
+  "routes/promo": {
+    id: "routes/promo",
+    parentId: "root",
+    path: "promo",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route25
   }
 };
 export {

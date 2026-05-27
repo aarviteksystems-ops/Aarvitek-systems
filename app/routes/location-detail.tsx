@@ -179,13 +179,52 @@ export function loader({ params }: Route.LoaderArgs) {
     return { city };
 }
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ data }: Route.MetaArgs) {
     if (!data || !data.city) {
         return [{ title: "City Not Found - Aarvitek Systems" }];
     }
+    
+    const urlPath = `/locations/${data.city.slug}`;
+    const faqs = data.city.faqs.map((f: any) => ({
+        "@type": "Question",
+        "name": f.q,
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": f.a
+        }
+    }));
+
     return [
-        { title: data.city.metaTitle },
-        { name: "description", content: data.city.metaDescription }
+        ...generateMeta({
+            title: data.city.metaTitle,
+            description: data.city.metaDescription,
+            url: urlPath,
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": `Aarvitek Systems ${data.city.name}`,
+            "image": "https://aarviteksystems.com/images/og-image.png",
+            "url": `https://aarviteksystems.com${urlPath}`,
+            "telephone": "+91 787 090 1336",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": data.city.name,
+                "addressCountry": "IN"
+            }
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqs
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Locations", item: "/locations" },
+            { name: data.city.name, item: urlPath }
+        ]))
     ];
 }
 

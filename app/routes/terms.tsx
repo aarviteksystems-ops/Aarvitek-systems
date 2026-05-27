@@ -7,11 +7,19 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Terms of Service & Agreements | Aarvitek Systems" },
-        { name: "description", content: "Read the Terms of Service governing code delivery, Figma layouts ownership, secure payment processing, and agile development contracts at Aarvitek Systems." },
-        { name: "keywords", content: "terms of service aarvitek systems, digital development contract, custom code ownership, figma design rights, payment terms" }
+        ...generateMeta({
+            title: "Terms of Service & Agreements | Aarvitek Systems",
+            description: "Read the Terms of Service governing code delivery, Figma layouts ownership, secure payment processing, and agile development contracts at Aarvitek Systems.",
+            url: "/terms",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Terms of Service", item: "/terms" }
+        ]))
     ];
 }
 

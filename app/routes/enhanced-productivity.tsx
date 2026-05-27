@@ -1,10 +1,19 @@
 import type { Route } from "./+types/enhanced-productivity";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Enhanced Productivity | Aarvitek Systems" },
-        { name: "description", content: "Automate repetitive tasks and focus on high-impact strategies." },
+        ...generateMeta({
+            title: "Enhanced Productivity | Aarvitek Systems",
+            description: "Automate repetitive tasks and focus on high-impact strategies with our custom IT and automation solutions.",
+            url: "/enhanced-productivity",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Enhanced Productivity", item: "/enhanced-productivity" }
+        ]))
     ];
 }
 

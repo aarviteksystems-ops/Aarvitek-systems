@@ -7,11 +7,25 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Our Custom Web & Graphic Design Portfolio | Aarvitek Systems" },
-        { name: "description", content: "Explore custom web applications, responsive Figma mockups, high-converting e-commerce storefronts, and professional motion graphic videos engineered by Aarvitek Systems." },
-        { name: "keywords", content: "web development portfolio, custom UI/UX showcase, branding design case studies, shopify developer work, digital agency portfolio delhi" }
+        ...generateMeta({
+            title: "Our Custom Web & Graphic Design Portfolio | Aarvitek Systems",
+            description: "Explore custom web applications, responsive Figma mockups, high-converting e-commerce storefronts, and professional motion graphic videos engineered by Aarvitek Systems.",
+            url: "/portfolio",
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            "name": "Aarvitek Systems Portfolio",
+            "description": "Explore custom web applications, responsive Figma mockups, high-converting e-commerce storefronts, and professional motion graphic videos engineered by Aarvitek Systems."
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Portfolio", item: "/portfolio" }
+        ]))
     ];
 }
 

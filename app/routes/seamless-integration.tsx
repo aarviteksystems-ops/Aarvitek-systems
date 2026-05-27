@@ -1,10 +1,19 @@
 import type { Route } from "./+types/seamless-integration";
 import { Link } from "react-router";
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Seamless Integration - How We Work | Aarvitek Systems" },
-        { name: "description", content: "Zero downtime deployment and systems syncing for enterprise businesses." },
+        ...generateMeta({
+            title: "Seamless Integration - How We Work | Aarvitek Systems",
+            description: "Phase 3 of our process: Zero downtime deployment and seamless systems syncing for enterprise businesses and startups.",
+            url: "/seamless-integration",
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Seamless Integration", item: "/seamless-integration" }
+        ]))
     ];
 }
 

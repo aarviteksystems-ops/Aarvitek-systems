@@ -7,11 +7,30 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Custom Web Development Services & Scalable SaaS Apps | Aarvitek Systems" },
-        { name: "description", content: "Aarvitek Systems delivers high-performance custom web development services, scalable headless CMS, and secure enterprise software architectures using React, Next.js, and Node.js. Speed and SEO optimized." },
-        { name: "keywords", content: "custom web development, enterprise web application, nextjs web development, react developer, scalable ecommerce website, headless CMS development, full-stack software engineering, page speed optimization, delhi it company" }
+        ...generateMeta({
+            title: "Custom Web Development Services & Scalable SaaS Apps | Aarvitek Systems",
+            description: "Aarvitek Systems delivers high-performance custom web development services, scalable headless CMS, and secure enterprise software architectures using React, Next.js, and Node.js. Speed and SEO optimized.",
+            url: "/web-development",
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "serviceType": "Custom Web Development",
+            "provider": {
+                "@type": "Organization",
+                "name": "Aarvitek Systems"
+            },
+            "description": "High-performance custom web development services, scalable headless CMS, and secure enterprise software architectures.",
+            "areaServed": "IN"
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Web Development", item: "/web-development" }
+        ]))
     ];
 }
 

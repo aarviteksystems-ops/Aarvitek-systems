@@ -7,10 +7,42 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+import { generateMeta, generateJsonLd } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Aarvitek Systems - Intelligent IT & Automation" },
-    { name: "description", content: "Empowering businesses with top-tier Web Development, AI Automation, and Design." },
+    ...generateMeta({
+      title: "Aarvitek Systems | High-Performance IT Solutions & Web Development",
+      description: "Empowering startups and enterprises with scalable web apps, custom software, and digital branding solutions in India.",
+      url: "/",
+    }),
+    generateJsonLd({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Aarvitek Systems",
+      "url": "https://aarviteksystems.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://aarviteksystems.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }),
+    generateJsonLd({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Aarvitek Systems",
+      "image": "https://aarviteksystems.com/images/og-image.png",
+      "@id": "https://aarviteksystems.com",
+      "url": "https://aarviteksystems.com",
+      "telephone": "+91 787 090 1336",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "New Delhi",
+        "addressLocality": "New Delhi",
+        "addressRegion": "DL",
+        "addressCountry": "IN"
+      }
+    })
   ];
 }
 

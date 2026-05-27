@@ -6,10 +6,29 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
+import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
+
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Message from the Director - Aarvitek Systems" },
-        { name: "description", content: "Read a personal message from our Managing Director about Aarvitek Systems' commitment to technology, innovation, and digital transformation." },
+        ...generateMeta({
+            title: "Message from the Director | Aarvitek Systems",
+            description: "Read a personal message from Aarvind Kumaar Sinha, Managing Director, about Aarvitek Systems' commitment to technology, innovation, and digital transformation.",
+            url: "/director-message",
+        }),
+        generateJsonLd({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Aarvind Kumaar Sinha",
+            "jobTitle": "Managing Director",
+            "worksFor": {
+                "@type": "Organization",
+                "name": "Aarvitek Systems"
+            }
+        }),
+        generateJsonLd(getBreadcrumbSchema([
+            { name: "Home", item: "/" },
+            { name: "Director's Message", item: "/director-message" }
+        ]))
     ];
 }
 
