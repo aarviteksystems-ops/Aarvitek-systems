@@ -100,8 +100,8 @@ export function FloatingEnquiryForm() {
         },
         body: JSON.stringify({
           access_key: WEB3FORMS_ACCESS_KEY,
-          subject: `New Enquiry from ${formData.name} — ${formData.service}`,
-          from_name: "Aarvitek Systems Website",
+          subject: `[Floating Enquiry Form] New Enquiry from ${formData.name} — ${formData.service}`,
+          from_name: "Aarvitek Systems - Floating Enquiry Form",
           name: formData.name,
           email: formData.email,
           phone: formData.phone,

@@ -1,5 +1,5 @@
 import type { Route } from "./+types/contact";
-
+import { useState } from "react";
 import { generateMeta, generateJsonLd, getBreadcrumbSchema } from "../utils/seo-config";
 
 export function meta({ }: Route.MetaArgs) {
@@ -23,6 +23,82 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default function Contact() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [subject, setSubject] = useState("General Inquiry");
+    const [message, setMessage] = useState("");
+    
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    
+    const [submittedName, setSubmittedName] = useState("");
+    const [submittedEmail, setSubmittedEmail] = useState("");
+    const [submittedSubject, setSubmittedSubject] = useState("");
+
+    const validate = () => {
+        const newErrors: Record<string, string> = {};
+        if (!name.trim()) newErrors.name = "Name is required";
+        if (!email.trim()) {
+            newErrors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            newErrors.email = "Please enter a valid email address";
+        }
+        if (!message.trim()) newErrors.message = "Message is required";
+        
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validate()) return;
+
+        setIsSubmitting(true);
+
+        const WEB3FORMS_ACCESS_KEY = "2bf3198d-6793-47b6-bffa-cb44d5716c25";
+
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({
+                    access_key: WEB3FORMS_ACCESS_KEY,
+                    subject: `[Contact Form] ${subject} from ${name}`,
+                    from_name: "Aarvitek Systems - Contact Form",
+                    name: name,
+                    email: email,
+                    subject_type: subject,
+                    message: message,
+                    botcheck: "",
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setSubmittedName(name);
+                setSubmittedEmail(email);
+                setSubmittedSubject(subject);
+                setSubmitSuccess(true);
+                // Clear fields
+                setName("");
+                setEmail("");
+                setSubject("General Inquiry");
+                setMessage("");
+            } else {
+                setErrors({ submit: "Form submission failed. Please try again." });
+            }
+        } catch {
+            setErrors({ submit: "Network error occurred. Please try again." });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <div className="pt-16 min-h-screen">
             <section className="bg-blue-600 py-20 text-white">
@@ -38,36 +114,133 @@ export default function Contact() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {/* Contact Form */}
-                        <div className="bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm">
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send us a Message</h2>
-                            <form className="space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
-                                        <input type="text" id="name" className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="John Doe" />
+                        <div className="bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm relative overflow-hidden">
+                            {submitSuccess ? (
+                                <div className="py-12 flex flex-col items-center justify-center text-center space-y-6 animate-[fadeIn_0.5s_ease-out]">
+                                    <div className="w-20 h-20 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(16,185,129,0.3)] border border-emerald-500/20">
+                                        <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+                                        </svg>
                                     </div>
-                                    <div>
-                                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
-                                        <input type="email" id="email" className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="john@example.com" />
+                                    <div className="space-y-3">
+                                        <h3 className="text-gray-900 dark:text-white font-extrabold text-2xl">Message Dispatched!</h3>
+                                        <p className="text-gray-600 dark:text-gray-400 text-sm max-w-md leading-relaxed">
+                                            Thank you, <strong>{submittedName}</strong>. Your inquiry regarding <strong>{submittedSubject}</strong> has been transmitted successfully. 
+                                            Our consultants will reach back to you at <strong>{submittedEmail}</strong> within 2 hours.
+                                        </p>
                                     </div>
+                                    <button 
+                                        onClick={() => setSubmitSuccess(false)}
+                                        className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors text-xs"
+                                    >
+                                        Send Another Message
+                                    </button>
                                 </div>
-                                <div>
-                                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subject</label>
-                                    <select id="subject" className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
-                                        <option>General Inquiry</option>
-                                        <option>Project Quote</option>
-                                        <option>Support</option>
-                                        <option>Other</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
-                                    <textarea id="message" rows={4} className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="Tell us about your project..."></textarea>
-                                </div>
-                                <button type="submit" className="w-full py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-blue-600/30">
-                                    Send Message
-                                </button>
-                            </form>
+                            ) : (
+                                <>
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send us a Message</h2>
+                                    <form onSubmit={handleSubmit} className="space-y-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
+                                                <input 
+                                                    type="text" 
+                                                    id="name" 
+                                                    disabled={isSubmitting}
+                                                    value={name}
+                                                    onChange={(e) => {
+                                                        setName(e.target.value);
+                                                        if (errors.name) {
+                                                            const copy = { ...errors };
+                                                            delete copy.name;
+                                                            setErrors(copy);
+                                                        }
+                                                    }}
+                                                    className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${
+                                                        errors.name ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"
+                                                    }`}
+                                                    placeholder="John Doe" 
+                                                />
+                                                {errors.name && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.name}</p>}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                                                <input 
+                                                    type="email" 
+                                                    id="email" 
+                                                    disabled={isSubmitting}
+                                                    value={email}
+                                                    onChange={(e) => {
+                                                        setEmail(e.target.value);
+                                                        if (errors.email) {
+                                                            const copy = { ...errors };
+                                                            delete copy.email;
+                                                            setErrors(copy);
+                                                        }
+                                                    }}
+                                                    className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${
+                                                        errors.email ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"
+                                                    }`}
+                                                    placeholder="john@example.com" 
+                                                />
+                                                {errors.email && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.email}</p>}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subject</label>
+                                            <select 
+                                                id="subject" 
+                                                disabled={isSubmitting}
+                                                value={subject}
+                                                onChange={(e) => setSubject(e.target.value)}
+                                                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                            >
+                                                <option value="General Inquiry">General Inquiry</option>
+                                                <option value="Project Quote">Project Quote</option>
+                                                <option value="Support">Support</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
+                                            <textarea 
+                                                id="message" 
+                                                rows={4} 
+                                                disabled={isSubmitting}
+                                                value={message}
+                                                onChange={(e) => {
+                                                    setMessage(e.target.value);
+                                                    if (errors.message) {
+                                                        const copy = { ...errors };
+                                                        delete copy.message;
+                                                        setErrors(copy);
+                                                    }
+                                                }}
+                                                className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${
+                                                    errors.message ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"
+                                                }`}
+                                                placeholder="Tell us about your project..."
+                                            ></textarea>
+                                            {errors.message && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.message}</p>}
+                                        </div>
+                                        <button 
+                                            type="submit" 
+                                            disabled={isSubmitting}
+                                            className="w-full py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 cursor-pointer"
+                                        >
+                                            {isSubmitting ? (
+                                                <>
+                                                    <div className="w-5 h-5 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
+                                                    Sending Message...
+                                                </>
+                                            ) : (
+                                                "Send Message"
+                                            )}
+                                        </button>
+                                        {errors.submit && <p className="text-red-500 text-sm font-bold text-center mt-2">{errors.submit}</p>}
+                                    </form>
+                                </>
+                            )}
                         </div>
 
                         {/* Contact Info */}

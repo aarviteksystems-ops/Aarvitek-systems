@@ -23,6 +23,10 @@ export default function PromoLanding() {
     const [service, setService] = useState("web-dev");
     const [details, setDetails] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [submittedName, setSubmittedName] = useState("");
+    const [submittedEmail, setSubmittedEmail] = useState("");
 
     // Calculator State
     const [calcType, setCalcType] = useState<"standard" | "ecommerce" | "custom">("standard");
@@ -55,10 +59,84 @@ export default function PromoLanding() {
         formSectionRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const getServiceLabel = (val: string) => {
+        switch (val) {
+            case "web-dev": return "Bespoke Website Development";
+            case "ecommerce": return "Shopify / E-Commerce Store";
+            case "custom-app": return "Custom Web Application";
+            case "ui-ux": return "UI/UX Redesign & Graphic Pack";
+            default: return val;
+        }
+    };
+
+    const validate = () => {
+        const newErrors: Record<string, string> = {};
+        if (!name.trim()) newErrors.name = "Name is required";
+        if (!email.trim()) {
+            newErrors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            newErrors.email = "Please enter a valid email address";
+        }
+        if (!phone.trim()) {
+            newErrors.phone = "Phone number is required";
+        } else if (!/^\+?[0-9\s-]{8,15}$/.test(phone.trim())) {
+            newErrors.phone = "Please enter a valid phone number";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate API post
-        setIsSubmitted(true);
+        if (!validate()) return;
+
+        setIsSubmitting(true);
+
+        const WEB3FORMS_ACCESS_KEY = "2bf3198d-6793-47b6-bffa-cb44d5716c25";
+
+        try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({
+                    access_key: WEB3FORMS_ACCESS_KEY,
+                    subject: `[Promo Proposal Form] New Proposal Claimed by ${name}`,
+                    from_name: "Aarvitek Systems - Promo Proposal Form",
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    service: getServiceLabel(service),
+                    details: details || "No additional details provided",
+                    calculator_class: calcType,
+                    calculator_pages: pageCount,
+                    calculator_addons: features.join(", "),
+                    calculator_estimated_price: `₹${calculatePrice().toLocaleString("en-IN")}`,
+                    botcheck: "",
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setSubmittedName(name);
+                setSubmittedEmail(email);
+                setIsSubmitted(true);
+                // Clear form fields
+                setName("");
+                setEmail("");
+                setPhone("");
+                setDetails("");
+            } else {
+                setErrors({ submit: "Submission failed. Please try again." });
+            }
+        } catch {
+            setErrors({ submit: "Network error. Please try again." });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     useGSAP(() => {
@@ -168,12 +246,22 @@ export default function PromoLanding() {
                                                 <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5">Your Name</label>
                                                 <input
                                                     type="text"
-                                                    required
+                                                    disabled={isSubmitting}
                                                     value={name}
-                                                    onChange={(e) => setName(e.target.value)}
+                                                    onChange={(e) => {
+                                                        setName(e.target.value);
+                                                        if (errors.name) {
+                                                            const copy = { ...errors };
+                                                            delete copy.name;
+                                                            setErrors(copy);
+                                                        }
+                                                    }}
                                                     placeholder="John Doe"
-                                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                                                    className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${
+                                                        errors.name ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"
+                                                    }`}
                                                 />
+                                                {errors.name && <p className="text-red-400 text-[10px] mt-1 font-semibold">{errors.name}</p>}
                                             </div>
 
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -181,29 +269,50 @@ export default function PromoLanding() {
                                                     <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5">Email Address</label>
                                                     <input
                                                         type="email"
-                                                        required
+                                                        disabled={isSubmitting}
                                                         value={email}
-                                                        onChange={(e) => setEmail(e.target.value)}
+                                                        onChange={(e) => {
+                                                            setEmail(e.target.value);
+                                                            if (errors.email) {
+                                                                const copy = { ...errors };
+                                                                delete copy.email;
+                                                                setErrors(copy);
+                                                            }
+                                                        }}
                                                         placeholder="john@company.com"
-                                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${
+                                                            errors.email ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"
+                                                        }`}
                                                     />
+                                                    {errors.email && <p className="text-red-400 text-[10px] mt-1 font-semibold">{errors.email}</p>}
                                                 </div>
                                                 <div>
                                                     <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5">Phone Number</label>
                                                     <input
                                                         type="tel"
-                                                        required
+                                                        disabled={isSubmitting}
                                                         value={phone}
-                                                        onChange={(e) => setPhone(e.target.value)}
+                                                        onChange={(e) => {
+                                                            setPhone(e.target.value);
+                                                            if (errors.phone) {
+                                                                const copy = { ...errors };
+                                                                delete copy.phone;
+                                                                setErrors(copy);
+                                                            }
+                                                        }}
                                                         placeholder="+91 99999 99999"
-                                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${
+                                                            errors.phone ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"
+                                                        }`}
                                                     />
+                                                    {errors.phone && <p className="text-red-400 text-[10px] mt-1 font-semibold">{errors.phone}</p>}
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5">What do you need built?</label>
                                                 <select
+                                                    disabled={isSubmitting}
                                                     value={service}
                                                     onChange={(e) => setService(e.target.value)}
                                                     className="w-full bg-[#0d0d0d] border border-white/10 rounded-xl px-4 py-3 text-xs text-slate-300 focus:outline-none focus:border-purple-500/50 transition-all"
@@ -218,6 +327,7 @@ export default function PromoLanding() {
                                             <div>
                                                 <label className="block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5">Brief details (optional)</label>
                                                 <textarea
+                                                    disabled={isSubmitting}
                                                     value={details}
                                                     onChange={(e) => setDetails(e.target.value)}
                                                     placeholder="Tell us about your brand goals..."
@@ -229,10 +339,19 @@ export default function PromoLanding() {
 
                                         <button
                                             type="submit"
-                                            className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs hover:opacity-90 transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+                                            disabled={isSubmitting}
+                                            className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs hover:opacity-90 transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
                                         >
-                                            Claim My Free Proposal →
+                                            {isSubmitting ? (
+                                                <>
+                                                    <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
+                                                    Claiming Proposal...
+                                                </>
+                                            ) : (
+                                                "Claim My Free Proposal →"
+                                            )}
                                         </button>
+                                        {errors.submit && <p className="text-red-400 text-xs text-center font-bold mt-2">{errors.submit}</p>}
                                         <p className="text-[9px] text-center text-slate-500">🔒 We respect your privacy. Zero spam guaranteed.</p>
                                     </form>
                                 ) : (
@@ -243,7 +362,7 @@ export default function PromoLanding() {
                                         <div className="space-y-2">
                                             <h3 className="text-xl font-bold text-white">Proposal Claimed!</h3>
                                             <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
-                                                Thank you, {name}. Our solutions engineers are reviewing your request. We will reach out to you within 24 hours at <strong>{email}</strong>.
+                                                Thank you, {submittedName}. Our solutions engineers are reviewing your request. We will reach out to you within 24 hours at <strong>{submittedEmail}</strong>.
                                             </p>
                                         </div>
                                     </div>
