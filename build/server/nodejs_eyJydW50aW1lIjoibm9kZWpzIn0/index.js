@@ -4621,8 +4621,8 @@ function FloatingEnquiryForm() {
         },
         body: JSON.stringify({
           access_key: WEB3FORMS_ACCESS_KEY,
-          subject: `New Enquiry from ${formData.name} — ${formData.service}`,
-          from_name: "Aarvitek Systems Website",
+          subject: `[Floating Enquiry Form] New Enquiry from ${formData.name} — ${formData.service}`,
+          from_name: "Aarvitek Systems - Floating Enquiry Form",
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
@@ -4852,6 +4852,7 @@ const links = () => [{
   rel: "stylesheet",
   href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
 }];
+const gtmId = "GTM-NL7RR69K";
 function Layout({
   children
 }) {
@@ -4865,14 +4866,32 @@ function Layout({
     lang: "en",
     className: "dark scroll-smooth",
     children: [/* @__PURE__ */ jsxs("head", {
-      children: [/* @__PURE__ */ jsx("meta", {
+      children: [/* @__PURE__ */ jsx("script", {
+        dangerouslySetInnerHTML: {
+          __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${gtmId}');`
+        }
+      }), /* @__PURE__ */ jsx("meta", {
         charSet: "utf-8"
       }), /* @__PURE__ */ jsx("meta", {
         name: "viewport",
         content: "width=device-width, initial-scale=1"
       }), /* @__PURE__ */ jsx(Meta, {}), /* @__PURE__ */ jsx(Links, {})]
     }), /* @__PURE__ */ jsxs("body", {
-      children: [!isPromo && /* @__PURE__ */ jsx(Navbar, {}), /* @__PURE__ */ jsx("main", {
+      children: [/* @__PURE__ */ jsx("noscript", {
+        children: /* @__PURE__ */ jsx("iframe", {
+          src: `https://www.googletagmanager.com/ns.html?id=${gtmId}`,
+          height: "0",
+          width: "0",
+          style: {
+            display: "none",
+            visibility: "hidden"
+          }
+        })
+      }), !isPromo && /* @__PURE__ */ jsx(Navbar, {}), /* @__PURE__ */ jsx("main", {
         className: `min-h-screen ${isPromo ? "pt-0" : "pt-16"}`,
         children
       }), !isPromo && /* @__PURE__ */ jsx(WhatsAppButton, {}), !isPromo && /* @__PURE__ */ jsx(CalendlyModal, {}), !isPromo && /* @__PURE__ */ jsx(FloatingEnquiryForm, {}), !isPromo && /* @__PURE__ */ jsx(Dock, {}), !isPromo && /* @__PURE__ */ jsx(Footer, {}), /* @__PURE__ */ jsx(ScrollRestoration, {}), /* @__PURE__ */ jsx(Scripts, {})]
@@ -8099,6 +8118,74 @@ function meta$l({}) {
   }]))];
 }
 const contact = UNSAFE_withComponentProps(function Contact() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("General Inquiry");
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [submittedName, setSubmittedName] = useState("");
+  const [submittedEmail, setSubmittedEmail] = useState("");
+  const [submittedSubject, setSubmittedSubject] = useState("");
+  const validate = () => {
+    const newErrors = {};
+    if (!name.trim()) newErrors.name = "Name is required";
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    if (!message.trim()) newErrors.message = "Message is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setIsSubmitting(true);
+    const WEB3FORMS_ACCESS_KEY = "2bf3198d-6793-47b6-bffa-cb44d5716c25";
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `[Contact Form] ${subject} from ${name}`,
+          from_name: "Aarvitek Systems - Contact Form",
+          name,
+          email,
+          subject_type: subject,
+          message,
+          botcheck: ""
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSubmittedName(name);
+        setSubmittedEmail(email);
+        setSubmittedSubject(subject);
+        setSubmitSuccess(true);
+        setName("");
+        setEmail("");
+        setSubject("General Inquiry");
+        setMessage("");
+      } else {
+        setErrors({
+          submit: "Form submission failed. Please try again."
+        });
+      }
+    } catch {
+      setErrors({
+        submit: "Network error occurred. Please try again."
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return /* @__PURE__ */ jsxs("div", {
     className: "pt-16 min-h-screen",
     children: [/* @__PURE__ */ jsx("section", {
@@ -8119,73 +8206,172 @@ const contact = UNSAFE_withComponentProps(function Contact() {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: /* @__PURE__ */ jsxs("div", {
           className: "grid grid-cols-1 lg:grid-cols-2 gap-12",
-          children: [/* @__PURE__ */ jsxs("div", {
-            className: "bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm",
-            children: [/* @__PURE__ */ jsx("h2", {
-              className: "text-2xl font-bold text-gray-900 dark:text-white mb-6",
-              children: "Send us a Message"
-            }), /* @__PURE__ */ jsxs("form", {
-              className: "space-y-6",
-              children: [/* @__PURE__ */ jsxs("div", {
-                className: "grid grid-cols-1 md:grid-cols-2 gap-6",
+          children: [/* @__PURE__ */ jsx("div", {
+            className: "bg-gray-50 dark:bg-gray-900 p-8 rounded-2xl shadow-sm relative overflow-hidden",
+            children: submitSuccess ? /* @__PURE__ */ jsxs("div", {
+              className: "py-12 flex flex-col items-center justify-center text-center space-y-6 animate-[fadeIn_0.5s_ease-out]",
+              children: [/* @__PURE__ */ jsx("div", {
+                className: "w-20 h-20 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(16,185,129,0.3)] border border-emerald-500/20",
+                children: /* @__PURE__ */ jsx("svg", {
+                  className: "w-10 h-10 text-white",
+                  fill: "none",
+                  stroke: "currentColor",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx("path", {
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "3",
+                    d: "M5 13l4 4L19 7"
+                  })
+                })
+              }), /* @__PURE__ */ jsxs("div", {
+                className: "space-y-3",
+                children: [/* @__PURE__ */ jsx("h3", {
+                  className: "text-gray-900 dark:text-white font-extrabold text-2xl",
+                  children: "Message Dispatched!"
+                }), /* @__PURE__ */ jsxs("p", {
+                  className: "text-gray-600 dark:text-gray-400 text-sm max-w-md leading-relaxed",
+                  children: ["Thank you, ", /* @__PURE__ */ jsx("strong", {
+                    children: submittedName
+                  }), ". Your inquiry regarding ", /* @__PURE__ */ jsx("strong", {
+                    children: submittedSubject
+                  }), " has been transmitted successfully. Our consultants will reach back to you at ", /* @__PURE__ */ jsx("strong", {
+                    children: submittedEmail
+                  }), " within 2 hours."]
+                })]
+              }), /* @__PURE__ */ jsx("button", {
+                onClick: () => setSubmitSuccess(false),
+                className: "px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors text-xs",
+                children: "Send Another Message"
+              })]
+            }) : /* @__PURE__ */ jsxs(Fragment, {
+              children: [/* @__PURE__ */ jsx("h2", {
+                className: "text-2xl font-bold text-gray-900 dark:text-white mb-6",
+                children: "Send us a Message"
+              }), /* @__PURE__ */ jsxs("form", {
+                onSubmit: handleSubmit,
+                className: "space-y-6",
                 children: [/* @__PURE__ */ jsxs("div", {
-                  children: [/* @__PURE__ */ jsx("label", {
-                    htmlFor: "name",
-                    className: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2",
-                    children: "Name"
-                  }), /* @__PURE__ */ jsx("input", {
-                    type: "text",
-                    id: "name",
-                    className: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all",
-                    placeholder: "John Doe"
+                  className: "grid grid-cols-1 md:grid-cols-2 gap-6",
+                  children: [/* @__PURE__ */ jsxs("div", {
+                    children: [/* @__PURE__ */ jsx("label", {
+                      htmlFor: "name",
+                      className: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2",
+                      children: "Name"
+                    }), /* @__PURE__ */ jsx("input", {
+                      type: "text",
+                      id: "name",
+                      disabled: isSubmitting,
+                      value: name,
+                      onChange: (e) => {
+                        setName(e.target.value);
+                        if (errors.name) {
+                          const copy = {
+                            ...errors
+                          };
+                          delete copy.name;
+                          setErrors(copy);
+                        }
+                      },
+                      className: `w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${errors.name ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"}`,
+                      placeholder: "John Doe"
+                    }), errors.name && /* @__PURE__ */ jsx("p", {
+                      className: "text-red-500 text-xs mt-1 font-semibold",
+                      children: errors.name
+                    })]
+                  }), /* @__PURE__ */ jsxs("div", {
+                    children: [/* @__PURE__ */ jsx("label", {
+                      htmlFor: "email",
+                      className: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2",
+                      children: "Email"
+                    }), /* @__PURE__ */ jsx("input", {
+                      type: "email",
+                      id: "email",
+                      disabled: isSubmitting,
+                      value: email,
+                      onChange: (e) => {
+                        setEmail(e.target.value);
+                        if (errors.email) {
+                          const copy = {
+                            ...errors
+                          };
+                          delete copy.email;
+                          setErrors(copy);
+                        }
+                      },
+                      className: `w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${errors.email ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"}`,
+                      placeholder: "john@example.com"
+                    }), errors.email && /* @__PURE__ */ jsx("p", {
+                      className: "text-red-500 text-xs mt-1 font-semibold",
+                      children: errors.email
+                    })]
                   })]
                 }), /* @__PURE__ */ jsxs("div", {
                   children: [/* @__PURE__ */ jsx("label", {
-                    htmlFor: "email",
+                    htmlFor: "subject",
                     className: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2",
-                    children: "Email"
-                  }), /* @__PURE__ */ jsx("input", {
-                    type: "email",
-                    id: "email",
+                    children: "Subject"
+                  }), /* @__PURE__ */ jsxs("select", {
+                    id: "subject",
+                    disabled: isSubmitting,
+                    value: subject,
+                    onChange: (e) => setSubject(e.target.value),
                     className: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all",
-                    placeholder: "john@example.com"
+                    children: [/* @__PURE__ */ jsx("option", {
+                      value: "General Inquiry",
+                      children: "General Inquiry"
+                    }), /* @__PURE__ */ jsx("option", {
+                      value: "Project Quote",
+                      children: "Project Quote"
+                    }), /* @__PURE__ */ jsx("option", {
+                      value: "Support",
+                      children: "Support"
+                    }), /* @__PURE__ */ jsx("option", {
+                      value: "Other",
+                      children: "Other"
+                    })]
                   })]
-                })]
-              }), /* @__PURE__ */ jsxs("div", {
-                children: [/* @__PURE__ */ jsx("label", {
-                  htmlFor: "subject",
-                  className: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2",
-                  children: "Subject"
-                }), /* @__PURE__ */ jsxs("select", {
-                  id: "subject",
-                  className: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all",
-                  children: [/* @__PURE__ */ jsx("option", {
-                    children: "General Inquiry"
-                  }), /* @__PURE__ */ jsx("option", {
-                    children: "Project Quote"
-                  }), /* @__PURE__ */ jsx("option", {
-                    children: "Support"
-                  }), /* @__PURE__ */ jsx("option", {
-                    children: "Other"
+                }), /* @__PURE__ */ jsxs("div", {
+                  children: [/* @__PURE__ */ jsx("label", {
+                    htmlFor: "message",
+                    className: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2",
+                    children: "Message"
+                  }), /* @__PURE__ */ jsx("textarea", {
+                    id: "message",
+                    rows: 4,
+                    disabled: isSubmitting,
+                    value: message,
+                    onChange: (e) => {
+                      setMessage(e.target.value);
+                      if (errors.message) {
+                        const copy = {
+                          ...errors
+                        };
+                        delete copy.message;
+                        setErrors(copy);
+                      }
+                    },
+                    className: `w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${errors.message ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"}`,
+                    placeholder: "Tell us about your project..."
+                  }), errors.message && /* @__PURE__ */ jsx("p", {
+                    className: "text-red-500 text-xs mt-1 font-semibold",
+                    children: errors.message
                   })]
+                }), /* @__PURE__ */ jsx("button", {
+                  type: "submit",
+                  disabled: isSubmitting,
+                  className: "w-full py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 cursor-pointer",
+                  children: isSubmitting ? /* @__PURE__ */ jsxs(Fragment, {
+                    children: [/* @__PURE__ */ jsx("div", {
+                      className: "w-5 h-5 rounded-full border-2 border-white border-t-transparent animate-spin"
+                    }), "Sending Message..."]
+                  }) : "Send Message"
+                }), errors.submit && /* @__PURE__ */ jsx("p", {
+                  className: "text-red-500 text-sm font-bold text-center mt-2",
+                  children: errors.submit
                 })]
-              }), /* @__PURE__ */ jsxs("div", {
-                children: [/* @__PURE__ */ jsx("label", {
-                  htmlFor: "message",
-                  className: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2",
-                  children: "Message"
-                }), /* @__PURE__ */ jsx("textarea", {
-                  id: "message",
-                  rows: 4,
-                  className: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all",
-                  placeholder: "Tell us about your project..."
-                })]
-              }), /* @__PURE__ */ jsx("button", {
-                type: "submit",
-                className: "w-full py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-blue-600/30",
-                children: "Send Message"
               })]
-            })]
+            })
           }), /* @__PURE__ */ jsxs("div", {
             className: "space-y-8 lg:pl-12",
             children: [/* @__PURE__ */ jsxs("div", {
@@ -12991,15 +13177,19 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
   const [service, setService] = useState("web-dev");
   const [details, setDetails] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [submittedName, setSubmittedName] = useState("");
+  const [submittedEmail, setSubmittedEmail] = useState("");
   const [calcType, setCalcType] = useState("standard");
   const [pageCount, setPageCount] = useState(5);
-  const [features, setFeatures] = useState(["seo", "responsive"]);
+  const [features, setFeatures] = useState(["seo", "responsive", "cms", "pixel"]);
   const calculatePrice = () => {
     let base = 0;
-    if (calcType === "standard") base = 12e3;
-    else if (calcType === "ecommerce") base = 25e3;
-    else base = 4e4;
-    let pageCost = pageCount * 1200;
+    if (calcType === "standard") base = 0;
+    else if (calcType === "ecommerce") base = 0;
+    else base = 0;
+    let pageCost = pageCount * 999;
     let featureCost = features.length * 2500;
     return base + pageCost + featureCost;
   };
@@ -13015,9 +13205,85 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
       behavior: "smooth"
     });
   };
-  const handleSubmit = (e) => {
+  const getServiceLabel = (val) => {
+    switch (val) {
+      case "web-dev":
+        return "Bespoke Website Development";
+      case "ecommerce":
+        return "Shopify / E-Commerce Store";
+      case "custom-app":
+        return "Custom Web Application";
+      case "ui-ux":
+        return "UI/UX Redesign & Graphic Pack";
+      default:
+        return val;
+    }
+  };
+  const validate = () => {
+    const newErrors = {};
+    if (!name.trim()) newErrors.name = "Name is required";
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    if (!phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^\+?[0-9\s-]{8,15}$/.test(phone.trim())) {
+      newErrors.phone = "Please enter a valid phone number";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    if (!validate()) return;
+    setIsSubmitting(true);
+    const WEB3FORMS_ACCESS_KEY = "2bf3198d-6793-47b6-bffa-cb44d5716c25";
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `[Promo Proposal Form] New Proposal Claimed by ${name}`,
+          from_name: "Aarvitek Systems - Promo Proposal Form",
+          name,
+          email,
+          phone,
+          service: getServiceLabel(service),
+          details: details || "No additional details provided",
+          calculator_class: calcType,
+          calculator_pages: pageCount,
+          calculator_addons: features.join(", "),
+          calculator_estimated_price: `₹${calculatePrice().toLocaleString("en-IN")}`,
+          botcheck: ""
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSubmittedName(name);
+        setSubmittedEmail(email);
+        setIsSubmitted(true);
+        setName("");
+        setEmail("");
+        setPhone("");
+        setDetails("");
+      } else {
+        setErrors({
+          submit: "Submission failed. Please try again."
+        });
+      }
+    } catch {
+      setErrors({
+        submit: "Network error. Please try again."
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   useGSAP(() => {
     gsapWithCSS.from(".promo-animate", {
@@ -13172,11 +13438,23 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
                       children: "Your Name"
                     }), /* @__PURE__ */ jsx("input", {
                       type: "text",
-                      required: true,
+                      disabled: isSubmitting,
                       value: name,
-                      onChange: (e) => setName(e.target.value),
+                      onChange: (e) => {
+                        setName(e.target.value);
+                        if (errors.name) {
+                          const copy = {
+                            ...errors
+                          };
+                          delete copy.name;
+                          setErrors(copy);
+                        }
+                      },
                       placeholder: "John Doe",
-                      className: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                      className: `w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${errors.name ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"}`
+                    }), errors.name && /* @__PURE__ */ jsx("p", {
+                      className: "text-red-400 text-[10px] mt-1 font-semibold",
+                      children: errors.name
                     })]
                   }), /* @__PURE__ */ jsxs("div", {
                     className: "grid grid-cols-1 sm:grid-cols-2 gap-4",
@@ -13186,11 +13464,23 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
                         children: "Email Address"
                       }), /* @__PURE__ */ jsx("input", {
                         type: "email",
-                        required: true,
+                        disabled: isSubmitting,
                         value: email,
-                        onChange: (e) => setEmail(e.target.value),
+                        onChange: (e) => {
+                          setEmail(e.target.value);
+                          if (errors.email) {
+                            const copy = {
+                              ...errors
+                            };
+                            delete copy.email;
+                            setErrors(copy);
+                          }
+                        },
                         placeholder: "john@company.com",
-                        className: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                        className: `w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${errors.email ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"}`
+                      }), errors.email && /* @__PURE__ */ jsx("p", {
+                        className: "text-red-400 text-[10px] mt-1 font-semibold",
+                        children: errors.email
                       })]
                     }), /* @__PURE__ */ jsxs("div", {
                       children: [/* @__PURE__ */ jsx("label", {
@@ -13198,11 +13488,23 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
                         children: "Phone Number"
                       }), /* @__PURE__ */ jsx("input", {
                         type: "tel",
-                        required: true,
+                        disabled: isSubmitting,
                         value: phone,
-                        onChange: (e) => setPhone(e.target.value),
+                        onChange: (e) => {
+                          setPhone(e.target.value);
+                          if (errors.phone) {
+                            const copy = {
+                              ...errors
+                            };
+                            delete copy.phone;
+                            setErrors(copy);
+                          }
+                        },
                         placeholder: "+91 99999 99999",
-                        className: "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/30 transition-all"
+                        className: `w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${errors.phone ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"}`
+                      }), errors.phone && /* @__PURE__ */ jsx("p", {
+                        className: "text-red-400 text-[10px] mt-1 font-semibold",
+                        children: errors.phone
                       })]
                     })]
                   }), /* @__PURE__ */ jsxs("div", {
@@ -13210,6 +13512,7 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
                       className: "block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5",
                       children: "What do you need built?"
                     }), /* @__PURE__ */ jsxs("select", {
+                      disabled: isSubmitting,
                       value: service,
                       onChange: (e) => setService(e.target.value),
                       className: "w-full bg-[#0d0d0d] border border-white/10 rounded-xl px-4 py-3 text-xs text-slate-300 focus:outline-none focus:border-purple-500/50 transition-all",
@@ -13232,6 +13535,7 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
                       className: "block text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-1.5",
                       children: "Brief details (optional)"
                     }), /* @__PURE__ */ jsx("textarea", {
+                      disabled: isSubmitting,
                       value: details,
                       onChange: (e) => setDetails(e.target.value),
                       placeholder: "Tell us about your brand goals...",
@@ -13241,8 +13545,16 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
                   })]
                 }), /* @__PURE__ */ jsx("button", {
                   type: "submit",
-                  className: "w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs hover:opacity-90 transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)]",
-                  children: "Claim My Free Proposal →"
+                  disabled: isSubmitting,
+                  className: "w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs hover:opacity-90 transition-all shadow-[0_0_20px_rgba(168,85,247,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2",
+                  children: isSubmitting ? /* @__PURE__ */ jsxs(Fragment, {
+                    children: [/* @__PURE__ */ jsx("div", {
+                      className: "w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"
+                    }), "Claiming Proposal..."]
+                  }) : "Claim My Free Proposal →"
+                }), errors.submit && /* @__PURE__ */ jsx("p", {
+                  className: "text-red-400 text-xs text-center font-bold mt-2",
+                  children: errors.submit
                 }), /* @__PURE__ */ jsx("p", {
                   className: "text-[9px] text-center text-slate-500",
                   children: "🔒 We respect your privacy. Zero spam guaranteed."
@@ -13270,8 +13582,8 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
                     children: "Proposal Claimed!"
                   }), /* @__PURE__ */ jsxs("p", {
                     className: "text-xs text-slate-400 max-w-sm mx-auto leading-relaxed",
-                    children: ["Thank you, ", name, ". Our solutions engineers are reviewing your request. We will reach out to you within 24 hours at ", /* @__PURE__ */ jsx("strong", {
-                      children: email
+                    children: ["Thank you, ", submittedName, ". Our solutions engineers are reviewing your request. We will reach out to you within 24 hours at ", /* @__PURE__ */ jsx("strong", {
+                      children: submittedEmail
                     }), "."]
                   })]
                 })]
@@ -13324,7 +13636,7 @@ const promo = UNSAFE_withComponentProps(function PromoLanding() {
                 })]
               }), /* @__PURE__ */ jsx("input", {
                 type: "range",
-                min: 1,
+                min: 5,
                 max: 25,
                 value: pageCount,
                 onChange: (e) => setPageCount(parseInt(e.target.value)),
@@ -13572,7 +13884,7 @@ const route25 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   default: promo,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-BT4-KF5v.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-WxvP3-3J.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js", "/assets/index-BJLytLig.js"], "css": ["/assets/root-CxlUYPP7.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-mx3Ox1Eq.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-C5AsEZGJ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/director-message": { "id": "routes/director-message", "parentId": "root", "path": "director-message", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/director-message-erttXYmd.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-D3pxqUAX.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-DwcXcmea.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-_F_SyL5q.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/portfolio": { "id": "routes/portfolio", "parentId": "root", "path": "portfolio", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/portfolio-9Rfl1B-f.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-BqGuaI14.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-CX1EF4Uc.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-B8fLJstQ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-Ci5YlDbw.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/privacy-policy": { "id": "routes/privacy-policy", "parentId": "root", "path": "privacy-policy", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/privacy-policy-z-Xo6Bws.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/terms": { "id": "routes/terms", "parentId": "root", "path": "terms", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/terms-u8INQ0KV.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/video-editing": { "id": "routes/video-editing", "parentId": "root", "path": "video-editing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/video-editing-BJyLqtrH.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-C6jRtx9I.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CE_kUQUN.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-Dq1ys1zo.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-CyfwCbcD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/enhanced-productivity": { "id": "routes/enhanced-productivity", "parentId": "root", "path": "enhanced-productivity", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/enhanced-productivity-BNQwPHVy.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/scalability": { "id": "routes/scalability", "parentId": "root", "path": "scalability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/scalability-2Zc26eEB.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/cost-efficient": { "id": "routes/cost-efficient", "parentId": "root", "path": "cost-efficient", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/cost-efficient-CNWZ4fFf.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/availability": { "id": "routes/availability", "parentId": "root", "path": "availability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/availability-BENY6d6T.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/locations": { "id": "routes/locations", "parentId": "root", "path": "locations", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/locations-C5zlrOEl.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/location-detail": { "id": "routes/location-detail", "parentId": "root", "path": "locations/:city", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/location-detail-D07sx8iD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/promo": { "id": "routes/promo", "parentId": "root", "path": "promo", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/promo-CyqtfYAB.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-046d0d8b.js", "version": "046d0d8b", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-BT4-KF5v.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-DJPij4h1.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js", "/assets/index-BJLytLig.js"], "css": ["/assets/root-Ds8KTNSp.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-mx3Ox1Eq.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-C5AsEZGJ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/director-message": { "id": "routes/director-message", "parentId": "root", "path": "director-message", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/director-message-erttXYmd.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-CyJ5HjIt.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-DwcXcmea.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-_F_SyL5q.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/portfolio": { "id": "routes/portfolio", "parentId": "root", "path": "portfolio", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/portfolio-9Rfl1B-f.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-BqGuaI14.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-CX1EF4Uc.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-B8fLJstQ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-Ci5YlDbw.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/privacy-policy": { "id": "routes/privacy-policy", "parentId": "root", "path": "privacy-policy", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/privacy-policy-z-Xo6Bws.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/terms": { "id": "routes/terms", "parentId": "root", "path": "terms", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/terms-u8INQ0KV.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/video-editing": { "id": "routes/video-editing", "parentId": "root", "path": "video-editing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/video-editing-BJyLqtrH.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-C6jRtx9I.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CE_kUQUN.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-Dq1ys1zo.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-CyfwCbcD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/enhanced-productivity": { "id": "routes/enhanced-productivity", "parentId": "root", "path": "enhanced-productivity", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/enhanced-productivity-BNQwPHVy.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/scalability": { "id": "routes/scalability", "parentId": "root", "path": "scalability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/scalability-2Zc26eEB.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/cost-efficient": { "id": "routes/cost-efficient", "parentId": "root", "path": "cost-efficient", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/cost-efficient-CNWZ4fFf.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/availability": { "id": "routes/availability", "parentId": "root", "path": "availability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/availability-BENY6d6T.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/locations": { "id": "routes/locations", "parentId": "root", "path": "locations", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/locations-C5zlrOEl.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/location-detail": { "id": "routes/location-detail", "parentId": "root", "path": "locations/:city", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/location-detail-D07sx8iD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/promo": { "id": "routes/promo", "parentId": "root", "path": "promo", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/promo-dsbnAUQy.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-64d3af81.js", "version": "64d3af81", "sri": void 0 };
 const assetsBuildDirectory = "build\\client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "unstable_subResourceIntegrity": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };
