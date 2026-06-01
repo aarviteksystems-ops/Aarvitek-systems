@@ -41,15 +41,23 @@ import { CalendlyModal } from "./components/CalendlyModal";
 import { FloatingEnquiryForm } from "./components/FloatingEnquiryForm";
 import { useLocation } from "react-router";
 
-const gtmId = import.meta.env.VITE_GTM_ID;
-
-if (import.meta.env.DEV && !gtmId) {
-  console.warn(
-    "VITE_GTM_ID is not defined in your environment variables. Google Tag Manager is disabled."
-  );
-}
+const getGtmId = () => {
+  if (typeof window !== "undefined") {
+    return (window as any).env?.VITE_GTM_ID || import.meta.env.VITE_GTM_ID;
+  }
+  const serverEnv = typeof process !== "undefined" ? process.env : {};
+  return serverEnv.VITE_GTM_ID || import.meta.env.VITE_GTM_ID;
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const gtmId = getGtmId();
+
+  if (import.meta.env.DEV && !gtmId) {
+    console.warn(
+      "VITE_GTM_ID is not defined in your environment variables. Google Tag Manager is disabled."
+    );
+  }
+
   let location;
   try {
     location = useLocation();
@@ -89,6 +97,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             />
           </noscript>
         )}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.env = { VITE_GTM_ID: ${JSON.stringify(gtmId)} };`,
+          }}
+        />
         {!isPromo && <Navbar />}
         <main className={`min-h-screen ${isPromo ? 'pt-0' : 'pt-16'}`}>
           {children}
