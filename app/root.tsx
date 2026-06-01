@@ -43,10 +43,10 @@ import { useLocation } from "react-router";
 
 const getGtmId = () => {
   if (typeof window !== "undefined") {
-    return (window as any).env?.VITE_GTM_ID || import.meta.env.VITE_GTM_ID;
+    return (window as any).env?.VITE_GTM_ID || import.meta.env.VITE_GTM_ID || "GTM-NL7RR69K";
   }
   const serverEnv = typeof process !== "undefined" ? process.env : {};
-  return serverEnv.VITE_GTM_ID || import.meta.env.VITE_GTM_ID;
+  return serverEnv.VITE_GTM_ID || import.meta.env.VITE_GTM_ID || "GTM-NL7RR69K";
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
