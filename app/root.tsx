@@ -41,6 +41,14 @@ import { CalendlyModal } from "./components/CalendlyModal";
 import { FloatingEnquiryForm } from "./components/FloatingEnquiryForm";
 import { useLocation } from "react-router";
 
+const gtmId = import.meta.env.VITE_GTM_ID;
+
+if (import.meta.env.DEV && !gtmId) {
+  console.warn(
+    "VITE_GTM_ID is not defined in your environment variables. Google Tag Manager is disabled."
+  );
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   let location;
   try {
@@ -54,12 +62,33 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark scroll-smooth">
       <head>
+        {gtmId && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${gtmId}');`,
+            }}
+          />
+        )}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
       <body>
+        {gtmId && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
         {!isPromo && <Navbar />}
         <main className={`min-h-screen ${isPromo ? 'pt-0' : 'pt-16'}`}>
           {children}
