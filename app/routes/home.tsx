@@ -169,11 +169,11 @@ export default function Home() {
           <p className="text-center text-sm text-slate-500 font-semibold tracking-widest uppercase mb-8">Trusted by innovative companies worldwide</p>
           <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-opacity duration-500">
             {/* Logo placeholders */}
-            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Acme Corp</h3>
-            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">GlobalTech</h3>
-            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Innovate</h3>
-            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Stark Ind.</h3>
-            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Wayne Ent.</h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/ecodigitboost-logo.png" alt="" /></h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/infinite-export-logo.png" alt="" /></h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="images/Partners/logoimg.jpg" alt="" /></h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/rama-universal-company-logo-.png" alt="" /></h3>
+
           </div>
         </div>
       </section>
