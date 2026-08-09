@@ -149,7 +149,7 @@ export default function Home() {
           </h1>
 
           <p className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 font-medium">
-            Then explain that Aarvitek Systems provides web development, UI/UX, AI solutions, automation, and digital solutions.
+            Aarvitek Systems transforms ideas into reality. We build modern websites, powerful web applications, and end-to-end digital solutions that help startups and businesses win in the digital era.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -243,7 +243,7 @@ export default function Home() {
             {/* Service Card */}
             <Link to="/web-development" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
               <div className="flex items-center mb-4">
-                <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2"/></svg>
+                <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2" /></svg>
                 <h3 className="ml-3 text-xl font-semibold text-white">Web Development</h3>
               </div>
               <p className="text-slate-400 mb-4">Custom, scalable web applications built with modern frameworks and best‑in‑class performance.</p>
@@ -252,7 +252,7 @@ export default function Home() {
             {/* UI/UX Design */}
             <Link to="/ui-ux-design" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
               <div className="flex items-center mb-4">
-                <svg className="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                <svg className="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
                 <h3 className="ml-3 text-xl font-semibold text-white">UI/UX Design</h3>
               </div>
               <p className="text-slate-400 mb-4">Pixel‑perfect, user‑centered designs that boost engagement and conversion.</p>
@@ -261,7 +261,7 @@ export default function Home() {
             {/* E‑commerce Development */}
             <Link to="/ecommerce" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
               <div className="flex items-center mb-4">
-                <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h18v18H3V3z"/></svg>
+                <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h18v18H3V3z" /></svg>
                 <h3 className="ml-3 text-xl font-semibold text-white">E‑commerce Development</h3>
               </div>
               <p className="text-slate-400 mb-4">End‑to‑end online stores with secure payments, inventory, and analytics.</p>
@@ -270,7 +270,7 @@ export default function Home() {
             {/* AI & Automation */}
             <Link to="/ai-automation" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
               <div className="flex items-center mb-4">
-                <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4"/></svg>
+                <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4" /></svg>
                 <h3 className="ml-3 text-xl font-semibold text-white">AI & Automation</h3>
               </div>
               <p className="text-slate-400 mb-4">Intelligent bots, data pipelines, and predictive models to streamline operations.</p>
@@ -279,7 +279,7 @@ export default function Home() {
             {/* SEO & Performance */}
             <Link to="/seo-performance" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
               <div className="flex items-center mb-4">
-                <svg className="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14"/></svg>
+                <svg className="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14" /></svg>
                 <h3 className="ml-3 text-xl font-semibold text-white">SEO & Performance</h3>
               </div>
               <p className="text-slate-400 mb-4">Technical SEO, speed optimization, and analytics to drive traffic.</p>
@@ -288,7 +288,7 @@ export default function Home() {
             {/* Website Maintenance */}
             <Link to="/maintenance" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
               <div className="flex items-center mb-4">
-                <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2"/></svg>
+                <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2" /></svg>
                 <h3 className="ml-3 text-xl font-semibold text-white">Website Maintenance</h3>
               </div>
               <p className="text-slate-400 mb-4">Ongoing updates, security patches, and performance monitoring.</p>
