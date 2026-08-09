@@ -12,8 +12,8 @@ import { generateMeta, generateJsonLd } from "../utils/seo-config";
 export function meta({ }: Route.MetaArgs) {
   return [
     ...generateMeta({
-      title: "Aarvitek Systems | High-Performance IT Solutions & Web Development",
-      description: "Empowering startups and enterprises with scalable web apps, custom software, and digital branding solutions in India.",
+      title: "Aarvitek Systems | We Build Digital Experiences That Grow Businesses.",
+      description: "Aarvitek Systems transforms ideas into reality. We build modern websites, powerful web applications, and end-to-end digital solutions that help startups and businesses win in the digital era.",
       url: "/",
     }),
     generateJsonLd({
@@ -119,7 +119,7 @@ export default function Home() {
     <div ref={container} className="flex flex-col min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30">
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 lg:pt-56 lg:pb-32 overflow-hidden">
+      <section className="relative pt-40 pb-20 sm:pt-32 sm:pb-12 lg:pt-56 lg:pb-32 overflow-hidden">
         {/* Glow Effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[400px] bg-purple-600/30 blur-[120px] rounded-[100%] pointer-events-none"></div>
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-indigo-500/20 blur-[100px] rounded-[100%] pointer-events-none"></div>
@@ -149,15 +149,15 @@ export default function Home() {
           </h1>
 
           <p className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 font-medium">
-            We specialize in crafting stunning websites, robust e-commerce platforms, and impactful tech solutions that drive growth and engagement.
+            Then explain that Aarvitek Systems provides web development, UI/UX, AI solutions, automation, and digital solutions.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link to="/contact" className="px-8 py-4 rounded-full bg-purple-600 text-white font-semibold text-lg hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]">
-              Get in touch
+              Start a Project
             </Link>
-            <Link to="/web-development" className="px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all">
-              View services
+            <Link to="/projects" className="px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all">
+              View Our Work
             </Link>
           </div>
         </div>
@@ -169,17 +169,17 @@ export default function Home() {
           <p className="text-center text-sm text-slate-500 font-semibold tracking-widest uppercase mb-8">Trusted by innovative companies worldwide</p>
           <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-opacity duration-500">
             {/* Logo placeholders */}
-            <h3 className="logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Acme Corp</h3>
-            <h3 className="logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">GlobalTech</h3>
-            <h3 className="logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Innovate</h3>
-            <h3 className="logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Stark Ind.</h3>
-            <h3 className="logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Wayne Ent.</h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Acme Corp</h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">GlobalTech</h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Innovate</h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Stark Ind.</h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent">Wayne Ent.</h3>
           </div>
         </div>
       </section>
 
       {/* AI Services Z-Pattern */}
-      <section id="services" className="py-24 lg:py-32 relative reveal-section">
+      <section id="services" className="py-24 sm:py-12 lg:py-32 relative reveal-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Custom Web Development & Tech Solutions</h2>
@@ -232,8 +232,74 @@ export default function Home() {
         </div>
       </section>
 
+      {/* What We Do Section */}
+      <section id="what-we-do" className="py-24 sm:py-12 lg:py-32 reveal-section">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">What We Do</h2>
+            <p className="text-slate-400 text-lg max-w-2xl mx-auto">We offer a comprehensive suite of services to accelerate your digital transformation.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Service Card */}
+            <Link to="/web-development" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
+              <div className="flex items-center mb-4">
+                <svg className="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2"/></svg>
+                <h3 className="ml-3 text-xl font-semibold text-white">Web Development</h3>
+              </div>
+              <p className="text-slate-400 mb-4">Custom, scalable web applications built with modern frameworks and best‑in‑class performance.</p>
+              <span className="text-purple-300 group-hover:underline">Learn More →</span>
+            </Link>
+            {/* UI/UX Design */}
+            <Link to="/ui-ux-design" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
+              <div className="flex items-center mb-4">
+                <svg className="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                <h3 className="ml-3 text-xl font-semibold text-white">UI/UX Design</h3>
+              </div>
+              <p className="text-slate-400 mb-4">Pixel‑perfect, user‑centered designs that boost engagement and conversion.</p>
+              <span className="text-indigo-300 group-hover:underline">Learn More →</span>
+            </Link>
+            {/* E‑commerce Development */}
+            <Link to="/ecommerce" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
+              <div className="flex items-center mb-4">
+                <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h18v18H3V3z"/></svg>
+                <h3 className="ml-3 text-xl font-semibold text-white">E‑commerce Development</h3>
+              </div>
+              <p className="text-slate-400 mb-4">End‑to‑end online stores with secure payments, inventory, and analytics.</p>
+              <span className="text-green-300 group-hover:underline">Learn More →</span>
+            </Link>
+            {/* AI & Automation */}
+            <Link to="/ai-automation" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
+              <div className="flex items-center mb-4">
+                <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4"/></svg>
+                <h3 className="ml-3 text-xl font-semibold text-white">AI & Automation</h3>
+              </div>
+              <p className="text-slate-400 mb-4">Intelligent bots, data pipelines, and predictive models to streamline operations.</p>
+              <span className="text-red-300 group-hover:underline">Learn More →</span>
+            </Link>
+            {/* SEO & Performance */}
+            <Link to="/seo-performance" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
+              <div className="flex items-center mb-4">
+                <svg className="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14"/></svg>
+                <h3 className="ml-3 text-xl font-semibold text-white">SEO & Performance</h3>
+              </div>
+              <p className="text-slate-400 mb-4">Technical SEO, speed optimization, and analytics to drive traffic.</p>
+              <span className="text-yellow-300 group-hover:underline">Learn More →</span>
+            </Link>
+            {/* Website Maintenance */}
+            <Link to="/maintenance" className="block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300">
+              <div className="flex items-center mb-4">
+                <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2"/></svg>
+                <h3 className="ml-3 text-xl font-semibold text-white">Website Maintenance</h3>
+              </div>
+              <p className="text-slate-400 mb-4">Ongoing updates, security patches, and performance monitoring.</p>
+              <span className="text-blue-300 group-hover:underline">Learn More →</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Process Flow */}
-      <section id="process" className="py-24 bg-[#050505] border-y border-white/5 process-section reveal-section">
+      <section id="process" className="py-24 sm:py-12 bg-[#050505] border-y border-white/5 process-section reveal-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">How we work</h2>
@@ -266,7 +332,7 @@ export default function Home() {
       </section>
 
       {/* Benefits Benthos Grid */}
-      <section className="py-24 lg:py-32 benefits-section reveal-section">
+      <section className="py-24 sm:py-12 lg:py-32 benefits-section reveal-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Why upgrade with Aarvitek?</h2>
@@ -321,7 +387,7 @@ export default function Home() {
       </section>
 
       {/* Pricing Section Placeholder */}
-      <section id="pricing" className="py-24 bg-[#050505] border-y border-white/5 reveal-section">
+      <section id="pricing" className="py-24 sm:py-12 bg-[#050505] border-y border-white/5 reveal-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Transparent Web Development Packages</h2>
@@ -396,7 +462,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-24 lg:py-32 reveal-section">
+      <section id="faq" className="py-24 sm:py-12 lg:py-32 reveal-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Frequently Asked Questions</h2>

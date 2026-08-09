@@ -11,13 +11,13 @@ export function Footer() {
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-500/20 via-transparent to-transparent"></div>
                     <div className="relative border border-white/10 bg-white/5 backdrop-blur-sm p-12 md:p-20 text-center rounded-[2rem]">
                         <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-                            Let Aarvitek handle IT so you can <span className="text-purple-400">Scale Faster</span>.
+                            Tell us what you're building. We'll help you turn your idea into a <span className="text-purple-400">practical digital solution.</span>.
                         </h2>
                         <p className="text-slate-400 max-w-2xl mx-auto mb-10 text-lg">
                             We'll help you automate, build, and optimize your digital presence. Get back to what you do best—growing your business.
                         </p>
                         <Link to="/contact" className="inline-block px-8 py-4 rounded-full bg-purple-600 text-white font-medium hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]">
-                            Book a discovery call
+                            Start Your Project
                         </Link>
                     </div>
                 </div>

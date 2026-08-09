@@ -117,7 +117,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
         {!isPromo && <Navbar />}
-        <main className={`min-h-screen ${isPromo ? 'pt-0' : 'pt-16'}`}>
+        <main className={`min-h-screen ${isPromo ? 'pt-0' : 'pt-16'} fade-in`}>
           {children}
         </main>
         {!isPromo && <WhatsAppButton />}
