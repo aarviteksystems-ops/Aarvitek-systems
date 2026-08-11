@@ -7,10 +7,19 @@ require __DIR__ . '/vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Set response header for JSON
+// Set response headers for JSON and CORS
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Accept');
 
-// Allow only POST requests
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+// Allow only POST requests (after handling OPTIONS)
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method Not Allowed']);
@@ -18,10 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Retrieve and sanitize input fields
-$name    = trim($_POST['name'] ?? '');
-$email   = trim($_POST['email'] ?? '');
-$subject = trim($_POST['subject'] ?? 'Contact Form Submission');
-$message = trim($_POST['message'] ?? '');
+$input   = json_decode(file_get_contents('php://input'), true);
+$name    = trim($input['name'] ?? '');
+$email   = trim($input['email'] ?? '');
+$subject = trim($input['subject'] ?? 'Contact Form Submission');
+$message = trim($input['message'] ?? '');
 
 if (empty($name) || empty($email) || empty($message)) {
     http_response_code(400);

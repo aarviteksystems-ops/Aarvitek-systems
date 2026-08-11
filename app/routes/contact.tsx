@@ -57,7 +57,7 @@ export default function Contact() {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch("/submit.php", {
+            const response = await fetch(`${window.location.origin}/submit.php`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
