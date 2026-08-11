@@ -56,21 +56,17 @@ export default function Contact() {
 
         setIsSubmitting(true);
 
-        const WEB3FORMS_ACCESS_KEY = "2bf3198d-6793-47b6-bffa-cb44d5716c25";
-
         try {
-            const response = await fetch("https://api.web3forms.com/submit", {
+            const response = await fetch("/submit.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
                 body: JSON.stringify({
-                    access_key: WEB3FORMS_ACCESS_KEY,
-                    subject: `[Contact Form] ${subject} from ${name}`,
-                    from_name: "Aarvitek Systems - Contact Form",
                     name: name,
                     email: email,
+                    subject: subject,
                     subject_type: subject,
                     message: message,
                     botcheck: "",
@@ -90,7 +86,7 @@ export default function Contact() {
                 setSubject("General Inquiry");
                 setMessage("");
             } else {
-                setErrors({ submit: "Form submission failed. Please try again." });
+                setErrors({ submit: data.message || "Form submission failed. Please try again." });
             }
         } catch {
             setErrors({ submit: "Network error occurred. Please try again." });

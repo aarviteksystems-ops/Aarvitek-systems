@@ -11,7 +11,7 @@ export function Footer() {
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-500/20 via-transparent to-transparent"></div>
                     <div className="relative border border-white/10 bg-white/5 backdrop-blur-sm p-12 md:p-20 text-center rounded-[2rem]">
                         <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-                            Tell us what you're building. We'll help you turn your idea into a <span className="text-purple-400">practical digital solution.</span>.
+                            Tell us what you're building. We'll help you turn your idea into a <span className="text-purple-400">practical digital solution</span>.
                         </h2>
                         <p className="text-slate-400 max-w-2xl mx-auto mb-10 text-lg">
                             We'll help you automate, build, and optimize your digital presence. Get back to what you do best—growing your business.

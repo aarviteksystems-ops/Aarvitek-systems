@@ -4298,12 +4298,12 @@ function Footer() {
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-500/20 via-transparent to-transparent" }),
       /* @__PURE__ */ jsxs("div", { className: "relative border border-white/10 bg-white/5 backdrop-blur-sm p-12 md:p-20 text-center rounded-[2rem]", children: [
         /* @__PURE__ */ jsxs("h2", { className: "text-3xl md:text-5xl font-bold text-white mb-6", children: [
-          "Let Aarvitek handle IT so you can ",
-          /* @__PURE__ */ jsx("span", { className: "text-purple-400", children: "Scale Faster" }),
+          "Tell us what you're building. We'll help you turn your idea into a ",
+          /* @__PURE__ */ jsx("span", { className: "text-purple-400", children: "practical digital solution" }),
           "."
         ] }),
         /* @__PURE__ */ jsx("p", { className: "text-slate-400 max-w-2xl mx-auto mb-10 text-lg", children: "We'll help you automate, build, and optimize your digital presence. Get back to what you do best—growing your business." }),
-        /* @__PURE__ */ jsx(Link, { to: "/contact", className: "inline-block px-8 py-4 rounded-full bg-purple-600 text-white font-medium hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]", children: "Book a discovery call" })
+        /* @__PURE__ */ jsx(Link, { to: "/contact", className: "inline-block px-8 py-4 rounded-full bg-purple-600 text-white font-medium hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]", children: "Start Your Project" })
       ] })
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 px-4", children: [
@@ -4873,7 +4873,19 @@ function Layout({
     lang: "en",
     className: "dark scroll-smooth",
     children: [/* @__PURE__ */ jsxs("head", {
-      children: [gtmId && /* @__PURE__ */ jsx("script", {
+      children: [/* @__PURE__ */ jsx("script", {
+        async: true,
+        src: "https://www.googletagmanager.com/gtag/js?id=G-PRH4ZDYWWY"
+      }), /* @__PURE__ */ jsx("script", {
+        dangerouslySetInnerHTML: {
+          __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-PRH4ZDYWWY');
+            `
+        }
+      }), gtmId && /* @__PURE__ */ jsx("script", {
         dangerouslySetInnerHTML: {
           __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -4903,7 +4915,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           __html: `window.env = { VITE_GTM_ID: ${JSON.stringify(gtmId)} };`
         }
       }), !isPromo && /* @__PURE__ */ jsx(Navbar, {}), /* @__PURE__ */ jsx("main", {
-        className: `min-h-screen ${isPromo ? "pt-0" : "pt-16"}`,
+        className: `min-h-screen ${isPromo ? "pt-0" : "pt-16"} fade-in`,
         children
       }), !isPromo && /* @__PURE__ */ jsx(WhatsAppButton, {}), !isPromo && /* @__PURE__ */ jsx(CalendlyModal, {}), !isPromo && /* @__PURE__ */ jsx(FloatingEnquiryForm, {}), !isPromo && /* @__PURE__ */ jsx(Dock, {}), !isPromo && /* @__PURE__ */ jsx(Footer, {}), /* @__PURE__ */ jsx(ScrollRestoration, {}), /* @__PURE__ */ jsx(Scripts, {})]
     })]
@@ -7139,8 +7151,8 @@ _getGSAP2() && gsap.registerPlugin(ScrollTrigger);
 gsapWithCSS.registerPlugin(useGSAP, ScrollTrigger);
 function meta$o({}) {
   return [...generateMeta({
-    title: "Aarvitek Systems | High-Performance IT Solutions & Web Development",
-    description: "Empowering startups and enterprises with scalable web apps, custom software, and digital branding solutions in India.",
+    title: "Aarvitek Systems | We Build Digital Experiences That Grow Businesses.",
+    description: "Aarvitek Systems transforms ideas into reality. We build modern websites, powerful web applications, and end-to-end digital solutions that help startups and businesses win in the digital era.",
     url: "/"
   }), generateJsonLd({
     "@context": "https://schema.org",
@@ -7233,7 +7245,7 @@ const home = UNSAFE_withComponentProps(function Home() {
     ref: container,
     className: "flex flex-col min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30",
     children: [/* @__PURE__ */ jsxs("section", {
-      className: "relative pt-40 pb-20 lg:pt-56 lg:pb-32 overflow-hidden",
+      className: "relative pt-40 pb-20 sm:pt-32 sm:pb-12 lg:pt-56 lg:pb-32 overflow-hidden",
       children: [/* @__PURE__ */ jsx("div", {
         className: "absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[400px] bg-purple-600/30 blur-[120px] rounded-[100%] pointer-events-none"
       }), /* @__PURE__ */ jsx("div", {
@@ -7276,17 +7288,17 @@ const home = UNSAFE_withComponentProps(function Home() {
           })]
         }), /* @__PURE__ */ jsx("p", {
           className: "text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 font-medium",
-          children: "We specialize in crafting stunning websites, robust e-commerce platforms, and impactful tech solutions that drive growth and engagement."
+          children: "Aarvitek Systems transforms ideas into reality. We build modern websites, powerful web applications, and end-to-end digital solutions that help startups and businesses win in the digital era."
         }), /* @__PURE__ */ jsxs("div", {
           className: "flex flex-col sm:flex-row justify-center gap-4",
           children: [/* @__PURE__ */ jsx(Link, {
             to: "/contact",
             className: "px-8 py-4 rounded-full bg-purple-600 text-white font-semibold text-lg hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]",
-            children: "Get in touch"
+            children: "Start a Project"
           }), /* @__PURE__ */ jsx(Link, {
-            to: "/web-development",
+            to: "/projects",
             className: "px-8 py-4 rounded-full bg-transparent border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all",
-            children: "View services"
+            children: "View Our Work"
           })]
         })]
       })]
@@ -7301,26 +7313,39 @@ const home = UNSAFE_withComponentProps(function Home() {
         }), /* @__PURE__ */ jsxs("div", {
           className: "flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-opacity duration-500",
           children: [/* @__PURE__ */ jsx("h3", {
-            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
-            children: "Acme Corp"
+            className: "logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
+            children: /* @__PURE__ */ jsx("img", {
+              className: "w-[145px]",
+              src: "/images/Partners/ecodigitboost-logo.png",
+              alt: ""
+            })
           }), /* @__PURE__ */ jsx("h3", {
-            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
-            children: "GlobalTech"
+            className: "logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
+            children: /* @__PURE__ */ jsx("img", {
+              className: "w-[145px]",
+              src: "/images/Partners/infinite-export-logo.png",
+              alt: ""
+            })
           }), /* @__PURE__ */ jsx("h3", {
-            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
-            children: "Innovate"
+            className: "logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
+            children: /* @__PURE__ */ jsx("img", {
+              className: "w-[145px]",
+              src: "images/Partners/logoimg.jpg",
+              alt: ""
+            })
           }), /* @__PURE__ */ jsx("h3", {
-            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
-            children: "Stark Ind."
-          }), /* @__PURE__ */ jsx("h3", {
-            className: "logo-item text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
-            children: "Wayne Ent."
+            className: "logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent",
+            children: /* @__PURE__ */ jsx("img", {
+              className: "w-[145px]",
+              src: "/images/Partners/rama-universal-company-logo-.png",
+              alt: ""
+            })
           })]
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
       id: "services",
-      className: "py-24 lg:py-32 relative reveal-section",
+      className: "py-24 sm:py-12 lg:py-32 relative reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsxs("div", {
@@ -7424,8 +7449,189 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
+      id: "what-we-do",
+      className: "py-24 sm:py-12 lg:py-32 reveal-section",
+      children: /* @__PURE__ */ jsxs("div", {
+        className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+        children: [/* @__PURE__ */ jsxs("div", {
+          className: "text-center mb-12",
+          children: [/* @__PURE__ */ jsx("h2", {
+            className: "text-3xl md:text-5xl font-bold text-white mb-4",
+            children: "What We Do"
+          }), /* @__PURE__ */ jsx("p", {
+            className: "text-slate-400 text-lg max-w-2xl mx-auto",
+            children: "We offer a comprehensive suite of services to accelerate your digital transformation."
+          })]
+        }), /* @__PURE__ */ jsxs("div", {
+          className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+          children: [/* @__PURE__ */ jsxs(Link, {
+            to: "/web-development",
+            className: "block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "flex items-center mb-4",
+              children: [/* @__PURE__ */ jsx("svg", {
+                className: "w-8 h-8 text-purple-400",
+                fill: "none",
+                stroke: "currentColor",
+                viewBox: "0 0 24 24",
+                children: /* @__PURE__ */ jsx("path", {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: "2",
+                  d: "M12 6v6l4 2"
+                })
+              }), /* @__PURE__ */ jsx("h3", {
+                className: "ml-3 text-xl font-semibold text-white",
+                children: "Web Development"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 mb-4",
+              children: "Custom, scalable web applications built with modern frameworks and best‑in‑class performance."
+            }), /* @__PURE__ */ jsx("span", {
+              className: "text-purple-300 group-hover:underline",
+              children: "Learn More →"
+            })]
+          }), /* @__PURE__ */ jsxs(Link, {
+            to: "/ui-ux-design",
+            className: "block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "flex items-center mb-4",
+              children: [/* @__PURE__ */ jsx("svg", {
+                className: "w-8 h-8 text-indigo-400",
+                fill: "none",
+                stroke: "currentColor",
+                viewBox: "0 0 24 24",
+                children: /* @__PURE__ */ jsx("path", {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: "2",
+                  d: "M4 6h16M4 12h16M4 18h7"
+                })
+              }), /* @__PURE__ */ jsx("h3", {
+                className: "ml-3 text-xl font-semibold text-white",
+                children: "UI/UX Design"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 mb-4",
+              children: "Pixel‑perfect, user‑centered designs that boost engagement and conversion."
+            }), /* @__PURE__ */ jsx("span", {
+              className: "text-indigo-300 group-hover:underline",
+              children: "Learn More →"
+            })]
+          }), /* @__PURE__ */ jsxs(Link, {
+            to: "/ecommerce",
+            className: "block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "flex items-center mb-4",
+              children: [/* @__PURE__ */ jsx("svg", {
+                className: "w-8 h-8 text-green-400",
+                fill: "none",
+                stroke: "currentColor",
+                viewBox: "0 0 24 24",
+                children: /* @__PURE__ */ jsx("path", {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: "2",
+                  d: "M3 3h18v18H3V3z"
+                })
+              }), /* @__PURE__ */ jsx("h3", {
+                className: "ml-3 text-xl font-semibold text-white",
+                children: "E‑commerce Development"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 mb-4",
+              children: "End‑to‑end online stores with secure payments, inventory, and analytics."
+            }), /* @__PURE__ */ jsx("span", {
+              className: "text-green-300 group-hover:underline",
+              children: "Learn More →"
+            })]
+          }), /* @__PURE__ */ jsxs(Link, {
+            to: "/ai-automation",
+            className: "block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "flex items-center mb-4",
+              children: [/* @__PURE__ */ jsx("svg", {
+                className: "w-8 h-8 text-red-400",
+                fill: "none",
+                stroke: "currentColor",
+                viewBox: "0 0 24 24",
+                children: /* @__PURE__ */ jsx("path", {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: "2",
+                  d: "M9 12l2 2 4-4"
+                })
+              }), /* @__PURE__ */ jsx("h3", {
+                className: "ml-3 text-xl font-semibold text-white",
+                children: "AI & Automation"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 mb-4",
+              children: "Intelligent bots, data pipelines, and predictive models to streamline operations."
+            }), /* @__PURE__ */ jsx("span", {
+              className: "text-red-300 group-hover:underline",
+              children: "Learn More →"
+            })]
+          }), /* @__PURE__ */ jsxs(Link, {
+            to: "/seo-performance",
+            className: "block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "flex items-center mb-4",
+              children: [/* @__PURE__ */ jsx("svg", {
+                className: "w-8 h-8 text-yellow-400",
+                fill: "none",
+                stroke: "currentColor",
+                viewBox: "0 0 24 24",
+                children: /* @__PURE__ */ jsx("path", {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: "2",
+                  d: "M5 12h14"
+                })
+              }), /* @__PURE__ */ jsx("h3", {
+                className: "ml-3 text-xl font-semibold text-white",
+                children: "SEO & Performance"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 mb-4",
+              children: "Technical SEO, speed optimization, and analytics to drive traffic."
+            }), /* @__PURE__ */ jsx("span", {
+              className: "text-yellow-300 group-hover:underline",
+              children: "Learn More →"
+            })]
+          }), /* @__PURE__ */ jsxs(Link, {
+            to: "/maintenance",
+            className: "block group bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 hover:border-transparent transition-all duration-300",
+            children: [/* @__PURE__ */ jsxs("div", {
+              className: "flex items-center mb-4",
+              children: [/* @__PURE__ */ jsx("svg", {
+                className: "w-8 h-8 text-blue-400",
+                fill: "none",
+                stroke: "currentColor",
+                viewBox: "0 0 24 24",
+                children: /* @__PURE__ */ jsx("path", {
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeWidth: "2",
+                  d: "M12 6v6l4 2"
+                })
+              }), /* @__PURE__ */ jsx("h3", {
+                className: "ml-3 text-xl font-semibold text-white",
+                children: "Website Maintenance"
+              })]
+            }), /* @__PURE__ */ jsx("p", {
+              className: "text-slate-400 mb-4",
+              children: "Ongoing updates, security patches, and performance monitoring."
+            }), /* @__PURE__ */ jsx("span", {
+              className: "text-blue-300 group-hover:underline",
+              children: "Learn More →"
+            })]
+          })]
+        })]
+      })
+    }), /* @__PURE__ */ jsx("section", {
       id: "process",
-      className: "py-24 bg-[#050505] border-y border-white/5 process-section reveal-section",
+      className: "py-24 sm:py-12 bg-[#050505] border-y border-white/5 process-section reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsx("div", {
@@ -7492,7 +7698,7 @@ const home = UNSAFE_withComponentProps(function Home() {
         })]
       })
     }), /* @__PURE__ */ jsx("section", {
-      className: "py-24 lg:py-32 benefits-section reveal-section",
+      className: "py-24 sm:py-12 lg:py-32 benefits-section reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsx("div", {
@@ -7584,7 +7790,7 @@ const home = UNSAFE_withComponentProps(function Home() {
       })
     }), /* @__PURE__ */ jsx("section", {
       id: "pricing",
-      className: "py-24 bg-[#050505] border-y border-white/5 reveal-section",
+      className: "py-24 sm:py-12 bg-[#050505] border-y border-white/5 reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsxs("div", {
@@ -7675,7 +7881,7 @@ const home = UNSAFE_withComponentProps(function Home() {
       })
     }), /* @__PURE__ */ jsx("section", {
       id: "faq",
-      className: "py-24 lg:py-32 reveal-section",
+      className: "py-24 sm:py-12 lg:py-32 reveal-section",
       children: /* @__PURE__ */ jsxs("div", {
         className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         children: [/* @__PURE__ */ jsxs("div", {
@@ -8155,20 +8361,17 @@ const contact = UNSAFE_withComponentProps(function Contact() {
     e.preventDefault();
     if (!validate()) return;
     setIsSubmitting(true);
-    const WEB3FORMS_ACCESS_KEY = "2bf3198d-6793-47b6-bffa-cb44d5716c25";
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("/submit.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json"
         },
         body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          subject: `[Contact Form] ${subject} from ${name}`,
-          from_name: "Aarvitek Systems - Contact Form",
           name,
           email,
+          subject,
           subject_type: subject,
           message,
           botcheck: ""
@@ -8186,7 +8389,7 @@ const contact = UNSAFE_withComponentProps(function Contact() {
         setMessage("");
       } else {
         setErrors({
-          submit: "Form submission failed. Please try again."
+          submit: data.message || "Form submission failed. Please try again."
         });
       }
     } catch {
@@ -13895,7 +14098,7 @@ const route25 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   default: promo,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-BT4-KF5v.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-CO9SrGhF.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js", "/assets/index-BJLytLig.js"], "css": ["/assets/root-Ds8KTNSp.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-mx3Ox1Eq.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-C5AsEZGJ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/director-message": { "id": "routes/director-message", "parentId": "root", "path": "director-message", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/director-message-erttXYmd.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-CyJ5HjIt.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-DwcXcmea.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-_F_SyL5q.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/portfolio": { "id": "routes/portfolio", "parentId": "root", "path": "portfolio", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/portfolio-9Rfl1B-f.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-BqGuaI14.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-CX1EF4Uc.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-B8fLJstQ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-Ci5YlDbw.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/privacy-policy": { "id": "routes/privacy-policy", "parentId": "root", "path": "privacy-policy", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/privacy-policy-z-Xo6Bws.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/terms": { "id": "routes/terms", "parentId": "root", "path": "terms", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/terms-u8INQ0KV.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/video-editing": { "id": "routes/video-editing", "parentId": "root", "path": "video-editing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/video-editing-BJyLqtrH.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-C6jRtx9I.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CE_kUQUN.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-Dq1ys1zo.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-CyfwCbcD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/enhanced-productivity": { "id": "routes/enhanced-productivity", "parentId": "root", "path": "enhanced-productivity", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/enhanced-productivity-BNQwPHVy.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/scalability": { "id": "routes/scalability", "parentId": "root", "path": "scalability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/scalability-2Zc26eEB.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/cost-efficient": { "id": "routes/cost-efficient", "parentId": "root", "path": "cost-efficient", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/cost-efficient-CNWZ4fFf.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/availability": { "id": "routes/availability", "parentId": "root", "path": "availability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/availability-BENY6d6T.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/locations": { "id": "routes/locations", "parentId": "root", "path": "locations", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/locations-C5zlrOEl.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/location-detail": { "id": "routes/location-detail", "parentId": "root", "path": "locations/:city", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/location-detail-D07sx8iD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/promo": { "id": "routes/promo", "parentId": "root", "path": "promo", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/promo-dsbnAUQy.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-92eee69c.js", "version": "92eee69c", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-BT4-KF5v.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-Bp_LYDE8.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js", "/assets/index-BJLytLig.js"], "css": ["/assets/root-xvUlC3TB.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/home": { "id": "routes/home", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/home-Cm3i-7T6.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/about": { "id": "routes/about", "parentId": "root", "path": "about", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/about-C5AsEZGJ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/director-message": { "id": "routes/director-message", "parentId": "root", "path": "director-message", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/director-message-erttXYmd.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/contact": { "id": "routes/contact", "parentId": "root", "path": "contact", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/contact-Bn93YyLL.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/clients": { "id": "routes/clients", "parentId": "root", "path": "clients", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/clients-DwcXcmea.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/career": { "id": "routes/career", "parentId": "root", "path": "career", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/career-_F_SyL5q.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/portfolio": { "id": "routes/portfolio", "parentId": "root", "path": "portfolio", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/portfolio-9Rfl1B-f.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/web-development": { "id": "routes/web-development", "parentId": "root", "path": "web-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/web-development-BqGuaI14.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/website-design": { "id": "routes/website-design", "parentId": "root", "path": "website-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/website-design-CX1EF4Uc.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/graphic-design": { "id": "routes/graphic-design", "parentId": "root", "path": "graphic-design", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/graphic-design-B8fLJstQ.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/ecommerce": { "id": "routes/ecommerce", "parentId": "root", "path": "ecommerce", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/ecommerce-Ci5YlDbw.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/privacy-policy": { "id": "routes/privacy-policy", "parentId": "root", "path": "privacy-policy", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/privacy-policy-z-Xo6Bws.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/terms": { "id": "routes/terms", "parentId": "root", "path": "terms", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/terms-u8INQ0KV.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/video-editing": { "id": "routes/video-editing", "parentId": "root", "path": "video-editing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/video-editing-BJyLqtrH.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/ScrollTrigger-CB6UHAJl.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/smart-analyzing": { "id": "routes/smart-analyzing", "parentId": "root", "path": "smart-analyzing", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/smart-analyzing-C6jRtx9I.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/agile-development": { "id": "routes/agile-development", "parentId": "root", "path": "agile-development", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/agile-development-CE_kUQUN.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/seamless-integration": { "id": "routes/seamless-integration", "parentId": "root", "path": "seamless-integration", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/seamless-integration-Dq1ys1zo.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/continuous-optimization": { "id": "routes/continuous-optimization", "parentId": "root", "path": "continuous-optimization", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/continuous-optimization-CyfwCbcD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/enhanced-productivity": { "id": "routes/enhanced-productivity", "parentId": "root", "path": "enhanced-productivity", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/enhanced-productivity-BNQwPHVy.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/scalability": { "id": "routes/scalability", "parentId": "root", "path": "scalability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/scalability-2Zc26eEB.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/cost-efficient": { "id": "routes/cost-efficient", "parentId": "root", "path": "cost-efficient", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/cost-efficient-CNWZ4fFf.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/availability": { "id": "routes/availability", "parentId": "root", "path": "availability", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/availability-BENY6d6T.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/locations": { "id": "routes/locations", "parentId": "root", "path": "locations", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/locations-C5zlrOEl.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/location-detail": { "id": "routes/location-detail", "parentId": "root", "path": "locations/:city", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/location-detail-D07sx8iD.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js", "/assets/seo-config-DeU6Y2Nk.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/promo": { "id": "routes/promo", "parentId": "root", "path": "promo", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/promo-dsbnAUQy.js", "imports": ["/assets/chunk-WWGJGFF6-jZa-PEke.js", "/assets/index-BJLytLig.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-7ab14a5b.js", "version": "7ab14a5b", "sri": void 0 };
 const assetsBuildDirectory = "build\\client";
 const basename = "/";
 const future = { "unstable_optimizeDeps": false, "unstable_subResourceIntegrity": false, "v8_middleware": false, "v8_splitRouteModules": false, "v8_viteEnvironmentApi": false };

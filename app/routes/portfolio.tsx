@@ -61,7 +61,7 @@ export default function Portfolio() {
 
     return (
         <div ref={container} className="min-h-screen bg-[#000000] text-slate-300 selection:bg-purple-500/30 overflow-hidden pt-24 pb-12">
-            
+
             {/* Ambient Background Glows */}
             <div className="absolute top-[-10%] left-[5%] w-[500px] h-[500px] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none"></div>
             <div className="absolute top-[30%] right-[-10%] w-[600px] h-[600px] bg-pink-500/10 blur-[180px] rounded-full pointer-events-none"></div>
@@ -147,10 +147,10 @@ export default function Portfolio() {
                         ].map((item, idx) => (
                             <div key={idx} className="reveal-card">
                                 <div className={`group rounded-[2rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-md overflow-hidden transition-all duration-500 transform hover:-translate-y-2 cursor-pointer shadow-2xl ${item.glow}`}>
-                                    
+
                                     {/* Mock Browser Frame */}
                                     <div className="relative aspect-[16/9] w-full overflow-hidden bg-white/5 border-b border-white/5">
-                                        
+
                                         {/* Browser Header */}
                                         <div className="absolute top-0 inset-x-0 h-10 px-4 bg-black/40 backdrop-blur-md border-b border-white/5 flex items-center justify-between z-20">
                                             <div className="flex gap-1.5">
@@ -162,10 +162,10 @@ export default function Portfolio() {
                                             <div className="w-12"></div>
                                         </div>
 
-                                        <img 
-                                            src={item.img} 
-                                            alt={item.title} 
-                                            className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 pt-10" 
+                                        <img
+                                            src={item.img}
+                                            alt={item.title}
+                                            className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 pt-10"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
                                     </div>
@@ -202,13 +202,13 @@ export default function Portfolio() {
                     </div>
                 </div>
             </section>
-
+            {/*  */}
             {/* 3. CTA: Start a Project */}
             <section className="py-16 relative z-10">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="relative rounded-[2rem] overflow-hidden p-12 text-center border border-white/10 bg-gradient-to-br from-[#0c051a] to-[#04010a] shadow-2xl">
                         <div className="absolute top-[-30%] right-[-10%] w-[300px] h-[300px] bg-purple-500/20 blur-[80px] rounded-full pointer-events-none"></div>
-                        
+
                         <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
                             <h2 className="text-3xl md:text-4xl font-black text-white">
                                 Ready to Build Your Own <br />
@@ -220,8 +220,8 @@ export default function Portfolio() {
                                 Let's collaborate to architect a stunning custom codebase or graphic vector system that places you light years ahead of your competitors.
                             </p>
                             <div className="pt-4">
-                                <Link 
-                                    to="/contact" 
+                                <Link
+                                    to="/contact"
                                     className="inline-block px-8 py-4 rounded-full bg-purple-600 text-white font-extrabold hover:bg-purple-500 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)]"
                                 >
                                     Book a Discovery Call
