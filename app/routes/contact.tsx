@@ -50,6 +50,8 @@ export default function Contact() {
         return Object.keys(newErrors).length === 0;
     };
 
+    const WEB3FORMS_ACCESS_KEY = "2bf3198d-6793-47b6-bffa-cb44d5716c25";
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validate()) return;
@@ -57,17 +59,19 @@ export default function Contact() {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch(`${window.location.origin}/submit.php`, {
+            const response = await fetch("https://api.web3forms.com/submit", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
                 body: JSON.stringify({
+                    access_key: WEB3FORMS_ACCESS_KEY,
+                    subject: `[Contact Form] ${subject} from ${name}`,
+                    from_name: "Aarvitek Systems - Contact Form",
                     name: name,
                     email: email,
-                    subject: subject,
-                    subject_type: subject,
+                    inquiry_type: subject,
                     message: message,
                     botcheck: "",
                 }),
