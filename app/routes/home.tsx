@@ -20,12 +20,7 @@ export function meta({ }: Route.MetaArgs) {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Aarvitek Systems",
-      "url": "https://aarviteksystems.com/",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://aarviteksystems.com/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
+      "url": "https://aarviteksystems.com/"
     }),
     generateJsonLd({
       "@context": "https://schema.org",
@@ -169,10 +164,10 @@ export default function Home() {
           <p className="text-center text-sm text-slate-500 font-semibold tracking-widest uppercase mb-8">Trusted by innovative companies worldwide</p>
           <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-opacity duration-500">
             {/* Logo placeholders */}
-            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/ecodigitboost-logo.png" alt="" /></h3>
-            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/infinite-export-logo.png" alt="" /></h3>
-            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="images/Partners/logoimg.jpg" alt="" /></h3>
-            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/rama-universal-company-logo-.png" alt="" /></h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/ecodigitboost-logo.png" alt="EcoDigitBoost partner logo" /></h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/infinite-export-logo.png" alt="Infinite Export partner logo" /></h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/logoimg.jpg" alt="Client partner logo" /></h3>
+            <h3 className="logo-item text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-400 to-slate-200 bg-clip-text text-transparent"><img className="w-[145px]" src="/images/Partners/rama-universal-company-logo-.png" alt="Rama Universal Company partner logo" /></h3>
 
           </div>
         </div>

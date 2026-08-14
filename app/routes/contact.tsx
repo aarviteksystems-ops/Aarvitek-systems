@@ -27,11 +27,11 @@ export default function Contact() {
     const [email, setEmail] = useState("");
     const [subject, setSubject] = useState("General Inquiry");
     const [message, setMessage] = useState("");
-    
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
-    
+
     const [submittedName, setSubmittedName] = useState("");
     const [submittedEmail, setSubmittedEmail] = useState("");
     const [submittedSubject, setSubmittedSubject] = useState("");
@@ -45,7 +45,7 @@ export default function Contact() {
             newErrors.email = "Please enter a valid email address";
         }
         if (!message.trim()) newErrors.message = "Message is required";
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -125,11 +125,11 @@ export default function Contact() {
                                     <div className="space-y-3">
                                         <h3 className="text-gray-900 dark:text-white font-extrabold text-2xl">Message Dispatched!</h3>
                                         <p className="text-gray-600 dark:text-gray-400 text-sm max-w-md leading-relaxed">
-                                            Thank you, <strong>{submittedName}</strong>. Your inquiry regarding <strong>{submittedSubject}</strong> has been transmitted successfully. 
+                                            Thank you, <strong>{submittedName}</strong>. Your inquiry regarding <strong>{submittedSubject}</strong> has been transmitted successfully.
                                             Our consultants will reach back to you at <strong>{submittedEmail}</strong> within 2 hours.
                                         </p>
                                     </div>
-                                    <button 
+                                    <button
                                         onClick={() => setSubmitSuccess(false)}
                                         className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors text-xs"
                                     >
@@ -143,9 +143,9 @@ export default function Contact() {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
                                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
-                                                <input 
-                                                    type="text" 
-                                                    id="name" 
+                                                <input
+                                                    type="text"
+                                                    id="name"
                                                     disabled={isSubmitting}
                                                     value={name}
                                                     onChange={(e) => {
@@ -156,18 +156,17 @@ export default function Contact() {
                                                             setErrors(copy);
                                                         }
                                                     }}
-                                                    className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${
-                                                        errors.name ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"
-                                                    }`}
-                                                    placeholder="John Doe" 
+                                                    className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${errors.name ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"
+                                                        }`}
+                                                    placeholder="John Doe"
                                                 />
                                                 {errors.name && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.name}</p>}
                                             </div>
                                             <div>
                                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
-                                                <input 
-                                                    type="email" 
-                                                    id="email" 
+                                                <input
+                                                    type="email"
+                                                    id="email"
                                                     disabled={isSubmitting}
                                                     value={email}
                                                     onChange={(e) => {
@@ -178,18 +177,17 @@ export default function Contact() {
                                                             setErrors(copy);
                                                         }
                                                     }}
-                                                    className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${
-                                                        errors.email ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"
-                                                    }`}
-                                                    placeholder="john@example.com" 
+                                                    className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${errors.email ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"
+                                                        }`}
+                                                    placeholder="john@example.com"
                                                 />
                                                 {errors.email && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.email}</p>}
                                             </div>
                                         </div>
                                         <div>
                                             <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subject</label>
-                                            <select 
-                                                id="subject" 
+                                            <select
+                                                id="subject"
                                                 disabled={isSubmitting}
                                                 value={subject}
                                                 onChange={(e) => setSubject(e.target.value)}
@@ -203,9 +201,9 @@ export default function Contact() {
                                         </div>
                                         <div>
                                             <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
-                                            <textarea 
-                                                id="message" 
-                                                rows={4} 
+                                            <textarea
+                                                id="message"
+                                                rows={4}
                                                 disabled={isSubmitting}
                                                 value={message}
                                                 onChange={(e) => {
@@ -216,15 +214,14 @@ export default function Contact() {
                                                         setErrors(copy);
                                                     }
                                                 }}
-                                                className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${
-                                                    errors.message ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"
-                                                }`}
+                                                className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 outline-none transition-all ${errors.message ? "border-red-500 focus:ring-red-500/20" : "border-gray-300 dark:border-gray-700 focus:ring-blue-500"
+                                                    }`}
                                                 placeholder="Tell us about your project..."
                                             ></textarea>
                                             {errors.message && <p className="text-red-500 text-xs mt-1 font-semibold">{errors.message}</p>}
                                         </div>
-                                        <button 
-                                            type="submit" 
+                                        <button
+                                            type="submit"
                                             disabled={isSubmitting}
                                             className="w-full py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-600/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 cursor-pointer"
                                         >

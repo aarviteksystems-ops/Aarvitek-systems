@@ -189,7 +189,7 @@ export function FloatingEnquiryForm() {
             <span className="text-xl">📊</span>
             <div>
               <h3 className="text-white font-extrabold text-lg">Send an Enquiry</h3>
-              <p className="text-slate-400 text-xs mt-0.5">We respond in less than 2 hours</p>
+              <p className="text-slate-400 text-xs mt-0.5">We'll get back to you as soon as possible.</p>
             </div>
           </div>
           <button

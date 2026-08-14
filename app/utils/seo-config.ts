@@ -75,7 +75,7 @@ export function getOrganizationSchema() {
         "@type": "Organization",
         "name": SITE_NAME,
         "url": SITE_URL,
-        "logo": `${SITE_URL}/images/logo.png`, // Assuming a logo exists or will exist
+        "logo": `${SITE_URL}/images/og-image.png`,
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": COMPANY_PHONE,

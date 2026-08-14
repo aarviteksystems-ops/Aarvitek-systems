@@ -97,49 +97,49 @@ export default function Portfolio() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {[
                             {
-                                img: "/images/web-development.png",
+                                img: "/images/portfolio/website/apex-retail-dashboard.jpg",
                                 cat: "Full-Stack Custom Web App",
                                 title: "Apex Retail Solutions Platform",
                                 desc: "Rebuilding a complex B2B logistics ecosystem using Next.js and serverless AWS architectures. Replaced a slow legacy dashboard with a high-performance system, cutting server latency times and improving database synchronization.",
                                 stats: [
-                                    { val: "100/100", lbl: "LCP speed score" },
-                                    { val: "+320%", lbl: "Data speed boost" }
+                                    { val: "Next.js", lbl: "Performance-first architecture" },
+                                    { val: "AWS", lbl: "Serverless infrastructure" }
                                 ],
                                 glow: "hover:shadow-[0_0_40px_rgba(168,85,247,0.15)] hover:border-purple-500/30",
                                 border: "group-hover:bg-purple-500"
                             },
                             {
-                                img: "/images/ui-ux-design.png",
+                                img: "/images/portfolio/website/nexa-bank-mockup.jpg",
                                 cat: "Figma UI/UX & Interaction",
                                 title: "Nexa Digital Bank Blueprints",
                                 desc: "Crafting comprehensive mobile and desktop interactive mockup designs for an emerging digital banking product. Built custom vector component libraries, mapped complex buyer journeys, and tested click-through rates.",
                                 stats: [
-                                    { val: "94%", lbl: "First impressions rating" },
-                                    { val: "100%", lbl: "Figma vector output" }
+                                    { val: "40+", lbl: "Custom Figma components" },
+                                    { val: "Mobile", lbl: "& Desktop responsive" }
                                 ],
                                 glow: "hover:shadow-[0_0_40px_rgba(244,63,94,0.15)] hover:border-pink-500/30",
                                 border: "group-hover:bg-pink-500"
                             },
                             {
-                                img: "/images/web-development.png",
+                                img: "/images/portfolio/website/lumina-storefront.jpg",
                                 cat: "Headless E-Commerce Solutions",
                                 title: "Lumina Organic Storefront",
                                 desc: "Engineering a fast, headless e-commerce store connected via Shopify store APIs. Replaced generic slow theme styles with a fully bespoke, conversion-rate optimized (CRO) React cart engine.",
                                 stats: [
-                                    { val: "+82%", lbl: "Checkouts increase" },
-                                    { val: "< 1.0s", lbl: "Frictionless checkout speed" }
+                                    { val: "Headless", lbl: "Shopify API integration" },
+                                    { val: "CRO", lbl: "Optimized checkout flow" }
                                 ],
                                 glow: "hover:shadow-[0_0_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/30",
                                 border: "group-hover:bg-emerald-500"
                             },
                             {
-                                img: "/images/ui-ux-design.png",
+                                img: "/images/portfolio/video/stellar-explainer.jpg",
                                 cat: "Cinematic Video Editing & VFX",
                                 title: "Stellar Cloud Explainer Reel",
                                 desc: "Editing a high-impact promotional campaign video for an enterprise SaaS product. Handcrafted kinetic text sequences, synced complex background audio masterings, and color styled all log clips.",
                                 stats: [
-                                    { val: "+85%", lbl: "User retention" },
-                                    { val: "4K UHD", lbl: "Lossless resolution" }
+                                    { val: "4K UHD", lbl: "Production quality" },
+                                    { val: "VFX", lbl: "Kinetic motion graphics" }
                                 ],
                                 glow: "hover:shadow-[0_0_40px_rgba(99,102,241,0.15)] hover:border-indigo-500/30",
                                 border: "group-hover:bg-indigo-500"
@@ -165,6 +165,9 @@ export default function Portfolio() {
                                         <img
                                             src={item.img}
                                             alt={item.title}
+                                            loading="lazy"
+                                            width={800}
+                                            height={450}
                                             className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700 pt-10"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
@@ -217,7 +220,7 @@ export default function Portfolio() {
                                 </span>
                             </h2>
                             <p className="text-slate-400 text-sm leading-relaxed">
-                                Let's collaborate to architect a stunning custom codebase or graphic vector system that places you light years ahead of your competitors.
+                                We understand your business → we solve the problem → we deliver → we support you.
                             </p>
                             <div className="pt-4">
                                 <Link

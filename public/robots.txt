@@ -4,4 +4,4 @@ Allow: /
 Disallow: /promo
 
 # Sitemaps
-Sitemap: https://aarvitek-systems.vercel.app/sitemap.xml
+Sitemap: https://aarviteksystems.com/sitemap.xml
