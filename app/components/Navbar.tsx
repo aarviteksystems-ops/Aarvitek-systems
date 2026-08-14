@@ -64,52 +64,76 @@ export function Navbar() {
                         </Link>
                     </div>
 
-                    <div className="hidden md:flex space-x-8 items-center bg-white/5 px-6 py-2 rounded-full border border-white/10">
-                        <NavLink to="/" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                    {/* Navigation Links Capsule */}
+                    <div className="hidden md:flex items-center gap-1 lg:gap-2 bg-white/[0.06] backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 shadow-lg shadow-black/20 content-center">
+                        <NavLink
+                            to="/"
+                            className={({ isActive }) => `px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${isActive ? 'text-white bg-white/10 shadow-sm' : 'text-slate-300 hover:text-white hover:bg-white/5'}`}
+                        >
                             Home
                         </NavLink>
-                        <div className="relative group nav-item">
-                            <button className="text-sm font-medium text-slate-400 group-hover:text-white flex items-center gap-1 cursor-pointer h-10">
-                                About Us
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+
+                        {/* About Us Dropdown */}
+                        <div className="relative group">
+                            <button className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 group-hover:text-white flex items-center gap-1.5 transition-all duration-200 cursor-pointer">
+                                <span>About Us</span>
+                                <svg className="w-3.5 h-3.5 text-slate-400 group-hover:text-white group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7"></path>
+                                </svg>
                             </button>
-                            <div className="absolute left-0 top-full pt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
-                                <div className="bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl overflow-hidden py-2">
-                                    <Link to="/about" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Company Profile</Link>
-                                    <Link to="/director-message" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Director's Message</Link>
+                            <div className="absolute left-0 top-full pt-2.5 w-52 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform -translate-y-1 group-hover:translate-y-0 z-50">
+                                <div className="bg-[#0c0c0e]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden p-1.5">
+                                    <Link to="/about" className="block px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors">
+                                        Company Profile
+                                    </Link>
+                                    <Link to="/director-message" className="block px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors">
+                                        Director's Message
+                                    </Link>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="relative group nav-item">
-                            <button className="text-sm font-medium text-slate-400 group-hover:text-white flex items-center gap-1 cursor-pointer h-10">
-                                Services
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                        {/* Services Dropdown */}
+                        <div className="relative group">
+                            <button className="px-3.5 py-1.5 rounded-full text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 group-hover:text-white flex items-center gap-1.5 transition-all duration-200 cursor-pointer">
+                                <span>Services</span>
+                                <svg className="w-3.5 h-3.5 text-slate-400 group-hover:text-white group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7"></path>
+                                </svg>
                             </button>
-                            <div className="absolute left-0 top-full pt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
-                                <div className="bg-[#0a0a0a] border border-white/10 rounded-xl shadow-2xl overflow-hidden py-2">
-                                    <Link to="/web-development" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Web Development</Link>
-                                    <Link to="/website-design" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Website Design</Link>
-                                    <Link to="/graphic-design" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Graphic Design</Link>
-                                    <Link to="/ecommerce" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">E-Commerce</Link>
-                                    <Link to="/video-editing" className="block px-4 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white transition-colors">Video Editing</Link>
+                            <div className="absolute left-0 top-full pt-2.5 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform -translate-y-1 group-hover:translate-y-0 z-50">
+                                <div className="bg-[#0c0c0e]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden p-1.5">
+                                    <Link to="/web-development" className="block px-3.5 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors">Web Development</Link>
+                                    <Link to="/website-design" className="block px-3.5 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors">Website Design</Link>
+                                    <Link to="/graphic-design" className="block px-3.5 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors">Graphic Design</Link>
+                                    <Link to="/ecommerce" className="block px-3.5 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors">E-Commerce</Link>
+                                    <Link to="/video-editing" className="block px-3.5 py-2 rounded-xl text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors">Video Editing</Link>
                                 </div>
                             </div>
                         </div>
-                        
-                        <NavLink to="/portfolio" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
+
+                        <NavLink
+                            to="/portfolio"
+                            className={({ isActive }) => `px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${isActive ? 'text-white bg-white/10 shadow-sm' : 'text-slate-300 hover:text-white hover:bg-white/5'}`}
+                        >
                             Portfolio
                         </NavLink>
-                        <NavLink to="/clients" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                        <NavLink
+                            to="/clients"
+                            className={({ isActive }) => `px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${isActive ? 'text-white bg-white/10 shadow-sm' : 'text-slate-300 hover:text-white hover:bg-white/5'}`}
+                        >
                             Clients
                         </NavLink>
-                        <NavLink to="/locations" className={({ isActive }) => `nav-item text-sm font-medium transition-colors hover:text-white ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                        <NavLink
+                            to="/locations"
+                            className={({ isActive }) => `px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${isActive ? 'text-white bg-white/10 shadow-sm' : 'text-slate-300 hover:text-white hover:bg-white/5'}`}
+                        >
                             Locations
                         </NavLink>
                     </div>
 
-                    <div className="hidden md:flex items-center nav-item">
-                        <Link to="/contact" className="px-6 py-2.5 rounded-full bg-purple-600 text-white text-sm font-medium hover:bg-purple-500 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]">
+                    <div className="hidden md:flex items-center">
+                        <Link to="/contact" className="px-6 py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-sm font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(168,85,247,0.35)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] hover:scale-105 active:scale-95">
                             Book a Call
                         </Link>
                     </div>

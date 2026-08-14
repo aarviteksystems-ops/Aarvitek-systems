@@ -45,14 +45,7 @@ body {
     animation: none;
   }
 }
-/* Hover animations */
-.nav-item {
-  @apply transition-transform duration-300;
-}
-.nav-item:hover {
-  @apply scale-105;
-}
-
+/* Button hover effect */
 button:hover {
   @apply shadow-lg;
 }
