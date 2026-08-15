@@ -59,8 +59,12 @@ export function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-20 items-center">
                     <div className="flex-shrink-0 flex items-center nav-item">
-                        <Link to="/" className="text-2xl font-black tracking-tighter text-white">
-                            AARVITEK
+                        <Link to="/" className="flex items-center gap-3 group">
+                            <img
+                                src="/images/aarvitek-systems-logo.png"
+                                alt="Aarvitek Systems"
+                                className="h-20 sm:h-24 w-auto object-contain rounded-lg transition-transform duration-300 group-hover:scale-105"
+                            />
                         </Link>
                     </div>
 

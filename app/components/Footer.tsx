@@ -25,8 +25,12 @@ export function Footer() {
                 {/* Footer Links */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 px-4">
                     <div className="col-span-1 md:col-span-1">
-                        <Link to="/" className="text-3xl font-black tracking-tighter text-white mb-6 block">
-                            AARVITEK
+                        <Link to="/" className="inline-block mb-6 group">
+                            <img
+                                src="/images/aarvitek-systems-logo.png"
+                                alt="Aarvitek Systems"
+                                className="h-24 sm:h-28 w-auto object-contain rounded-xl transition-transform duration-300 group-hover:scale-105"
+                            />
                         </Link>
                         <p className="text-slate-400 text-sm leading-relaxed mb-8">
                             Empowering businesses with innovative IT solutions. We craft digital experiences that drive growth and success.

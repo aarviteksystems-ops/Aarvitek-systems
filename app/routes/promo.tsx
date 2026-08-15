@@ -162,11 +162,12 @@ export default function PromoLanding() {
             {/* SIMPLIFIED HEADER (CRO optimized - no menu leak paths) */}
             <header className="relative z-50 border-b border-white/5 bg-black/40 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-2.5">
-                        <span className="text-xl font-black text-white tracking-wider flex items-center">
-                            AARVITEK
-                            <span className="h-2 w-2 rounded-full bg-purple-500 ml-1.5 animate-pulse"></span>
-                        </span>
+                    <Link to="/" className="flex items-center gap-2.5 group">
+                        <img
+                            src="/images/aarvitek-systems-logo.png"
+                            alt="Aarvitek Systems"
+                            className="h-20 sm:h-28 w-auto object-contain rounded-lg transition-transform duration-300 group-hover:scale-105"
+                        />
                     </Link>
                     <div className="flex items-center gap-6">
                         <a href="tel:+917870901336" className="hidden sm:flex items-center gap-2 text-xs font-bold text-slate-300 hover:text-white transition-colors">
@@ -257,9 +258,8 @@ export default function PromoLanding() {
                                                         }
                                                     }}
                                                     placeholder="John Doe"
-                                                    className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${
-                                                        errors.name ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"
-                                                    }`}
+                                                    className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${errors.name ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"
+                                                        }`}
                                                 />
                                                 {errors.name && <p className="text-red-400 text-[10px] mt-1 font-semibold">{errors.name}</p>}
                                             </div>
@@ -280,9 +280,8 @@ export default function PromoLanding() {
                                                             }
                                                         }}
                                                         placeholder="john@company.com"
-                                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${
-                                                            errors.email ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"
-                                                        }`}
+                                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${errors.email ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"
+                                                            }`}
                                                     />
                                                     {errors.email && <p className="text-red-400 text-[10px] mt-1 font-semibold">{errors.email}</p>}
                                                 </div>
@@ -301,9 +300,8 @@ export default function PromoLanding() {
                                                             }
                                                         }}
                                                         placeholder="+91 99999 99999"
-                                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${
-                                                            errors.phone ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"
-                                                        }`}
+                                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 transition-all ${errors.phone ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/30" : "border-white/10 focus:border-purple-500/50 focus:ring-purple-500/30"
+                                                            }`}
                                                     />
                                                     {errors.phone && <p className="text-red-400 text-[10px] mt-1 font-semibold">{errors.phone}</p>}
                                                 </div>
